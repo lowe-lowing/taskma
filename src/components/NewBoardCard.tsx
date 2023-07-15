@@ -14,7 +14,7 @@ const NewBoardCard: FC<NewBoardCardProps> = ({ workspace }) => {
       <CreateBoardDialog
         workspace={workspace}
         trigger={
-          <CardContent className="flex h-full cursor-pointer items-center justify-center p-0">
+          <CardContent className="flex h-full cursor-pointer items-center justify-center p-0 hover:bg-secondary">
             <p className="text-xs">New Board</p>
             <Plus size={14} />
           </CardContent>

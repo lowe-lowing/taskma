@@ -45,7 +45,7 @@ export default function TaskList({
         >
           <Card
             className={cn(
-              "z-0 w-60 rounded-t-none bg-secondary dark:border-gray-700",
+              "w-60 rounded-t-none bg-secondary dark:border-gray-700",
               {
                 "bg-green-100 dark:bg-gray-700": isDraggingLane,
               }
@@ -82,7 +82,7 @@ export default function TaskList({
               </ScrollArea>
             </CardContent>
           </Card>
-          <div className="h-full w-full bg-background" />
+          <div className="h-full w-full bg-background pointer-events-none" />
         </div>
       )}
     </Droppable>

@@ -20,10 +20,9 @@ export const CreateWorkspaceDialog: FC = () => {
   const [input, setInput] = useState("");
   const router = useRouter();
 
-  const { mutate: createWorkspace } = trpc.workspace.addWorkspace.useMutation({
+  const { mutateAsync: createWorkspace } = trpc.workspace.addWorkspace.useMutation({
     onSuccess: ({ WorkspaceId }) => {
       router.push(`/workspace/${WorkspaceId}/boards`);
-      router.refresh();
     },
     onError: (error) => {
       if (error instanceof TRPCClientError) {
@@ -39,12 +38,13 @@ export const CreateWorkspaceDialog: FC = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <div
-          className="rounded-md p-0.5 transition-all hover:scale-125 hover:bg-primary-foreground"
-          onClick={(e) => e.stopPropagation()}
+        <Button
+          variant={"ghost"}
+          size={"sm"}
+          className="p-0.5 transition-all hover:scale-125 hover:bg-primary-foreground"
         >
           <Plus size={14} />
-        </div>
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -52,15 +52,12 @@ export const CreateWorkspaceDialog: FC = () => {
             Create New Workspace
           </DialogTitle>
         </DialogHeader>
-        <div>
-          <Label htmlFor="name">Workspace Name</Label>
           <Input
             placeholder="Workspace Name"
             name="name"
             value={input}
             onChange={(e) => setInput(e.target.value)}
           />
-        </div>
         <DialogFooter>
           <Button
             type="submit"

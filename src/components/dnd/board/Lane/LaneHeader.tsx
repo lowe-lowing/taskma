@@ -64,7 +64,6 @@ const LaneHeader: FC<LaneHeaderProps> = ({ lane, provided, refetchLanes }) => {
       {isEditingName ? (
         <form
           onSubmit={handleEditLaneName}
-          {...provided.dragHandleProps}
           aria-label={`${lane.Name} quote list`}
           className="relative"
           ref={ref}

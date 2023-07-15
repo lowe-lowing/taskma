@@ -24,6 +24,7 @@ const Lane = ({ lane, index, isCombineEnabled, refetchLanes }: LaneProps) => {
                 "bg-green-100 dark:bg-gray-700": snapshot.isDragging,
               }
             )}
+            {...provided.dragHandleProps}
           >
             <CardHeader className="px-2 py-1">
               <LaneHeader
@@ -32,7 +33,6 @@ const Lane = ({ lane, index, isCombineEnabled, refetchLanes }: LaneProps) => {
                 refetchLanes={refetchLanes}
               />
             </CardHeader>
-            {/* <Separator className="bg-accent" /> */}
           </Card>
           <TaskList
             lane={lane}

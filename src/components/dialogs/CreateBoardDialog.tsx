@@ -30,7 +30,6 @@ const CreateBoardDialog: FC<CreateBoardDialogProps> = ({
   const { mutate: createBoard } = trpc.board.addBoard.useMutation({
     onSuccess: ({ id, workspaceId }) => {
       router.push(`/workspace/${workspaceId}/board/${id}`);
-      router.refresh();
     },
     onError: (error) => {
       toast.error("Something went wrong. Please try again later.");
@@ -45,15 +44,12 @@ const CreateBoardDialog: FC<CreateBoardDialogProps> = ({
             Create new Board in '{workspace.Name}'
           </DialogTitle>
         </DialogHeader>
-        <div>
-          <Label htmlFor="name">Board Name</Label>
           <Input
             placeholder="Board Name"
             name="name"
             value={input}
             onChange={(e) => setInput(e.target.value)}
           />
-        </div>
         <DialogFooter>
           <Button
             type="submit"
