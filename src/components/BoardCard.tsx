@@ -1,11 +1,13 @@
 import { trpc } from "@/lib/trpc";
-import { Board } from "@prisma/client";
+import { Board as PrismaBoard } from "@prisma/client";
 import Link from "next/link";
 import { FC } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import Board from "./dnd/board/Board";
+import { Separator } from "./ui/separator";
 
 interface BoardCardProps {
-  board: Board;
+  board: PrismaBoard;
   workspaceId: string;
 }
 
@@ -18,17 +20,49 @@ const BoardCard: FC<BoardCardProps> = ({ board, workspaceId }) => {
         <CardHeader className="p-1">
           <CardTitle className="text-xs">{board.Name}</CardTitle>
         </CardHeader>
-        <CardContent className="p-0 pl-1">
-          <div className="flex flex-row gap-0.5">
-            {lanes?.map((lane) => (
-              <div key={lane.id} className="flex flex-col gap-0.5">
-                <div className="h-1 w-4 bg-secondary" />
+        <CardContent className="flex flex-row gap-1 p-0 pl-1">
+          {lanes?.map((lane) => (
+            <Card
+              className={"w-8 rounded-sm bg-secondary dark:border-gray-700"}
+            >
+              <CardHeader className="flex h-3 w-8 flex-row items-center p-0">
+                <p className="truncate pl-0.5 text-[6px] leading-none">
+                  {lane.Name}
+                </p>
+              </CardHeader>
+              <CardContent className="p-0">
+                <Separator className="bg-primary-foreground" />
                 {lane.Tasks.map((task) => (
-                  <div key={task.id} className="h-2 w-4 bg-secondary" />
+                  <div key={task.id} className="flex h-4 w-8 items-center">
+                    <p className="truncate pl-0.5 text-[6px] leading-none">
+                      {task.Title}
+                    </p>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          ))}
+          {/* <div className="flex flex-row gap-1">
+            {lanes?.map((lane) => (
+              <div key={lane.id} className="flex flex-col gap-1">
+                <div className="flex h-3 w-8 items-center bg-secondary pl-0.5">
+                  <p className="truncate text-[6px] leading-none">
+                    {lane.Name}
+                  </p>
+                </div>
+                {lane.Tasks.map((task) => (
+                  <div
+                    key={task.id}
+                    className="flex h-4 w-8 items-center bg-secondary pl-0.5"
+                  >
+                    <p className="truncate text-[6px] leading-none">
+                      {task.Title}
+                    </p>
+                  </div>
                 ))}
               </div>
             ))}
-          </div>
+          </div> */}
         </CardContent>
       </Card>
     </Link>

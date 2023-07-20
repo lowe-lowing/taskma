@@ -82,7 +82,7 @@ export default function TaskList({
               </ScrollArea>
             </CardContent>
           </Card>
-          <div className="h-full w-full bg-background pointer-events-none" />
+          <div className="pointer-events-none -z-50 h-full w-full bg-transparent" />
         </div>
       )}
     </Droppable>

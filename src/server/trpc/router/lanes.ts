@@ -2,8 +2,6 @@ import { LaneWithTasks } from "@/components/dnd/types";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
 
-export type OriginalData = Array<LaneWithTasks>;
-
 export const laneRouter = router({
   getLanes: protectedProcedure
     .input(z.object({ boardId: z.string() }))

@@ -17,7 +17,7 @@ const AddTaskHandler: FC<AddTaskHandlerProps> = ({ lane, refetchLanes }) => {
   const [newTaskName, setNewTaskName] = useState("");
   const [isCreatingNewTask, setIsCreatingNewTask] = useState(false);
 
-  // FIXME: maybe add task to state directly instead of refetching (if it takes long time to refetch)
+  // FIXME: maybe add task to state directly instead of refetching (if it takes long time to refetch, I need to check this when i publish it to the internet)
   const { mutateAsync: createTask, isLoading } =
     trpc.task.createTask.useMutation({
       onSuccess: () => {

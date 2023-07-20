@@ -1,4 +1,3 @@
-import { OriginalData } from "@/server/trpc/router/lanes";
 import { trpc } from "@/lib/trpc";
 import { useEffect, useState } from "react";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
@@ -7,13 +6,13 @@ import {
   reorderTasksBetweenLanes,
   reorderTasksSameLane,
 } from "../reorder";
-import { ListType } from "../types";
+import { LaneWithTasks, ListType } from "../types";
 import Lane from "./Lane/Lane";
 import AddLaneHandler from "./Lane/AddLaneHandler";
 
 type BoardProps = {
   isCombineEnabled: boolean;
-  initial: OriginalData;
+  initial: LaneWithTasks[];
   boardId: string;
   useClone: boolean;
   containerHeight: number;

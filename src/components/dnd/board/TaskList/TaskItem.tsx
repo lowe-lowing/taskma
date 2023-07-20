@@ -8,7 +8,6 @@ import moment from "moment";
 import React from "react";
 import { DraggableProvided } from "react-beautiful-dnd";
 
-// FIXME: bug where taskitem shows behind tasklist
 type TaskItemProps = {
   task: Task;
   isDragging: any;

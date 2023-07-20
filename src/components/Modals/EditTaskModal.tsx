@@ -5,17 +5,10 @@ import toast from "react-hot-toast";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import Modal from "react-modal";
 import { Button } from "../ui/button";
-
-const customStyles = {
-  content: {
-    // top: "40%",
-    // left: "50%",
-    // right: "auto",
-    // bottom: "auto",
-    // marginRight: "-50%",
-    // transform: "translate(-50%, -50%)",
-  },
-};
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
+import { Label } from "../ui/label";
+import { X } from "lucide-react";
 
 type EditTaskModalProps = {
   isOpen: boolean;
@@ -74,44 +67,64 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = ({
           margin: "auto",
           width: "fit-content",
           height: "fit-content",
-          background: "bg-background",
+          padding: "0px",
         },
         overlay: { background: "rgba(0, 0, 0, .5)" },
       }}
     >
-      <form onSubmit={handleEdit} className="flex w-fit flex-col">
-        <input
-          type="text"
-          name="title"
-          placeholder="Title"
-          value={form.title}
-          onChange={changeHandler}
-          required
-        />
-        <textarea
-          name="description"
-          placeholder="Description"
-          value={form.description}
-          onChange={changeHandler}
-        />
-        <div className="flex w-full items-center">
-          <input
-            type="date"
-            name="dueDate"
-            placeholder="Due Date"
-            value={form.dueDate}
+      <form
+        onSubmit={handleEdit}
+        className="relative flex w-fit flex-col gap-2 bg-secondary p-5"
+      >
+        <Button
+          variant={"ghost"}
+          size={"icon"}
+          onClick={closeModal}
+          className="absolute right-1 top-1 hover:bg-background"
+        >
+          <X />
+        </Button>
+        <div>
+          <Label htmlFor="title">Title</Label>
+          <Input
+            type="text"
+            name="title"
+            value={form.title}
             onChange={changeHandler}
-          />
-          <AiOutlineCloseCircle
-            className="cursor-pointer"
-            onClick={() => setForm((prev) => ({ ...prev, dueDate: "" }))}
+            required
           />
         </div>
-        <Button type="submit" className="w-fit p-[3px]">
+        <div>
+          <Label htmlFor="description">Description</Label>
+          <Textarea
+            name="description"
+            value={form.description}
+            onChange={changeHandler}
+          />
+        </div>
+        <div>
+          <Label htmlFor="dueDate">Due Date</Label>
+
+          <div className="flex w-full items-center">
+            <Input
+              type="date"
+              name="dueDate"
+              placeholder="Due Date"
+              value={form.dueDate}
+              onChange={changeHandler}
+            />
+            {form.dueDate !== "" && (
+              <AiOutlineCloseCircle
+                className="cursor-pointer"
+                onClick={() => setForm((prev) => ({ ...prev, dueDate: "" }))}
+              />
+            )}
+          </div>
+        </div>
+        <Button type="submit" className="p-[3px]">
           Save
         </Button>
       </form>
-      <button onClick={closeModal}>close</button>
     </Modal>
   );
 };

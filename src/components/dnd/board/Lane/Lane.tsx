@@ -16,7 +16,11 @@ const Lane = ({ lane, index, isCombineEnabled, refetchLanes }: LaneProps) => {
   return (
     <Draggable draggableId={lane.id} index={index}>
       {(provided, snapshot) => (
-        <div ref={provided.innerRef} {...provided.draggableProps}>
+        <div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          className="relative"
+        >
           <Card
             className={cn(
               "mb-0 w-60 rounded-b-none bg-secondary dark:border-gray-700",
