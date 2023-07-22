@@ -30,8 +30,8 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # local env files
-# .env
-# .env*.local
+.env
+.env*.local
 
 # vercel
 .vercel
@@ -40,3 +40,4 @@ yarn-error.log*
 *.tsbuildinfo
 
 .vscode
+role-notes.txt

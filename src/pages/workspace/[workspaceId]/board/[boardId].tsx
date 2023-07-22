@@ -1,13 +1,12 @@
 import Board from "@/components/dnd/board/Board";
+import { Button } from "@/components/ui/button";
+import BackButton from "@/components/utils/BackButton";
 import { trpc } from "@/lib/trpc";
 import { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useState } from "react";
 
 const BoardView: NextPage = () => {
-  const [newLaneName, setNewLaneName] = useState("");
-
   const router = useRouter();
   const boardId = router.query.boardId as string;
 
@@ -18,17 +17,6 @@ const BoardView: NextPage = () => {
       },
       { enabled: !!boardId }
     );
-  const { mutateAsync: addLane } = trpc.lane.createLane.useMutation();
-
-  const handleAddLane = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
-    await addLane({
-      boardId,
-      name: newLaneName,
-      order: board?.Lanes?.length || 0,
-    });
-    refetchLanes();
-  };
 
   return (
     <>
@@ -38,16 +26,11 @@ const BoardView: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="relative flex h-[calc(100vh-40px)] flex-col items-center overflow-x-hidden pt-1">
-        <div>Board: {board?.Name}</div>
-        {/* <form onSubmit={handleAddLane} className="flex flex-row gap-1 p-2">
-          <input
-            type="text"
-            value={newLaneName}
-            onChange={(e) => setNewLaneName(e.target.value)}
-            className="border-2"
-          />
-          <Button>Add Lane</Button>
-        </form> */}
+        <div className="flex w-full justify-between px-1 sm:justify-evenly">
+          <BackButton />
+          <h2>Board: {board?.Name}</h2>
+          <div>Settings</div>
+        </div>
         {board?.Lanes ? (
           <Board
             initial={board.Lanes}

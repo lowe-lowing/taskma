@@ -8,7 +8,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { trpc } from "@/lib/trpc";
 import { Workspace } from "@prisma/client";
 import { useRouter } from "next/navigation";
@@ -44,12 +43,12 @@ const CreateBoardDialog: FC<CreateBoardDialogProps> = ({
             Create new Board in '{workspace.Name}'
           </DialogTitle>
         </DialogHeader>
-          <Input
-            placeholder="Board Name"
-            name="name"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
+        <Input
+          placeholder="Board Name"
+          name="name"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
         <DialogFooter>
           <Button
             type="submit"

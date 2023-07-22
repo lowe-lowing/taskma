@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import {
+  closeDialog,
   Dialog,
   DialogContent,
   DialogFooter,
@@ -73,7 +74,7 @@ export const InviteDialog: FC<InviteDialogProps> = ({ workspace }) => {
         if (pathname.endsWith(`${workspace.id}/members`)) {
           router.refresh();
         } else {
-          document.getElementById("closeDialog")?.click();
+          closeDialog();
         }
       },
       onError: () => {

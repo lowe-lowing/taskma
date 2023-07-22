@@ -8,7 +8,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { trpc } from "@/lib/trpc";
 import { TRPCClientError } from "@trpc/client";
 import { Plus } from "lucide-react";
@@ -20,20 +19,21 @@ export const CreateWorkspaceDialog: FC = () => {
   const [input, setInput] = useState("");
   const router = useRouter();
 
-  const { mutateAsync: createWorkspace } = trpc.workspace.addWorkspace.useMutation({
-    onSuccess: ({ WorkspaceId }) => {
-      router.push(`/workspace/${WorkspaceId}/boards`);
-    },
-    onError: (error) => {
-      if (error instanceof TRPCClientError) {
-        if (error.data.httpStatus === 400) {
-          const err = JSON.parse(error.message);
-          return toast.error(err[0].message);
+  const { mutateAsync: createWorkspace } =
+    trpc.workspace.addWorkspace.useMutation({
+      onSuccess: ({ WorkspaceId }) => {
+        router.push(`/workspace/${WorkspaceId}/boards`);
+      },
+      onError: (error) => {
+        if (error instanceof TRPCClientError) {
+          if (error.data.httpStatus === 400) {
+            const err = JSON.parse(error.message);
+            return toast.error(err[0].message);
+          }
         }
-      }
-      toast.error("Something went wrong. Please try again later.");
-    },
-  });
+        toast.error("Something went wrong. Please try again later.");
+      },
+    });
 
   return (
     <Dialog>
@@ -52,12 +52,12 @@ export const CreateWorkspaceDialog: FC = () => {
             Create New Workspace
           </DialogTitle>
         </DialogHeader>
-          <Input
-            placeholder="Workspace Name"
-            name="name"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
+        <Input
+          placeholder="Workspace Name"
+          name="name"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
         <DialogFooter>
           <Button
             type="submit"

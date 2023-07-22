@@ -1,3 +1,4 @@
+import EditTaskDialog from "@/components/dialogs/EditTaskDialog";
 import { EditTaskModal } from "@/components/Modals/EditTaskModal";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
@@ -45,12 +46,12 @@ function TaskItem({
       data-testid={task.id}
       data-index={index}
     >
-      <EditTaskModal
+      {/* <EditTaskModal
         isOpen={isEditingTask}
         setIsOpen={setIsEditingTask}
         task={task}
         refetchLanes={refetchLanes}
-      />
+      /> */}
       <div className="flex flex-grow basis-full flex-col">
         <div
           className="grid gap-1"
@@ -60,14 +61,20 @@ function TaskItem({
         >
           <p className="overflow-hidden">{task.Title}</p>
           <div className="flex items-start">
-            <Button
-              variant={"ghost"}
-              size={"sm"}
-              className="p-1"
-              onClick={() => setIsEditingTask(true)}
-            >
-              <Edit size={20} />
-            </Button>
+            <EditTaskDialog
+              refetchLanes={refetchLanes}
+              task={task}
+              trigger={
+                <Button
+                  variant={"ghost"}
+                  size={"sm"}
+                  className="p-1"
+                  // onClick={() => setIsEditingTask(true)}
+                >
+                  <Edit size={20} />
+                </Button>
+              }
+            />
             <Button
               variant={"ghost"}
               size={"sm"}

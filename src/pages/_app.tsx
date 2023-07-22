@@ -27,9 +27,3 @@ const MyApp: AppType<{ session: Session | null }> = ({
 };
 
 export default trpc.withTRPC(MyApp);
-
-// Feature: See who created the workspace, and only the owner can delete it.
-// if the owner wants to leave the workspace, they must transfer ownership to another user.
-
-// Workspace Roles: Owner, Admin, Member
-// Board Roles: Owner, Admin, Member, Viewer
