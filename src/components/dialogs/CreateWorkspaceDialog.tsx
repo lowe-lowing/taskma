@@ -20,7 +20,7 @@ export const CreateWorkspaceDialog: FC = () => {
   const router = useRouter();
 
   const { mutateAsync: createWorkspace } =
-    trpc.workspace.addWorkspace.useMutation({
+    trpc.workspace.createWorkspace.useMutation({
       onSuccess: ({ WorkspaceId }) => {
         router.push(`/workspace/${WorkspaceId}/boards`);
       },

@@ -26,7 +26,7 @@ const CreateBoardDialog: FC<CreateBoardDialogProps> = ({
   const [input, setInput] = useState("");
   const router = useRouter();
 
-  const { mutate: createBoard } = trpc.board.addBoard.useMutation({
+  const { mutate: createBoard } = trpc.board.createBoard.useMutation({
     onSuccess: ({ id, workspaceId }) => {
       router.push(`/workspace/${workspaceId}/board/${id}`);
     },

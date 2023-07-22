@@ -64,6 +64,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   UserWorkspace UserWorkspace[]
+  UserBoards    UserBoard[]
 }
 
 model Workspace {
@@ -74,25 +75,43 @@ model Workspace {
 }
 
 model UserWorkspace {
-  id          String    @id @unique @default(cuid())
-  User        User      @relation(fields: [UserId], references: [id])
+  id          String        @id @unique @default(cuid())
+  User        User          @relation(fields: [UserId], references: [id])
   UserId      String
-  Workspace   Workspace @relation(fields: [WorkspaceId], references: [id])
+  Workspace   Workspace     @relation(fields: [WorkspaceId], references: [id])
   WorkspaceId String
+  Role        WorkspaceRole
 }
 
 enum WorkspaceRole {
-  OWNER
-  ADMIN
-  MEMBER
+  Owner
+  Admin
+  Member
 }
 
 model Board {
-  id          String     @id @unique @default(cuid())
+  id          String      @id @unique @default(cuid())
   Name        String
   Lanes       Lane[]
-  Workspace   Workspace? @relation(fields: [workspaceId], references: [id])
+  Workspace   Workspace?  @relation(fields: [workspaceId], references: [id])
   workspaceId String?
+  UserBoards  UserBoard[]
+}
+
+model UserBoard {
+  id      String    @id @unique @default(cuid())
+  User    User      @relation(fields: [userId], references: [id])
+  userId  String
+  Board   Board     @relation(fields: [boardId], references: [id])
+  boardId String
+  Role    BoardRole
+}
+
+enum BoardRole {
+  Creator
+  Admin
+  Editor
+  Viewer
 }
 
 model Lane {

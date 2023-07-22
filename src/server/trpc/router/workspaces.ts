@@ -1,5 +1,13 @@
+import { BoardRole, WorkspaceRole } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
+
+const zodWorkspaceRole = z.union([
+  z.literal(WorkspaceRole.Owner),
+  z.literal(WorkspaceRole.Admin),
+  z.literal(WorkspaceRole.Member),
+]);
 
 export const workspaceRouter = router({
   getWorkspaceById: protectedProcedure
@@ -9,20 +17,37 @@ export const workspaceRouter = router({
         where: { id: input.id },
       });
     }),
-  getWorkspacesByUser: protectedProcedure.query(({ ctx }) => {
+  getWorkspacesWithBoardsByUser: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.session.user.id;
-    return ctx.prisma.workspace.findMany({
+    const workspaces = await ctx.prisma.workspace.findMany({
       where: { UserWorkspaces: { some: { UserId: userId } } },
-      include: { Boards: true },
+      include: {
+        Boards: { include: { UserBoards: true } },
+        UserWorkspaces: true,
+      },
+    });
+    // TODO: might change so that every board connection is created instead of just the ones that only are members
+    return workspaces.map((workspace) => {
+      const role = workspace.UserWorkspaces.find(
+        (userWorkspace) => userWorkspace.UserId === userId
+      )!.Role;
+      if (role === WorkspaceRole.Member) {
+        // only including the boards if the user has a connected UserBoard (aka is a member of the board)
+        workspace.Boards = workspace.Boards.filter((board) =>
+          board.UserBoards.find((userBoard) => userBoard.userId === userId)
+        );
+      }
+      return workspace;
     });
   }),
-  addWorkspace: protectedProcedure
+  createWorkspace: protectedProcedure
     .input(z.object({ name: z.string().min(3).max(50) }))
     .mutation(async ({ ctx, input }) => {
       return ctx.prisma.userWorkspace.create({
         data: {
           User: { connect: { id: ctx.session.user.id } },
           Workspace: { create: { Name: input.name } },
+          Role: "Owner",
         },
       });
     }),
@@ -37,6 +62,9 @@ export const workspaceRouter = router({
             },
           },
         },
+        include: {
+          UserWorkspace: true,
+        },
       });
     }),
   getUsersToInviteByName: protectedProcedure
@@ -44,7 +72,7 @@ export const workspaceRouter = router({
     .query(async ({ ctx, input }) => {
       return ctx.prisma.user.findMany({
         where: {
-          name: { contains: input.name },
+          name: { contains: input.name, mode: "insensitive" },
           id: { not: ctx.session.user.id },
           AND: {
             NOT: {
@@ -77,6 +105,7 @@ export const workspaceRouter = router({
             data: {
               User: { connect: { id: user.id } },
               Workspace: { connect: { id: workspaceId } },
+              Role: "Member",
             },
           })
         )

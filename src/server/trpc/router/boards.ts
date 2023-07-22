@@ -15,24 +15,24 @@ export const boardRouter = router({
         },
       });
     }),
-  getBoards: protectedProcedure.query(({ ctx, input }) => {
-    return ctx.prisma.board.findMany({
-      where: {
-        Workspace: {
-          UserWorkspaces: { every: { UserId: ctx.session.user.id } },
-        },
-      },
-      include: { Workspace: true },
-    });
-  }),
-  getBoardsByWorkspace: protectedProcedure
-    .input(z.object({ workspaceId: z.string() }))
-    .query(({ ctx, input }) => {
-      return ctx.prisma.board.findMany({
-        where: { Workspace: { id: input.workspaceId } },
-      });
-    }),
-  addBoard: protectedProcedure
+  // getBoards: protectedProcedure.input(z.object({workspaceRole})).query(({ ctx, input }) => {
+  //   return ctx.prisma.board.findMany({
+  //     where: {
+  //       Workspace: {
+  //         UserWorkspaces: { every: { UserId: ctx.session.user.id } },
+  //       },
+  //     },
+  //     include: { Workspace: true },
+  //   });
+  // }),
+  // getBoardsByWorkspace: protectedProcedure
+  //   .input(z.object({ workspaceId: z.string() }))
+  //   .query(({ ctx, input }) => {
+  //     return ctx.prisma.board.findMany({
+  //       where: { Workspace: { id: input.workspaceId } },
+  //     });
+  //   }),
+  createBoard: protectedProcedure
     .input(
       z.object({ name: z.string().min(3).max(50), workspaceId: z.string() })
     )

@@ -140,8 +140,9 @@ export const InviteDialog: FC<InviteDialogProps> = ({ workspace }) => {
         <div className="flex flex-wrap">
           {selectedUsers.map((user) => (
             <Button
+              key={user.id}
               variant={"ghost"}
-              className="flex w-fit items-center rounded-xl bg-secondary p-1"
+              className="flex w-fit items-center rounded-xl bg-secondary p-1 px-2"
               onClick={() => {
                 setSelectedUsers((prev) =>
                   prev.filter((prevUser) => prevUser.id !== user.id)
