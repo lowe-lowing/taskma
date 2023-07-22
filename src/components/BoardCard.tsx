@@ -39,7 +39,7 @@ const BoardCard: FC<BoardCardProps> = ({ board, workspaceId }) => {
                       key={task.id}
                       className="flex items-center rounded-sm bg-background p-0.5"
                     >
-                      <p className="truncate text-[6px] leading-none">
+                      <p className="truncate text-[5px] leading-none">
                         {task.Title}
                       </p>
                     </div>
