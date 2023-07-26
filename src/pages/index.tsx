@@ -1,16 +1,16 @@
-import { type NextPage } from "next";
+import { InferGetServerSidePropsType, type NextPage } from "next";
 import { getSession, GetSessionParams, signIn } from "next-auth/react";
 import Head from "next/head";
 
 import { User } from "next-auth";
 import { useRouter } from "next/router";
 import { Button } from "../components/ui/button";
+import Navbar from "@/components/Navbar";
+import { ssrSession } from "@/lib/ssrSession";
 
-type Props = {
-  user: User;
-};
-
-const Home: NextPage<Props> = ({ user }) => {
+export default function Page({
+  data: session,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   return (
     <>
@@ -22,12 +22,13 @@ const Home: NextPage<Props> = ({ user }) => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <Navbar session={session} />
       <main className="flex flex-col items-center">
         <h1 className="text-5xl font-extrabold leading-normal text-gray-700 md:text-[5rem]">
           Welcome to <span className="text-purple-300">Taskma</span>
         </h1>
         <p>This is a platform for task management for your self or your team</p>
-        {user ? (
+        {session?.user ? (
           <Button onClick={() => router.push("/boards")} className="m-5">
             Go to Dashboard
           </Button>
@@ -39,17 +40,6 @@ const Home: NextPage<Props> = ({ user }) => {
       </main>
     </>
   );
-};
-
-export default Home;
-
-export async function getServerSideProps(ctx: GetSessionParams | undefined) {
-  const session = await getSession(ctx);
-  const user = session?.user;
-
-  return {
-    props: {
-      user: user || null,
-    },
-  };
 }
+
+export const getServerSideProps = ssrSession;

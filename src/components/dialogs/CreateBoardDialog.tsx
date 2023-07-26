@@ -26,14 +26,16 @@ const CreateBoardDialog: FC<CreateBoardDialogProps> = ({
   const [input, setInput] = useState("");
   const router = useRouter();
 
-  const { mutate: createBoard } = trpc.board.createBoard.useMutation({
-    onSuccess: ({ id, workspaceId }) => {
-      router.push(`/workspace/${workspaceId}/board/${id}`);
-    },
-    onError: (error) => {
-      toast.error("Something went wrong. Please try again later.");
-    },
-  });
+  const { mutate: createBoard, isLoading } = trpc.board.createBoard.useMutation(
+    {
+      onSuccess: ({ id, workspaceId }) => {
+        router.push(`/workspace/${workspaceId}/board/${id}`);
+      },
+      onError: (error) => {
+        toast.error("Something went wrong. Please try again later.");
+      },
+    }
+  );
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
@@ -53,9 +55,10 @@ const CreateBoardDialog: FC<CreateBoardDialogProps> = ({
           <Button
             type="submit"
             disabled={input.length < 3}
+            isLoading={isLoading}
             onClick={() =>
               createBoard({
-                name: input,
+                Name: input,
                 workspaceId: workspace.id,
               })
             }

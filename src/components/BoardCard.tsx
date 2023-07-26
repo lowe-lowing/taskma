@@ -10,7 +10,6 @@ interface BoardCardProps {
   workspaceId: string;
 }
 
-// TODO: Make this look like the real boards
 const BoardCard: FC<BoardCardProps> = ({ board, workspaceId }) => {
   const { data: lanes } = trpc.lane.getLanes.useQuery({ boardId: board.id });
   return (
@@ -25,6 +24,7 @@ const BoardCard: FC<BoardCardProps> = ({ board, workspaceId }) => {
               className={
                 "h-fit w-10 rounded-sm bg-secondary dark:border-gray-700"
               }
+              key={lane.id}
             >
               <CardHeader className="flex h-3 w-10 flex-row items-center p-0">
                 <p className="truncate pl-0.5 text-[8px] leading-none">
@@ -32,7 +32,7 @@ const BoardCard: FC<BoardCardProps> = ({ board, workspaceId }) => {
                 </p>
               </CardHeader>
               <CardContent className="p-0">
-                <Separator className="bg-primary-foreground" />
+                <Separator className="bg-gray-700" />
                 <div className="flex flex-col gap-0.5 p-0.5">
                   {lane.Tasks.map((task) => (
                     <div

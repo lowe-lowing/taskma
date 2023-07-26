@@ -5,14 +5,17 @@ import Link from "next/link";
 import { FC } from "react";
 import { Button } from "./ui/button";
 import UserAccountNav from "./UserAccountNav";
+import { Session } from "next-auth";
 
-interface NavbarProps {}
+interface NavbarProps {
+  session: Session | null;
+}
 
-const Navbar: FC<NavbarProps> = ({}) => {
+const Navbar: FC<NavbarProps> = ({ session }) => {
   const [darkTheme, setDarkTheme] = useDarkMode();
   const handleMode = () => setDarkTheme(!darkTheme);
 
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
   return (
     <div className="flex items-center justify-center bg-secondary">
       <div className="flex w-full max-w-4xl items-center justify-between p-2">

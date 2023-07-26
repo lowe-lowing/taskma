@@ -27,11 +27,13 @@ import {
 } from "../ui/command";
 import UserAvatar from "../UserAvatar";
 
-interface InviteDialogProps {
+interface InviteWorkspaceDialogProps {
   workspace: Workspace;
 }
 
-export const InviteDialog: FC<InviteDialogProps> = ({ workspace }) => {
+export const InviteWorkspaceDialog: FC<InviteWorkspaceDialogProps> = ({
+  workspace,
+}) => {
   const [input, setInput] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const router = useRouter();
@@ -70,7 +72,7 @@ export const InviteDialog: FC<InviteDialogProps> = ({ workspace }) => {
   const { mutateAsync: inviteMutation } =
     trpc.workspace.inviteToWorkspace.useMutation({
       onSuccess: (data) => {
-        toast.success("User invited");
+        toast.success(`${data.length > 1 ? "Users" : "User"} invited`);
         if (pathname.endsWith(`${workspace.id}/members`)) {
           router.refresh();
         } else {
@@ -86,7 +88,7 @@ export const InviteDialog: FC<InviteDialogProps> = ({ workspace }) => {
     <Dialog>
       <DialogTrigger asChild>
         <div
-          className="rounded-md p-0.5 transition-all hover:scale-125 hover:bg-primary-foreground"
+          className="cursor-pointer rounded-md p-0.5 transition-all hover:scale-125 hover:bg-primary-foreground"
           onClick={(e) => e.stopPropagation()}
         >
           <Plus size={14} />

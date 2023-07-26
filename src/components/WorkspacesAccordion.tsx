@@ -7,12 +7,11 @@ import {
 import { useAccordionContext } from "@/hooks/useAccordionContext";
 import { cn } from "@/lib/utils";
 import { Workspace } from "@prisma/client";
-import { KanbanSquare, Plus, Settings, Users } from "lucide-react";
-import Link from "next/link";
+import { KanbanSquare, Settings, Users } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
 import { FC, ReactNode, useEffect } from "react";
-import { InviteDialog } from "./dialogs/InviteDialog";
+import { InviteWorkspaceDialog } from "./dialogs/InviteWorkspaceDialog";
 import { Button } from "./ui/button";
 
 interface Props {
@@ -50,7 +49,7 @@ export const WorkspacesAccordion: FC<Props> = ({ workspaces }) => {
                     Members
                   </div>
                   <div onClick={(e) => e.stopPropagation()}>
-                    <InviteDialog workspace={workspace} />
+                    <InviteWorkspaceDialog workspace={workspace} />
                   </div>
                 </div>
               </WorkspaceLink>

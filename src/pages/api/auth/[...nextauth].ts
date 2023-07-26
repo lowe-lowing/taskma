@@ -23,6 +23,9 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
+      httpOptions: {
+        timeout: 30000
+      }
     }),
     GitHubProvider({
       clientId: env.GITHUB_ID,

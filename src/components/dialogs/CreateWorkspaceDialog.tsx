@@ -19,10 +19,10 @@ export const CreateWorkspaceDialog: FC = () => {
   const [input, setInput] = useState("");
   const router = useRouter();
 
-  const { mutateAsync: createWorkspace } =
+  const { mutateAsync: createWorkspace, isLoading } =
     trpc.workspace.createWorkspace.useMutation({
-      onSuccess: ({ WorkspaceId }) => {
-        router.push(`/workspace/${WorkspaceId}/boards`);
+      onSuccess: ({ workspaceId }) => {
+        router.push(`/workspace/${workspaceId}/boards`);
       },
       onError: (error) => {
         if (error instanceof TRPCClientError) {
@@ -62,6 +62,7 @@ export const CreateWorkspaceDialog: FC = () => {
           <Button
             type="submit"
             disabled={input.length < 3}
+            isLoading={isLoading}
             onClick={() =>
               createWorkspace({
                 name: input,

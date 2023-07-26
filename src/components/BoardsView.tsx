@@ -10,6 +10,7 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
+import BoardsViewSkeleton from "./skeletons/BoardsViewSkeleton";
 
 interface BoardsProps {
   workspaces:
@@ -17,10 +18,11 @@ interface BoardsProps {
         Boards: Board[];
       })[]
     | undefined;
+  isLoading: boolean;
 }
 
 // TODO: add loading state
-const BoardsView: FC<BoardsProps> = ({ workspaces }) => {
+const BoardsView: FC<BoardsProps> = ({ workspaces, isLoading }) => {
   const [workspaceNameInput, setWorkspaceNameInput] = useState("");
 
   const router = useRouter();
@@ -41,40 +43,17 @@ const BoardsView: FC<BoardsProps> = ({ workspaces }) => {
     });
 
   return (
-    <div className="flex w-full flex-col gap-1">
-      {workspaces && workspaces.length > 0 ? (
+    <div className="flex w-full flex-col gap-4">
+      {isLoading ? (
+        <BoardsViewSkeleton />
+      ) : workspaces && workspaces.length > 0 ? (
         workspaces.map((workspace) => (
-          <div key={workspace.id}>
-            <div className="flex justify-between">
+          <div key={workspace.id} className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
               <p>{workspace.Name}</p>
-              <div className="flex gap-1">
-                <Button
-                  variant={"secondary"}
-                  size={"sm"}
-                  className="gap-0.5 text-xs"
-                >
-                  <KanbanSquare size={12} />
-                  Boards
-                </Button>
-                <Button
-                  variant={"secondary"}
-                  size={"sm"}
-                  className="gap-0.5 text-xs"
-                >
-                  <Users size={12} />
-                  Members
-                </Button>
-                <Button
-                  variant={"secondary"}
-                  size={"sm"}
-                  className="gap-0.5 text-xs"
-                >
-                  <Settings size={12} />
-                  Settings
-                </Button>
-              </div>
+              <WorkspaceButtonsRow workspaceId={workspace.id} />
             </div>
-            <Separator className="my-1" />
+            <Separator />
             <BoardsPreview boards={workspace.Boards} workspace={workspace} />
           </div>
         ))
@@ -105,3 +84,24 @@ const BoardsView: FC<BoardsProps> = ({ workspaces }) => {
 };
 
 export default BoardsView;
+
+export const WorkspaceButtonsRow = ({
+  workspaceId,
+}: {
+  workspaceId?: string;
+}) => (
+  <div className="flex gap-1">
+    <Button variant={"secondary"} size={"sm"} className="gap-0.5 text-xs">
+      <KanbanSquare size={12} />
+      Boards
+    </Button>
+    <Button variant={"secondary"} size={"sm"} className="gap-0.5 text-xs">
+      <Users size={12} />
+      Members
+    </Button>
+    <Button variant={"secondary"} size={"sm"} className="gap-0.5 text-xs">
+      <Settings size={12} />
+      Settings
+    </Button>
+  </div>
+);

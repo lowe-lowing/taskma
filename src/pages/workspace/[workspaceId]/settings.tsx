@@ -1,11 +1,15 @@
+import Navbar from "@/components/Navbar";
 import SideView from "@/components/SideView";
 import MainGrid from "@/components/utils/MainGrid";
+import { ssrSession } from "@/lib/ssrSession";
 import { trpc } from "@/lib/trpc";
-import { NextPage } from "next";
+import { InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 
-const Settings: NextPage = () => {
-  const { data: workspaces } =
+export default function Page({
+  data: session,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const { data: workspaces, isLoading } =
     trpc.workspace.getWorkspacesWithBoardsByUser.useQuery();
 
   return (
@@ -13,14 +17,15 @@ const Settings: NextPage = () => {
       <Head>
         <title>Settings</title>
       </Head>
+      <Navbar session={session} />
       <main className="m-2 flex justify-center overflow-hidden">
         <MainGrid>
-          <SideView workspaces={workspaces} />
+          <SideView workspaces={workspaces} isLoading={isLoading} />
           <div className="w-full"></div>
         </MainGrid>
       </main>
     </>
   );
-};
+}
 
-export default Settings;
+export const getServerSideProps = ssrSession;

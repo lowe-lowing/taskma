@@ -1,6 +1,6 @@
 import { type AppType } from "next/app";
-import { type Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
+import { getServerSession, type Session } from "next-auth";
+import { getSession, SessionProvider, useSession } from "next-auth/react";
 
 import { trpc } from "../lib/trpc";
 
@@ -15,9 +15,10 @@ const MyApp: AppType<{ session: Session | null }> = ({
   pageProps: { session, ...pageProps },
 }) => {
   const [value, setValue] = useState<string[]>([]);
+
   return (
     <SessionProvider session={session}>
-      <Navbar />
+      {/* <Navbar /> */}
       <Toaster position="bottom-right" />
       <AccordionContext.Provider value={{ value, setValue }}>
         <Component {...pageProps} />

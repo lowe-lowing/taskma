@@ -8,12 +8,14 @@ import { CreateWorkspaceDialog } from "./dialogs/CreateWorkspaceDialog";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { WorkspacesAccordion } from "./WorkspacesAccordion";
+import SideViewSkeleton from "./skeletons/SideViewSkeleton";
 
 interface SideViewProps {
   workspaces: Workspace[] | undefined;
+  isLoading: boolean;
 }
 
-const SideView: FC<SideViewProps> = ({ workspaces }) => {
+const SideView: FC<SideViewProps> = ({ workspaces, isLoading }) => {
   const pathname = usePathname();
 
   return (
@@ -35,8 +37,10 @@ const SideView: FC<SideViewProps> = ({ workspaces }) => {
         <p className="text-xs leading-none">Workspaces</p>
         <CreateWorkspaceDialog />
       </div>
-      {/* TODO: add loading state */}
-      {workspaces && workspaces.length > 0 ? (
+      {/* TODO: add loading skleton */}
+      {isLoading ? (
+        <SideViewSkeleton />
+      ) : workspaces && workspaces.length > 0 ? (
         <WorkspacesAccordion workspaces={workspaces} />
       ) : (
         <div>No workspaces</div>
