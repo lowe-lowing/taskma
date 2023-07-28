@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 import { BoardRole, UserBoard } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
+import { wait } from "@/lib/utils";
 
 const zodBoardRole = z.union([
   z.literal(BoardRole.Creator),
@@ -21,7 +23,17 @@ export const boardRouter = router({
     }),
   getBoardFull: protectedProcedure
     .input(z.object({ boardId: z.string() }))
-    .query(({ ctx, input }) => {
+    .query(async ({ ctx, input }) => {
+      const memberShipExists = await ctx.prisma.userBoard.findFirst({
+        where: { userId: ctx.session.user.id, boardId: input.boardId },
+      });
+
+      if (!memberShipExists)
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "User is not a member of this board",
+        });
+
       return ctx.prisma.board.findUnique({
         where: { id: input.boardId },
         include: {

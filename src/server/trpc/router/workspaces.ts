@@ -2,14 +2,14 @@ import { WorkspaceRole } from "@prisma/client";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
 import { TRPCError } from "@trpc/server";
+import { wait } from "@/lib/utils";
+import { WorkspaceSettingsValidationSchema } from "@/components/forms/SettingsForm";
 
 const zodWorkspaceRole = z.union([
   z.literal(WorkspaceRole.Owner),
   z.literal(WorkspaceRole.Admin),
   z.literal(WorkspaceRole.Member),
 ]);
-
-const wait = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 export const workspaceRouter = router({
   getWorkspaceById: protectedProcedure
@@ -21,7 +21,6 @@ export const workspaceRouter = router({
     }),
   getWorkspacesByUser: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.session.user.id;
-    await wait(2000);
     return await ctx.prisma.workspace.findMany({
       where: { UserWorkspaces: { some: { userId } } },
     });
@@ -31,17 +30,17 @@ export const workspaceRouter = router({
     const workspaces = await ctx.prisma.workspace.findMany({
       where: { UserWorkspaces: { some: { userId } } },
       include: {
-        // TODO: add where clause here instead of the map below
         Boards: { include: { UserBoards: true } },
         UserWorkspaces: true,
       },
     });
+    // FIXME: maybe there is a better way to do this
     return workspaces.map((workspace) => {
       const role = workspace.UserWorkspaces.find(
         (userWorkspace) => userWorkspace.userId === userId
       )!.Role;
       if (role === WorkspaceRole.Member) {
-        // only including the boards if the user has a connected UserBoard (aka is a member of the board)
+        // if role == member only including the boards if the user has a connected UserBoard (aka is a member of the board)
         workspace.Boards = workspace.Boards.filter((board) =>
           board.UserBoards.find((userBoard) => userBoard.userId === userId)
         );
@@ -105,6 +104,20 @@ export const workspaceRouter = router({
           })
         )
       );
+    }),
+  updateSettings: protectedProcedure
+    .input(
+      z.object({
+        workspaceId: z.string(),
+        data: WorkspaceSettingsValidationSchema,
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { workspaceId, data } = input;
+      return ctx.prisma.workspace.update({
+        where: { id: workspaceId },
+        data,
+      });
     }),
   getUserRole: protectedProcedure
     .input(z.object({ workspaceId: z.string() }))

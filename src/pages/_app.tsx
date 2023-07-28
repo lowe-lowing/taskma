@@ -9,21 +9,25 @@ import Navbar from "@/components/Navbar";
 import { AccordionContext } from "@/hooks/useAccordionContext";
 import { useState } from "react";
 import { Toaster } from "react-hot-toast";
+import NextTopLoader from "nextjs-toploader";
+import useDarkMode from "@/hooks/useDarkMode";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
   const [value, setValue] = useState<string[]>([]);
-
+  const [darkmode] = useDarkMode();
   return (
-    <SessionProvider session={session}>
-      {/* <Navbar /> */}
+    <>
+      <NextTopLoader color={`${darkmode ? "white" : "black"}`} />
       <Toaster position="bottom-right" />
-      <AccordionContext.Provider value={{ value, setValue }}>
-        <Component {...pageProps} />
-      </AccordionContext.Provider>
-    </SessionProvider>
+      <SessionProvider session={session}>
+        <AccordionContext.Provider value={{ value, setValue }}>
+          <Component {...pageProps} />
+        </AccordionContext.Provider>
+      </SessionProvider>
+    </>
   );
 };
 

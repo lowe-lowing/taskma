@@ -1,7 +1,7 @@
 import BoardsPreview from "@/components/BoardsPreview";
-import { WorkspaceButtonsRow } from "@/components/BoardsView";
 import Navbar from "@/components/Navbar";
 import SideView from "@/components/SideView";
+import { WorkspaceButtonsRow } from "@/components/WorkspaceButtonsRow";
 import BoardsViewSkeleton from "@/components/skeletons/BoardsViewSkeleton";
 import { Separator } from "@/components/ui/separator";
 import MainGrid from "@/components/utils/MainGrid";

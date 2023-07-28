@@ -32,7 +32,7 @@ const BoardCard: FC<BoardCardProps> = ({ board, workspaceId }) => {
                 </p>
               </CardHeader>
               <CardContent className="p-0">
-                <Separator className="bg-gray-700" />
+                <Separator className="bg-gray-300 dark:bg-gray-700" />
                 <div className="flex flex-col gap-0.5 p-0.5">
                   {lane.Tasks.map((task) => (
                     <div

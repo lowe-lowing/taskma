@@ -70,6 +70,8 @@ model User {
 model Workspace {
   id             String          @id @unique @default(cuid())
   Name           String
+  Description    String          @default("")
+  Public         Boolean         @default(false)
   Boards         Board[]
   UserWorkspaces UserWorkspace[]
 }

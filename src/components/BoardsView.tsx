@@ -11,6 +11,8 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
 import BoardsViewSkeleton from "./skeletons/BoardsViewSkeleton";
+import Link from "next/link";
+import { WorkspaceButtonsRow } from "./WorkspaceButtonsRow";
 
 interface BoardsProps {
   workspaces:
@@ -84,24 +86,3 @@ const BoardsView: FC<BoardsProps> = ({ workspaces, isLoading }) => {
 };
 
 export default BoardsView;
-
-export const WorkspaceButtonsRow = ({
-  workspaceId,
-}: {
-  workspaceId?: string;
-}) => (
-  <div className="flex gap-1">
-    <Button variant={"secondary"} size={"sm"} className="gap-0.5 text-xs">
-      <KanbanSquare size={12} />
-      Boards
-    </Button>
-    <Button variant={"secondary"} size={"sm"} className="gap-0.5 text-xs">
-      <Users size={12} />
-      Members
-    </Button>
-    <Button variant={"secondary"} size={"sm"} className="gap-0.5 text-xs">
-      <Settings size={12} />
-      Settings
-    </Button>
-  </div>
-);

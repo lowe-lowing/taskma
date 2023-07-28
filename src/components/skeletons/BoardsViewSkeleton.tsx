@@ -17,6 +17,7 @@ const BoardsViewSkeleton = () => {
               variant={"secondary"}
               size={"sm"}
               className="gap-0.5 text-xs"
+              disabled
             >
               <KanbanSquare size={12} />
               Boards
@@ -27,6 +28,7 @@ const BoardsViewSkeleton = () => {
               variant={"secondary"}
               size={"sm"}
               className="gap-0.5 text-xs"
+              disabled
             >
               <Users size={12} />
               Members
@@ -37,6 +39,7 @@ const BoardsViewSkeleton = () => {
               variant={"secondary"}
               size={"sm"}
               className="gap-0.5 text-xs"
+              disabled
             >
               <Settings size={12} />
               Settings
