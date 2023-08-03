@@ -1,5 +1,4 @@
 import React from "react";
-import { WorkspaceButtonsRow } from "../BoardsView";
 import { Skeleton } from "../ui/skeleton";
 import { Separator } from "../ui/separator";
 import { Card } from "../ui/card";

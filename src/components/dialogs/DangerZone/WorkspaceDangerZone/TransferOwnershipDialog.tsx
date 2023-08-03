@@ -1,5 +1,13 @@
 import { Button } from "@/components/ui/button";
 import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
   closeDialog,
   Dialog,
   DialogContent,
@@ -8,47 +16,39 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import UserAvatar from "@/components/UserAvatar";
 import { useOnClickOutside } from "@/hooks/useOnClickOutside";
 import { trpc } from "@/lib/trpc";
-import { Board, Workspace } from "@prisma/client";
+import { Workspace } from "@prisma/client";
 import debounce from "lodash.debounce";
-import { Plus } from "lucide-react";
-import { User } from "next-auth";
+import type { User } from "next-auth";
 import { usePathname, useRouter } from "next/navigation";
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "../ui/command";
-import UserAvatar from "../UserAvatar";
 
-interface InviteBoardDialogProps {
-  board: Board;
-  refetchMembers: () => void;
+interface TransferOwnershipDialogProps {
+  workspace: Workspace;
+  membershipId: string;
+  trigger: React.ReactNode;
 }
 
-export const InviteBoardDialogDialog: FC<InviteBoardDialogProps> = ({
-  board,
-  refetchMembers,
+export const TransferOwnershipDialog: FC<TransferOwnershipDialogProps> = ({
+  workspace,
+  membershipId,
+  trigger,
 }) => {
   const [input, setInput] = useState("");
-  const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const {
     data: queryResults,
     refetch,
     isFetched,
     isFetching,
-  } = trpc.board.getUsersToInviteByName.useQuery(
+  } = trpc.workspace.getAdminsByName.useQuery(
     {
       name: input,
-      workspaceId: board.workspaceId!,
-      boardId: board.id,
+      workspaceId: workspace.id,
     },
     {
       enabled: input.length > 0,
@@ -65,12 +65,11 @@ export const InviteBoardDialogDialog: FC<InviteBoardDialogProps> = ({
     setInput("");
   });
 
-  const { mutateAsync: inviteMutation, isLoading } =
-    trpc.board.inviteToBoard.useMutation({
-      onSuccess: (data) => {
-        toast.success(`${data.length > 1 ? "Users" : "User"} invited`);
-        refetchMembers();
+  const { mutateAsync: transferOwnership, isLoading } =
+    trpc.workspace.transferOwnership.useMutation({
+      onSuccess: () => {
         closeDialog();
+        toast.success("Successfully transferred ownership.");
       },
       onError: () => {
         toast.error("Something went wrong. Please try again later.");
@@ -79,15 +78,11 @@ export const InviteBoardDialogDialog: FC<InviteBoardDialogProps> = ({
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button className="p-1" variant={"ghost"} size={"sm"}>
-          <Plus />
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="font-semibold">
-            {`Add members to '${board.Name}'`}
+            Transfer Ownership of {workspace.name}
           </DialogTitle>
         </DialogHeader>
         <Command
@@ -96,7 +91,7 @@ export const InviteBoardDialogDialog: FC<InviteBoardDialogProps> = ({
         >
           <CommandInput
             className="border-none outline-none ring-0 focus:border-none focus:outline-none"
-            placeholder="Search users in workspace..."
+            placeholder="Search admins..."
             isLoading={isFetching}
             value={input}
             onValueChange={(value) => {
@@ -112,8 +107,8 @@ export const InviteBoardDialogDialog: FC<InviteBoardDialogProps> = ({
                   {queryResults?.map((user: User) => (
                     <CommandItem
                       key={user.id}
-                      onSelect={(e) => {
-                        setSelectedUsers((prev) => [...prev, user]);
+                      onSelect={() => {
+                        setSelectedUser(user);
                         setInput("");
                       }}
                       value={user.name || undefined}
@@ -130,35 +125,32 @@ export const InviteBoardDialogDialog: FC<InviteBoardDialogProps> = ({
           )}
         </Command>
         <div className="flex flex-wrap">
-          {selectedUsers.map((user) => (
+          {selectedUser && (
             <Button
-              key={user.id}
               variant={"ghost"}
               className="flex w-fit items-center rounded-xl bg-secondary p-1 px-2"
-              onClick={() => {
-                setSelectedUsers((prev) =>
-                  prev.filter((prevUser) => prevUser.id !== user.id)
-                );
-              }}
+              onClick={() => setSelectedUser(null)}
             >
-              <UserAvatar user={user} className="mr-1 h-6 w-6" />
-              <div className="text-sm">{user.name}</div>
+              <UserAvatar user={selectedUser} className="mr-1 h-6 w-6" />
+              <div className="text-sm">{selectedUser.name}</div>
             </Button>
-          ))}
+          )}
         </div>
         <DialogFooter>
           <Button
             type="submit"
-            disabled={selectedUsers.length === 0}
+            disabled={selectedUser === null}
             isLoading={isLoading}
             onClick={() =>
-              inviteMutation({
-                users: selectedUsers,
-                boardId: board.id,
+              selectedUser?.id &&
+              transferOwnership({
+                workspaceId: workspace.id,
+                membershipId,
+                userToTransferId: selectedUser.id,
               })
             }
           >
-            Add members
+            Continue
           </Button>
         </DialogFooter>
       </DialogContent>

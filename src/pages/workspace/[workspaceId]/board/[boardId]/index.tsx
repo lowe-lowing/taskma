@@ -11,6 +11,7 @@ import { Settings } from "lucide-react";
 import { InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
+// import SocketProvider from "@/hooks/useSocket";
 
 export default function Page({
   data: session,
@@ -40,7 +41,9 @@ export default function Page({
     }
   );
 
-  // TODO: make loading skeleton & maybe some unauthorized page & not found page
+  const { data: loggedInUserMembership, isLoading: membershipLoading } =
+    trpc.board.getUserMembership.useQuery({ boardId }, { enabled: !!boardId });
+
   return (
     <>
       <Head>
@@ -48,9 +51,9 @@ export default function Page({
       </Head>
       <Navbar session={session} />
       <main className="relative flex h-[calc(100vh-40px)] flex-col items-center overflow-x-hidden pt-1">
-        {isLoading ? (
+        {isLoading || membershipLoading ? (
           <BoardSkeleton workspaceId={workspaceId} />
-        ) : board ? (
+        ) : board && loggedInUserMembership ? (
           <>
             <BoardContainer className="flex items-center justify-between px-1">
               <BackButton href={`/workspace/${workspaceId}/boards`} />
@@ -69,10 +72,9 @@ export default function Page({
               initial={board.Lanes}
               boardId={boardId}
               containerHeight={500}
-              useClone={false}
-              withScrollableColumns={false}
               refetchLanes={refetchLanes}
               isCombineEnabled={false}
+              UserBoardRole={loggedInUserMembership.Role}
             />
           </>
         ) : error?.data?.code === "UNAUTHORIZED" ? (

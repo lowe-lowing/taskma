@@ -12,8 +12,7 @@ import { useOnClickOutside } from "@/hooks/useOnClickOutside";
 import { trpc } from "@/lib/trpc";
 import { Workspace } from "@prisma/client";
 import debounce from "lodash.debounce";
-import { Plus } from "lucide-react";
-import { User } from "next-auth";
+import type { User } from "next-auth";
 import { usePathname, useRouter } from "next/navigation";
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
@@ -29,10 +28,12 @@ import UserAvatar from "../UserAvatar";
 
 interface InviteWorkspaceDialogProps {
   workspace: Workspace;
+  trigger: React.ReactNode;
 }
 
 export const InviteWorkspaceDialog: FC<InviteWorkspaceDialogProps> = ({
   workspace,
+  trigger,
 }) => {
   const [input, setInput] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
@@ -44,7 +45,7 @@ export const InviteWorkspaceDialog: FC<InviteWorkspaceDialogProps> = ({
     refetch,
     isFetched,
     isFetching,
-  } = trpc.workspace.getUsersToInviteByName.useQuery(
+  } = trpc.workspace.getAdmins.useQuery(
     {
       name: input,
       workspaceId: workspace.id,
@@ -69,7 +70,7 @@ export const InviteWorkspaceDialog: FC<InviteWorkspaceDialogProps> = ({
     setSelectedUsers([]);
   }, [pathname]);
 
-  const { mutateAsync: inviteMutation } =
+  const { mutate: inviteMutation, isLoading } =
     trpc.workspace.inviteToWorkspace.useMutation({
       onSuccess: (data) => {
         toast.success(`${data.length > 1 ? "Users" : "User"} invited`);
@@ -86,18 +87,11 @@ export const InviteWorkspaceDialog: FC<InviteWorkspaceDialogProps> = ({
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <div
-          className="cursor-pointer rounded-md p-0.5 transition-all hover:scale-125 hover:bg-primary-foreground"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <Plus size={14} />
-        </div>
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="font-semibold">
-            Invite People to '{workspace.Name}'
+            {`Invite People to '${workspace.name}'`}
           </DialogTitle>
         </DialogHeader>
         <Command
@@ -160,6 +154,7 @@ export const InviteWorkspaceDialog: FC<InviteWorkspaceDialogProps> = ({
           <Button
             type="submit"
             disabled={selectedUsers.length === 0}
+            isLoading={isLoading}
             onClick={() =>
               inviteMutation({
                 users: selectedUsers,

@@ -2,7 +2,7 @@ import { LaneWithTasks, ListType } from "@/components/dnd/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { Task } from "@prisma/client";
+import { BoardRole, Task } from "@prisma/client";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import AddTaskHandler from "./AddTaskHandler";
 import TaskItem from "./TaskItem";
@@ -14,7 +14,9 @@ type TaskListProps = {
   ignoreContainerClipping: any;
   isCombineEnabled: any;
   listId: string;
-  refetchLanes: () => void;
+  UserBoardRole: BoardRole;
+  setLanes: React.Dispatch<React.SetStateAction<LaneWithTasks[]>>;
+  updateUi: () => void;
 };
 
 export default function TaskList({
@@ -24,8 +26,35 @@ export default function TaskList({
   ignoreContainerClipping,
   isCombineEnabled,
   listId,
-  refetchLanes,
+  UserBoardRole,
+  setLanes,
+  updateUi,
 }: TaskListProps) {
+  if (UserBoardRole === BoardRole.Viewer) {
+    return (
+      <div className="h-[calc(100vh-200px)]">
+        <Card className="w-60 rounded-t-none bg-secondary dark:border-gray-700">
+          <CardContent className="p-0">
+            <ScrollArea className="px-3 pb-3" thumbClassName="dark:bg-gray-700">
+              <div className="mt-3 flex h-fit max-h-[calc(100vh-200px)] min-h-[3rem] select-none flex-col gap-2">
+                {tasks.map((task, i) => (
+                  <TaskItem
+                    key={task.id}
+                    task={task}
+                    isDragging={false}
+                    isGroupedOver={false}
+                    index={i}
+                    updateUi={updateUi}
+                  />
+                ))}
+              </div>
+            </ScrollArea>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <Droppable
       droppableId={listId}
@@ -71,13 +100,17 @@ export default function TaskList({
                           isGroupedOver={Boolean(dragSnapshot.combineTargetFor)}
                           provided={dragProvided}
                           index={i}
-                          refetchLanes={refetchLanes}
+                          updateUi={updateUi}
                         />
                       )}
                     </Draggable>
                   ))}
                   {dropProvided.placeholder}
-                  <AddTaskHandler lane={lane} refetchLanes={refetchLanes} />
+                  <AddTaskHandler
+                    lane={lane}
+                    setLanes={setLanes}
+                    updateUi={updateUi}
+                  />
                 </div>
               </ScrollArea>
             </CardContent>

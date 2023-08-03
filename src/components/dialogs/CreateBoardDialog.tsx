@@ -42,7 +42,7 @@ const CreateBoardDialog: FC<CreateBoardDialogProps> = ({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="font-semibold">
-            Create new Board in '{workspace.Name}'
+            {`Create new Board in '${workspace.name}'`}
           </DialogTitle>
         </DialogHeader>
         <Input

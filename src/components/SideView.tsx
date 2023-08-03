@@ -19,7 +19,7 @@ const SideView: FC<SideViewProps> = ({ workspaces, isLoading }) => {
   const pathname = usePathname();
 
   return (
-    <div className="w-40">
+    <div className="w-40 space-y-1">
       <Link href={"/boards"}>
         <Button
           variant={"ghost"}
@@ -32,12 +32,11 @@ const SideView: FC<SideViewProps> = ({ workspaces, isLoading }) => {
           Boards
         </Button>
       </Link>
-      <Separator className="my-1" />
+      <Separator />
       <div className="ml-0.5 flex flex-row items-center justify-between">
         <p className="text-xs leading-none">Workspaces</p>
         <CreateWorkspaceDialog />
       </div>
-      {/* TODO: add loading skleton */}
       {isLoading ? (
         <SideViewSkeleton />
       ) : workspaces && workspaces.length > 0 ? (

@@ -3,34 +3,35 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useOnClickOutside } from "@/hooks/useOnClickOutside";
 import { trpc } from "@/lib/trpc";
+import { BoardRole } from "@prisma/client";
 import { TRPCClientError } from "@trpc/client";
 import { Trash2 } from "lucide-react";
 import { FC, useRef, useState } from "react";
-import { DraggableProvided } from "react-beautiful-dnd";
 import toast from "react-hot-toast";
 import { AiOutlineEdit } from "react-icons/ai";
 
 interface LaneHeaderProps {
   lane: LaneWithTasks;
-  provided: DraggableProvided;
-  refetchLanes: () => void;
+  UserBoardRole: BoardRole;
+  updateUi: () => void;
 }
 
-const LaneHeader: FC<LaneHeaderProps> = ({ lane, provided, refetchLanes }) => {
+const LaneHeader: FC<LaneHeaderProps> = ({ lane, UserBoardRole, updateUi }) => {
   const [newLaneName, setNewLaneName] = useState(lane.Name);
   const [laneNameState, setLaneNameState] = useState(lane.Name);
   const [isEditingName, setIsEditingName] = useState(false);
 
-  const { mutateAsync: deleteLane } = trpc.lane.deleteLane.useMutation();
-  const handleDelete = async (laneId: string) => {
-    await deleteLane({ laneId });
-    refetchLanes();
-  };
+  const { mutateAsync: deleteLane } = trpc.lane.deleteLane.useMutation({
+    onSuccess: () => {
+      updateUi();
+    },
+  });
 
   const { mutate: updateLaneName } = trpc.lane.updateLaneName.useMutation({
     onSuccess: () => {
       setLaneNameState(newLaneName);
       setIsEditingName(false);
+      updateUi();
     },
     onError: (error) => {
       if (error instanceof TRPCClientError) {
@@ -53,7 +54,6 @@ const LaneHeader: FC<LaneHeaderProps> = ({ lane, provided, refetchLanes }) => {
     setNewLaneName(laneNameState);
   });
 
-  // FIXME: maybe make this only a form with input
   return (
     <div
       className="grid gap-1 p-1"
@@ -87,18 +87,20 @@ const LaneHeader: FC<LaneHeaderProps> = ({ lane, provided, refetchLanes }) => {
       ) : (
         <p className="overflow-hidden text-lg leading-none">{laneNameState}</p>
       )}
-      <div className="flex items-start">
-        <AiOutlineEdit
-          size={20}
-          className="cursor-pointer"
-          onClick={() => setIsEditingName((prev) => !prev)}
-        />
-        <Trash2
-          className="cursor-pointer"
-          onClick={() => handleDelete(lane.id)}
-          size={20}
-        />
-      </div>
+      {UserBoardRole !== BoardRole.Viewer && (
+        <div className="flex items-start">
+          <AiOutlineEdit
+            size={20}
+            className="cursor-pointer"
+            onClick={() => setIsEditingName((prev) => !prev)}
+          />
+          <Trash2
+            className="cursor-pointer"
+            onClick={() => deleteLane({ laneId: lane.id })}
+            size={20}
+          />
+        </div>
+      )}
     </div>
   );
 };

@@ -34,7 +34,7 @@ export default function Page({
           ) : workspace ? (
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
-                <p>{workspace.Name} - Boards</p>
+                <p>{workspace.name} - Boards</p>
                 <WorkspaceButtonsRow workspaceId={workspace.id} />
               </div>
               <Separator />
@@ -50,22 +50,6 @@ export default function Page({
               <h1 className="text-2xl font-semibold">Workspace not found</h1>
             </div>
           )}
-          {/* {!isLoading && !workspace ? (
-            <div className="p-4">
-              <h1 className="text-2xl font-semibold">Workspace not found</h1>
-            </div>
-          ) : (
-            <div>
-              <h1>{workspace?.Name} - Boards</h1>
-              <Separator className="my-2" />
-              {workspace && (
-                <BoardsPreview
-                  boards={workspace?.Boards}
-                  workspace={workspace}
-                />
-              )}
-            </div>
-          )} */}
         </MainGrid>
       </main>
     </>

@@ -1,17 +1,15 @@
 import { trpc } from "@/lib/trpc";
 import { Board, Workspace } from "@prisma/client";
 import { TRPCClientError } from "@trpc/client";
-import { KanbanSquare, Settings, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FC, useState } from "react";
 import toast from "react-hot-toast";
 import BoardsPreview from "./BoardsPreview";
+import BoardsViewSkeleton from "./skeletons/BoardsViewSkeleton";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
-import BoardsViewSkeleton from "./skeletons/BoardsViewSkeleton";
-import Link from "next/link";
 import { WorkspaceButtonsRow } from "./WorkspaceButtonsRow";
 
 interface BoardsProps {
@@ -23,7 +21,6 @@ interface BoardsProps {
   isLoading: boolean;
 }
 
-// TODO: add loading state
 const BoardsView: FC<BoardsProps> = ({ workspaces, isLoading }) => {
   const [workspaceNameInput, setWorkspaceNameInput] = useState("");
 
@@ -52,7 +49,7 @@ const BoardsView: FC<BoardsProps> = ({ workspaces, isLoading }) => {
         workspaces.map((workspace) => (
           <div key={workspace.id} className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
-              <p>{workspace.Name}</p>
+              <p>{workspace.name}</p>
               <WorkspaceButtonsRow workspaceId={workspace.id} />
             </div>
             <Separator />

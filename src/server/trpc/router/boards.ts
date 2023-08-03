@@ -1,8 +1,7 @@
-import { z } from "zod";
-import { router, protectedProcedure } from "../trpc";
-import { BoardRole, UserBoard } from "@prisma/client";
+import { BoardRole, Prisma, UserBoard } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
-import { wait } from "@/lib/utils";
+import { z } from "zod";
+import { protectedProcedure, router } from "../trpc";
 
 const zodBoardRole = z.union([
   z.literal(BoardRole.Creator),
@@ -12,6 +11,10 @@ const zodBoardRole = z.union([
 ]);
 
 export type BoardRoleType = z.infer<typeof zodBoardRole>;
+
+export type UserBoardWithUser = Prisma.UserBoardGetPayload<{
+  include: { User: true };
+}>;
 
 export const boardRouter = router({
   getBoardById: protectedProcedure
@@ -93,13 +96,12 @@ export const boardRouter = router({
         include: { User: true },
       });
     }),
-  getUserRole: protectedProcedure
+  getUserMembership: protectedProcedure
     .input(z.object({ boardId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const memberShip = await ctx.prisma.userBoard.findFirst({
+      return ctx.prisma.userBoard.findFirst({
         where: { userId: ctx.session.user.id, boardId: input.boardId },
       });
-      return memberShip?.Role;
     }),
   changeUserRole: protectedProcedure
     .input(z.object({ memberShipId: z.string(), role: zodBoardRole }))
@@ -152,6 +154,37 @@ export const boardRouter = router({
           })
         )
       );
+    }),
+  updateSettings: protectedProcedure
+    .input(
+      z.object({
+        boardId: z.string(),
+        Name: z.string().min(3).max(50),
+        isPublic: z.boolean(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { boardId, Name, isPublic } = input;
+      return ctx.prisma.board.update({
+        where: { id: boardId },
+        data: { Name, isPublic },
+      });
+    }),
+  deleteBoard: protectedProcedure
+    .input(z.object({ boardId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const { boardId } = input;
+      // only admins can delete boards maybe do a check for that
+      return ctx.prisma.board.delete({
+        where: { id: boardId },
+      });
+    }),
+  leaveBoard: protectedProcedure
+    .input(z.object({ membershipId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.prisma.userBoard.delete({
+        where: { id: input.membershipId },
+      });
     }),
 });
 

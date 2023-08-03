@@ -24,8 +24,8 @@ const SelectTrigger = React.forwardRef<
     )}
     {...props}
   >
-    <div className="flex gap-0.5">
-      {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+    <div className="flex items-center gap-1">
+      {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
       {children}
     </div>
     <SelectPrimitive.Icon asChild>

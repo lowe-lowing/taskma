@@ -1,9 +1,8 @@
+import { WorkspaceSettingsValidationSchema } from "@/components/forms/WorkspaceSettingsForm";
 import { WorkspaceRole } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
-import { TRPCError } from "@trpc/server";
-import { wait } from "@/lib/utils";
-import { WorkspaceSettingsValidationSchema } from "@/components/forms/SettingsForm";
 
 const zodWorkspaceRole = z.union([
   z.literal(WorkspaceRole.Owner),
@@ -30,23 +29,23 @@ export const workspaceRouter = router({
     const workspaces = await ctx.prisma.workspace.findMany({
       where: { UserWorkspaces: { some: { userId } } },
       include: {
-        Boards: { include: { UserBoards: true } },
-        UserWorkspaces: true,
+        Boards: { where: { UserBoards: { some: { userId } } } },
+        // UserWorkspaces: true,
       },
     });
-    // FIXME: maybe there is a better way to do this
-    return workspaces.map((workspace) => {
-      const role = workspace.UserWorkspaces.find(
-        (userWorkspace) => userWorkspace.userId === userId
-      )!.Role;
-      if (role === WorkspaceRole.Member) {
-        // if role == member only including the boards if the user has a connected UserBoard (aka is a member of the board)
-        workspace.Boards = workspace.Boards.filter((board) =>
-          board.UserBoards.find((userBoard) => userBoard.userId === userId)
-        );
-      }
-      return workspace;
-    });
+    return workspaces;
+    // return workspaces.map((workspace) => {
+    //   const role = workspace.UserWorkspaces.find(
+    //     (userWorkspace) => userWorkspace.userId === userId
+    //   )!.Role;
+    //   if (role === WorkspaceRole.Member) {
+    //     // if role == member only including the boards if the user has a connected UserBoard (aka is a member of the board)
+    //     workspace.Boards = workspace.Boards.filter((board) =>
+    //       board.UserBoards.find((userBoard) => userBoard.userId === userId)
+    //     );
+    //   }
+    //   return workspace;
+    // });
   }),
   createWorkspace: protectedProcedure
     .input(z.object({ name: z.string().min(3).max(50) }))
@@ -54,7 +53,7 @@ export const workspaceRouter = router({
       return ctx.prisma.userWorkspace.create({
         data: {
           User: { connect: { id: ctx.session.user.id } },
-          Workspace: { create: { Name: input.name } },
+          Workspace: { create: { name: input.name } },
           Role: "Owner",
         },
       });
@@ -69,9 +68,15 @@ export const workspaceRouter = router({
         include: {
           User: true,
         },
+        // FIXME: maybe order by joinedAt or other properties
+        orderBy: {
+          User: {
+            name: "asc",
+          },
+        },
       });
     }),
-  getUsersToInviteByName: protectedProcedure
+  getAdmins: protectedProcedure
     .input(z.object({ name: z.string(), workspaceId: z.string() }))
     .query(async ({ ctx, input }) => {
       const { name, workspaceId } = input;
@@ -119,13 +124,12 @@ export const workspaceRouter = router({
         data,
       });
     }),
-  getUserRole: protectedProcedure
+  getMemberShip: protectedProcedure
     .input(z.object({ workspaceId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const memberShip = await ctx.prisma.userWorkspace.findFirst({
+      return ctx.prisma.userWorkspace.findFirst({
         where: { userId: ctx.session.user.id, workspaceId: input.workspaceId },
       });
-      return memberShip?.Role;
     }),
   changeUserRole: protectedProcedure
     .input(
@@ -206,4 +210,76 @@ export const workspaceRouter = router({
         message: "Invalid arguments passed",
       });
     }),
+  // Danger Zone
+  deleteWorkspace: protectedProcedure
+    .input(z.object({ workspaceId: z.string(), userRole: zodWorkspaceRole }))
+    .mutation(async ({ ctx, input }) => {
+      const { workspaceId, userRole } = input;
+      if (userRole === "Owner") {
+        return ctx.prisma.workspace.delete({
+          where: { id: workspaceId },
+        });
+      }
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Only owner can delete workspace",
+      });
+    }),
+  leaveWorkspace: protectedProcedure
+    .input(z.object({ userRole: zodWorkspaceRole, membershipId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const { userRole, membershipId } = input;
+      if (userRole === "Owner") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Owner cannot leave workspace",
+        });
+      }
+      return ctx.prisma.userWorkspace.delete({
+        where: { id: membershipId },
+      });
+    }),
+  getAdminsByName: protectedProcedure
+    .input(z.object({ name: z.string(), workspaceId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { name, workspaceId } = input;
+      return ctx.prisma.user.findMany({
+        where: {
+          name: { contains: name, mode: "insensitive" },
+          UserWorkspace: { some: { workspaceId, Role: "Admin" } },
+        },
+      });
+    }),
+  transferOwnership: protectedProcedure
+    .input(
+      z.object({
+        workspaceId: z.string(),
+        userToTransferId: z.string(),
+        membershipId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { workspaceId, userToTransferId, membershipId } = input;
+      const userWorkspace = await ctx.prisma.userWorkspace.findFirst({
+        where: { userId: userToTransferId, workspaceId },
+      });
+      if (userWorkspace?.Role !== "Admin") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "User is not an admin",
+        });
+      }
+
+      return ctx.prisma.$transaction([
+        ctx.prisma.userWorkspace.update({
+          where: { id: membershipId },
+          data: { Role: "Admin" },
+        }),
+        ctx.prisma.userWorkspace.update({
+          where: { id: userWorkspace?.id },
+          data: { Role: "Owner" },
+        }),
+      ]);
+    }),
+  // -----------------
 });

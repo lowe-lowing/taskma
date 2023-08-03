@@ -1,5 +1,6 @@
 import { Card, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { BoardRole } from "@prisma/client";
 import { Draggable } from "react-beautiful-dnd";
 import { LaneWithTasks } from "../../types";
 import TaskList from "../TaskList/TaskList";
@@ -9,10 +10,45 @@ type LaneProps = {
   lane: LaneWithTasks;
   index: any;
   isCombineEnabled: any;
-  refetchLanes: () => void;
+  UserBoardRole: BoardRole;
+  setLanes: React.Dispatch<React.SetStateAction<LaneWithTasks[]>>;
+  updateUi: () => void;
 };
 
-const Lane = ({ lane, index, isCombineEnabled, refetchLanes }: LaneProps) => {
+const Lane = ({
+  lane,
+  index,
+  isCombineEnabled,
+  UserBoardRole,
+  setLanes,
+  updateUi,
+}: LaneProps) => {
+  if (UserBoardRole === BoardRole.Viewer) {
+    return (
+      <div className="relative">
+        <Card className="mb-0 w-60 rounded-b-none bg-secondary dark:border-gray-700">
+          <CardHeader className="px-2 py-1">
+            <LaneHeader
+              lane={lane}
+              UserBoardRole={UserBoardRole}
+              updateUi={updateUi}
+            />
+          </CardHeader>
+        </Card>
+        <TaskList
+          lane={lane}
+          tasks={lane.Tasks}
+          isDraggingLane={false}
+          listId={lane.id}
+          isCombineEnabled={false}
+          ignoreContainerClipping={undefined}
+          UserBoardRole={UserBoardRole}
+          setLanes={setLanes}
+          updateUi={updateUi}
+        />
+      </div>
+    );
+  }
   return (
     <Draggable draggableId={lane.id} index={index}>
       {(provided, snapshot) => (
@@ -33,8 +69,8 @@ const Lane = ({ lane, index, isCombineEnabled, refetchLanes }: LaneProps) => {
             <CardHeader className="px-2 py-1">
               <LaneHeader
                 lane={lane}
-                provided={provided}
-                refetchLanes={refetchLanes}
+                UserBoardRole={UserBoardRole}
+                updateUi={updateUi}
               />
             </CardHeader>
           </Card>
@@ -45,7 +81,9 @@ const Lane = ({ lane, index, isCombineEnabled, refetchLanes }: LaneProps) => {
             listId={lane.id}
             isCombineEnabled={Boolean(isCombineEnabled)}
             ignoreContainerClipping={undefined}
-            refetchLanes={refetchLanes}
+            UserBoardRole={UserBoardRole}
+            setLanes={setLanes}
+            updateUi={updateUi}
           />
         </div>
       )}

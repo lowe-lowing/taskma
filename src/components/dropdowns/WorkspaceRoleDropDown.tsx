@@ -51,7 +51,7 @@ const WorkspaceRoleDropDown: FC<RoleDropDownProps> = ({
         });
       }}
     >
-      <SelectTrigger className="w-[120px]" isLoading={isLoading}>
+      <SelectTrigger className="w-[140px]" isLoading={isLoading}>
         <SelectValue placeholder="Select a role" />
       </SelectTrigger>
       <SelectContent>

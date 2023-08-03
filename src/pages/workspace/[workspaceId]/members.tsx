@@ -11,6 +11,9 @@ import { trpc } from "@/lib/trpc";
 import { InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { WorkspaceButtonsRow } from "@/components/WorkspaceButtonsRow";
+import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function Page({
   data: session,
@@ -31,7 +34,7 @@ export default function Page({
     { enabled: !!workspaceId }
   );
 
-  const { data: loggedInUserRole } = trpc.workspace.getUserRole.useQuery(
+  const { data: loggedInUserRole } = trpc.workspace.getMemberShip.useQuery(
     { workspaceId },
     { enabled: !!workspaceId }
   );
@@ -48,10 +51,20 @@ export default function Page({
           {workspaceLoading || membersLoading ? (
             <WorkspaceMembersSkeleton />
           ) : workspace && members ? (
-            <div className="flex w-full flex-col gap-2">
+            <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <p>{workspace.Name} - Members</p>
-                <InviteWorkspaceDialog workspace={workspace} />
+                <div className="flex items-center gap-1">
+                  <p>{workspace.name} - Members</p>
+                  <InviteWorkspaceDialog
+                    workspace={workspace}
+                    trigger={
+                      <Button size={"sm"} variant={"ghost"} className="p-1">
+                        <Plus size={16} />
+                      </Button>
+                    }
+                  />
+                </div>
+                <WorkspaceButtonsRow workspaceId={workspace.id} />
               </div>
               <Separator />
               {members.map(({ User, Role, id: memberShipId }) => {
@@ -76,7 +89,7 @@ export default function Page({
                           </p>
                         </div>
                       </div>
-                      {loggedInUserRole === "Member" ||
+                      {loggedInUserRole?.Role === "Member" ||
                       isLoggedInUser ||
                       Role === "Owner" ? (
                         <p>{Role}</p>

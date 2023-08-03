@@ -17,7 +17,7 @@ export default SideViewSkeleton;
 const Dropdown = () => {
   return (
     <Skeleton className="h-6 w-full rounded-md" />
-    // TODO: make this look better
+    // FIXME: make this look better
     //   <div className="flex flex-row-reverse p-0.5">
     //     <ChevronDown />
     //   </div>

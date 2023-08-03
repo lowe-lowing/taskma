@@ -1,5 +1,5 @@
 import { trpc } from "@/lib/trpc";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import {
   reorderLanes,
@@ -9,14 +9,16 @@ import {
 import { LaneWithTasks, ListType } from "../types";
 import Lane from "./Lane/Lane";
 import AddLaneHandler from "./Lane/AddLaneHandler";
+import { BoardRole } from "@prisma/client";
+import io, { type Socket } from "Socket.IO-client";
+let socket: Socket;
 
 type BoardProps = {
   isCombineEnabled: boolean;
   initial: LaneWithTasks[];
   boardId: string;
-  useClone: boolean;
   containerHeight: number;
-  withScrollableColumns: boolean;
+  UserBoardRole: BoardRole;
   refetchLanes: () => void;
 };
 
@@ -24,9 +26,8 @@ const Board = ({
   isCombineEnabled,
   initial,
   boardId,
-  useClone,
   containerHeight,
-  withScrollableColumns,
+  UserBoardRole,
   refetchLanes,
 }: BoardProps) => {
   const [lanes, setLanes] = useState(initial);
@@ -105,40 +106,90 @@ const Board = ({
     }
   };
 
+  useEffect(() => {
+    socketInitializer();
+    // return () => {
+    //   socket.disconnect();
+    // };
+  }, []);
+
+  const socketInitializer = async () => {
+    socket = io({
+      path: "/api/socket",
+      addTrailingSlash: false,
+    });
+
+    socket.on("connect", () => {
+      console.log("connected");
+    });
+
+    socket.on("message", (msg: string) => {
+      if (msg === boardId) {
+        refetchLanes();
+      }
+    });
+  };
+
+  const updateUi = () => {
+    refetchLanes();
+    socket.emit("message", boardId);
+  };
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="flex h-full w-screen gap-2 overflow-x-auto p-2 px-4">
-        <Droppable
-          droppableId="board"
-          type={ListType.LANE}
-          direction="horizontal"
-          ignoreContainerClipping={Boolean(containerHeight)}
-          isCombineEnabled={isCombineEnabled}
-        >
-          {(provided) => (
-            <div
-              className="ml-auto flex gap-2"
-              ref={provided.innerRef}
-              {...provided.droppableProps}
+        {UserBoardRole !== BoardRole.Viewer ? (
+          <>
+            <Droppable
+              droppableId="board"
+              type={ListType.LANE}
+              direction="horizontal"
+              ignoreContainerClipping={Boolean(containerHeight)}
+              isCombineEnabled={isCombineEnabled}
             >
-              {lanes.map((lane, index) => (
-                <Lane
-                  key={lane.id}
-                  lane={lane}
-                  index={index}
-                  isCombineEnabled={isCombineEnabled}
-                  refetchLanes={refetchLanes}
-                />
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-        <AddLaneHandler
-          boardId={boardId}
-          lanesLength={initial.length}
-          refetchLanes={refetchLanes}
-        />
+              {(provided) => (
+                <div
+                  className="ml-auto flex gap-2"
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                >
+                  {lanes.map((lane, index) => (
+                    <Lane
+                      key={lane.id}
+                      lane={lane}
+                      index={index}
+                      isCombineEnabled={isCombineEnabled}
+                      UserBoardRole={UserBoardRole}
+                      setLanes={setLanes}
+                      updateUi={updateUi}
+                    />
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+            <AddLaneHandler
+              boardId={boardId}
+              lanesLength={initial.length}
+              setLanes={setLanes}
+              updateUi={updateUi}
+            />
+          </>
+        ) : (
+          <div className="mx-auto flex gap-2">
+            {lanes.map((lane, index) => (
+              <Lane
+                key={lane.id}
+                lane={lane}
+                index={index}
+                isCombineEnabled={isCombineEnabled}
+                UserBoardRole={UserBoardRole}
+                setLanes={setLanes}
+                updateUi={updateUi}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </DragDropContext>
   );

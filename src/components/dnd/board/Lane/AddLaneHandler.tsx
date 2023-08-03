@@ -3,17 +3,20 @@ import { Input } from "@/components/ui/input";
 import { trpc } from "@/lib/trpc";
 import { Plus, X } from "lucide-react";
 import { FC, useState } from "react";
+import { LaneWithTasks } from "../../types";
 
 interface AddLaneHandlerProps {
   boardId: string;
   lanesLength: number;
-  refetchLanes: () => void;
+  setLanes: React.Dispatch<React.SetStateAction<LaneWithTasks[]>>;
+  updateUi: () => void;
 }
 
 const AddLaneHandler: FC<AddLaneHandlerProps> = ({
   boardId,
   lanesLength,
-  refetchLanes,
+  setLanes,
+  updateUi,
 }) => {
   const [newLaneName, setNewLaneName] = useState("");
   const [isCreatingNewLane, setIsCreatingNewLane] = useState(false);
@@ -21,14 +24,24 @@ const AddLaneHandler: FC<AddLaneHandlerProps> = ({
   const { mutateAsync: createLane, isLoading } =
     trpc.lane.createLane.useMutation({
       onSuccess: () => {
-        refetchLanes();
-        setIsCreatingNewLane(false);
-        setNewLaneName("");
+        updateUi();
       },
     });
 
   const handleAdd = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLanes((prev) => [
+      ...prev,
+      {
+        id: `new_lane_${lanesLength}`,
+        Name: newLaneName,
+        Tasks: [],
+        Order: lanesLength,
+        boardId: boardId,
+      },
+    ]);
+    setIsCreatingNewLane(false);
+    setNewLaneName("");
     createLane({
       boardId: boardId,
       name: newLaneName,

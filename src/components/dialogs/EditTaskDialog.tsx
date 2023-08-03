@@ -19,13 +19,13 @@ import { Textarea } from "../ui/textarea";
 interface EditTaskDialogProps {
   trigger: React.ReactNode;
   task: Task;
-  refetchLanes: () => void;
+  updateUi: () => void;
 }
 
 const EditTaskDialog: FC<EditTaskDialogProps> = ({
   trigger,
-  refetchLanes,
   task,
+  updateUi,
 }) => {
   const [form, setForm] = useState({
     title: task.Title,
@@ -42,7 +42,7 @@ const EditTaskDialog: FC<EditTaskDialogProps> = ({
   const { mutate: editTaskMutation, isLoading } =
     trpc.task.editTask.useMutation({
       onSuccess: () => {
-        refetchLanes();
+        updateUi();
         toast.success("Task successfully edited!");
         closeDialog();
       },

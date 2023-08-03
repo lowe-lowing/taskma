@@ -5,7 +5,6 @@ import { getSession, SessionProvider, useSession } from "next-auth/react";
 import { trpc } from "../lib/trpc";
 
 import "../styles/globals.css";
-import Navbar from "@/components/Navbar";
 import { AccordionContext } from "@/hooks/useAccordionContext";
 import { useState } from "react";
 import { Toaster } from "react-hot-toast";

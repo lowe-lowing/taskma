@@ -10,20 +10,22 @@ import { useOnClickOutside } from "@/hooks/useOnClickOutside";
 
 interface AddTaskHandlerProps {
   lane: LaneWithTasks;
-  refetchLanes: () => void;
+  setLanes: React.Dispatch<React.SetStateAction<LaneWithTasks[]>>;
+  updateUi: () => void;
 }
 
-const AddTaskHandler: FC<AddTaskHandlerProps> = ({ lane, refetchLanes }) => {
+const AddTaskHandler: FC<AddTaskHandlerProps> = ({
+  lane,
+  setLanes,
+  updateUi,
+}) => {
   const [newTaskName, setNewTaskName] = useState("");
   const [isCreatingNewTask, setIsCreatingNewTask] = useState(false);
 
-  // FIXME: maybe add task to state directly instead of refetching (if it takes long time to refetch, I need to check this when i publish it to the internet)
   const { mutateAsync: createTask, isLoading } =
     trpc.task.createTask.useMutation({
       onSuccess: () => {
-        refetchLanes();
-        setIsCreatingNewTask(false);
-        setNewTaskName("");
+        updateUi();
       },
       onError: (error) => {
         if (error instanceof TRPCClientError) {
@@ -38,6 +40,23 @@ const AddTaskHandler: FC<AddTaskHandlerProps> = ({ lane, refetchLanes }) => {
 
   const handleAdd = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLanes((prev) => {
+      const newLanes = [...prev];
+      const laneIndex = newLanes.findIndex((l) => l.id === lane.id);
+      newLanes[laneIndex]?.Tasks.push({
+        id: `new_task_${lane.Tasks.length}`,
+        Title: newTaskName,
+        Order: lane.Tasks.length,
+        laneId: lane.id,
+        Description: "",
+        CreatedAt: new Date(),
+        UpdatedAt: new Date(),
+        DueDate: null,
+      });
+      return newLanes;
+    });
+    setIsCreatingNewTask(false);
+    setNewTaskName("");
     createTask({
       laneId: lane.id,
       title: newTaskName,

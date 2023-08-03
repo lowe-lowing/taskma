@@ -1,4 +1,3 @@
-import { LaneWithTasks } from "@/components/dnd/types";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
 

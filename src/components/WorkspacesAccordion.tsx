@@ -7,7 +7,7 @@ import {
 import { useAccordionContext } from "@/hooks/useAccordionContext";
 import { cn } from "@/lib/utils";
 import { Workspace } from "@prisma/client";
-import { KanbanSquare, Settings, Users } from "lucide-react";
+import { KanbanSquare, Plus, Settings, Users } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
 import { FC, ReactNode, useEffect } from "react";
@@ -34,7 +34,7 @@ export const WorkspacesAccordion: FC<Props> = ({ workspaces }) => {
       {workspaces.map((workspace) => (
         <AccordionItem key={workspace.id} value={workspace.id}>
           <AccordionTrigger className="text-sm">
-            {workspace.Name}
+            {workspace.name}
           </AccordionTrigger>
           <AccordionContent>
             <div className="mt-1 flex flex-col gap-1">
@@ -49,7 +49,17 @@ export const WorkspacesAccordion: FC<Props> = ({ workspaces }) => {
                     Members
                   </div>
                   <div onClick={(e) => e.stopPropagation()}>
-                    <InviteWorkspaceDialog workspace={workspace} />
+                    <InviteWorkspaceDialog
+                      workspace={workspace}
+                      trigger={
+                        <div
+                          className="cursor-pointer rounded-md p-0.5 transition-all hover:scale-125 hover:bg-primary-foreground"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Plus size={14} />
+                        </div>
+                      }
+                    />
                   </div>
                 </div>
               </WorkspaceLink>

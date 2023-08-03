@@ -1,5 +1,4 @@
 import EditTaskDialog from "@/components/dialogs/EditTaskDialog";
-import { EditTaskModal } from "@/components/Modals/EditTaskModal";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { cn } from "@/lib/utils";
@@ -13,86 +12,99 @@ type TaskItemProps = {
   task: Task;
   isDragging: any;
   isGroupedOver: any;
-  provided: DraggableProvided;
+  provided?: DraggableProvided;
   index: any;
-  refetchLanes: () => void;
+  updateUi: () => void;
 };
 function TaskItem({
   task,
   isDragging,
   provided,
   index,
-  refetchLanes,
+  updateUi,
 }: TaskItemProps) {
-  const [isEditingTask, setIsEditingTask] = React.useState<boolean>(false);
+  const { mutateAsync: deleteTask } = trpc.task.deleteTask.useMutation({
+    onSuccess: () => {
+      updateUi();
+    },
+  });
 
-  const { mutateAsync: deleteTask } = trpc.task.deleteTask.useMutation();
-  const handleDelete = async (taskId: string) => {
-    await deleteTask({ taskId });
-    refetchLanes();
-  };
-  return (
-    <div
-      className={cn(
-        "box-border flex select-none rounded-lg border-transparent bg-background p-2",
-        {
-          "bg-green-100 shadow-md dark:bg-gray-700": isDragging,
-        }
-      )}
-      ref={provided.innerRef}
-      {...provided.draggableProps}
-      {...provided.dragHandleProps}
-      data-is-dragging={isDragging}
-      data-testid={task.id}
-      data-index={index}
-    >
-      {/* <EditTaskModal
-        isOpen={isEditingTask}
-        setIsOpen={setIsEditingTask}
-        task={task}
-        refetchLanes={refetchLanes}
-      /> */}
-      <div className="flex flex-grow basis-full flex-col">
-        <div
-          className="grid gap-1"
-          style={{
-            gridTemplateColumns: "4fr 1fr",
-          }}
-        >
-          <p className="overflow-hidden">{task.Title}</p>
-          <div className="flex items-start">
-            <EditTaskDialog
-              refetchLanes={refetchLanes}
-              task={task}
-              trigger={
-                <Button
-                  variant={"ghost"}
-                  size={"sm"}
-                  className="p-1"
-                  // onClick={() => setIsEditingTask(true)}
-                >
-                  <Edit size={20} />
-                </Button>
-              }
-            />
-            <Button
-              variant={"ghost"}
-              size={"sm"}
-              className="p-1"
-              onClick={() => handleDelete(task.id)}
-            >
-              <Trash2 size={20} />
-            </Button>
-          </div>
-        </div>
-        {task.DueDate && (
-          <p className="text-xs text-gray-500">
-            Due Date: {moment(task.DueDate).format("MMM Do")}
-          </p>
+  if (!provided) {
+    return (
+      <div
+        className={cn(
+          "box-border flex select-none rounded-lg border-transparent bg-background p-2",
+          {
+            "bg-green-100 shadow-md dark:bg-gray-700": isDragging,
+          }
         )}
+        data-is-dragging={isDragging}
+        data-testid={task.id}
+        data-index={index}
+      >
+        <div className="flex flex-grow basis-full flex-col">
+          <p className="overflow-hidden">{task.Title}</p>
+          {task.DueDate && (
+            <p className="text-xs text-gray-500">
+              Due Date: {moment(task.DueDate).format("MMM Do")}
+            </p>
+          )}
+        </div>
       </div>
-    </div>
-  );
+    );
+  } else {
+    return (
+      <div
+        className={cn(
+          "box-border flex select-none rounded-lg border-transparent bg-background p-2",
+          {
+            "bg-green-100 shadow-md dark:bg-gray-700": isDragging,
+          }
+        )}
+        ref={provided.innerRef}
+        {...provided.draggableProps}
+        {...provided.dragHandleProps}
+        data-is-dragging={isDragging}
+        data-testid={task.id}
+        data-index={index}
+      >
+        <div className="flex flex-grow basis-full flex-col">
+          <div
+            className="grid gap-1"
+            style={{
+              gridTemplateColumns: "4fr 1fr",
+            }}
+          >
+            <p className="overflow-hidden">{task.Title}</p>
+            <div className="flex items-start">
+              <EditTaskDialog
+                updateUi={updateUi}
+                task={task}
+                trigger={
+                  <Button variant={"ghost"} size={"sm"} className="p-1">
+                    <Edit size={20} />
+                  </Button>
+                }
+              />
+              <Button
+                variant={"ghost"}
+                size={"sm"}
+                className="p-1"
+                onClick={() => deleteTask({ taskId: task.id })}
+              >
+                <Trash2 size={20} />
+              </Button>
+            </div>
+          </div>
+          {task.DueDate && (
+            <p className="text-xs text-gray-500">
+              Due Date: {moment(task.DueDate).format("MMM Do")}
+            </p>
+          )}
+        </div>
+      </div>
+    );
+  }
 }
 
 export default React.memo(TaskItem);
