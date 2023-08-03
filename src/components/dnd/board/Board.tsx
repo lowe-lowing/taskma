@@ -10,7 +10,7 @@ import { LaneWithTasks, ListType } from "../types";
 import Lane from "./Lane/Lane";
 import AddLaneHandler from "./Lane/AddLaneHandler";
 import { BoardRole } from "@prisma/client";
-import io, { type Socket } from "Socket.IO-client";
+import io, { type Socket } from "socket.io-client";
 let socket: Socket;
 
 type BoardProps = {
