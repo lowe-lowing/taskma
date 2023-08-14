@@ -1,4 +1,4 @@
-import { BoardRole, Prisma, UserBoard } from "@prisma/client";
+import { BoardRole, type Prisma, type UserBoard } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
@@ -122,7 +122,6 @@ export const boardRouter = router({
     )
     .query(async ({ ctx, input }) => {
       const { name, workspaceId, boardId } = input;
-      const userId = ctx.session.user.id;
       return ctx.prisma.user.findMany({
         where: {
           name: { contains: name, mode: "insensitive" },

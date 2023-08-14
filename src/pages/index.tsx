@@ -68,9 +68,9 @@ export default function Page({
             </li>
           </ul>
           <Balancer className="text-center text-xl">
-            Whether you're a busy professional, a student juggling multiple
+            {`Whether you're a busy professional, a student juggling multiple
             assignments, or someone striving for a more organized life, Taskma
-            is here to transform the way you manage tasks.
+            is here to transform the way you manage tasks.`}
           </Balancer>
           <Balancer className="text-center text-xl">
             Join thousands of satisfied users who have already taken control of
