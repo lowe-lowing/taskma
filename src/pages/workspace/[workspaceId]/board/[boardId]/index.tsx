@@ -47,7 +47,7 @@ export default function Page({
         <title>{board?.Name}</title>
       </Head>
       <Navbar session={session} />
-      <main className="relative flex h-[calc(100vh-50px)] flex-col items-center overflow-x-hidden pt-1 sm:h-[calc(100vh-42px)]">
+      <main className="relative flex h-[calc(100dvh-50px)] flex-col items-center overflow-x-hidden pt-1 sm:h-[calc(100dvh-42px)]">
         {isLoading || membershipLoading ? (
           <BoardSkeleton workspaceId={workspaceId} />
         ) : board && loggedInUserMembership ? (

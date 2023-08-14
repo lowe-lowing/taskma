@@ -83,11 +83,15 @@ export default function Page({
             <p className="text-xl">Created By Lowe Löwing</p>
             <p className="text-lg">
               Contact me at{" "}
-              <span className="underline">lowe.lowing@gmail.com</span>
+              <a className="underline" href="mailto:lowe.lowing@gmail.com">
+                lowe.lowing@gmail.com
+              </a>
             </p>
             <p className="text-lg">
               Or visit my website{" "}
-              <a href="https://lowelowing.se">lowelowing.se</a>
+              <a className="underline" href="https://lowelowing.se">
+                lowelowing.se
+              </a>
             </p>
           </div>
         </footer>

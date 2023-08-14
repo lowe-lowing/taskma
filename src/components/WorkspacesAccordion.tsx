@@ -56,7 +56,7 @@ export const WorkspacesAccordion: FC<Props> = ({ workspaces }) => {
                           className="cursor-pointer rounded-md p-0.5 transition-all hover:scale-125 hover:bg-primary-foreground"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <Plus size={14} />
+                          <Plus className="h-6 w-6 sm:h-4 sm:w-4" />
                         </div>
                       }
                     />

@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 
 interface NavbarProps {
   session: Session | null;
-  // passing workspace and isLoading means that the sheet will be rendered on small screens
+  // passing workspace and isLoading means that the SideViewSheet will be rendered on small screens
   workspaces?: Workspace[] | undefined;
   isLoading?: boolean;
 }
@@ -44,7 +44,12 @@ const Navbar: FC<NavbarProps> = ({ session, isLoading, workspaces }) => {
           {session?.user ? (
             <UserAccountNav user={session.user} />
           ) : (
-            <Button variant={"secondary"} size={"sm"} onClick={() => signIn()}>
+            <Button
+              variant={"secondary"}
+              size={"sm"}
+              className="max-sm:text-lg"
+              onClick={() => signIn()}
+            >
               Sign in
             </Button>
           )}
