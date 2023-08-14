@@ -11,7 +11,7 @@ export const BoardContainer: FC<BoardContainerProps> = ({
   className,
 }) => {
   return (
-    <div className={cn("mx-auto w-[90%] sm:w-[70%] md:w-[50%]", className)}>
+    <div className={cn("mx-auto w-[95%] sm:w-[70%] md:w-[50%]", className)}>
       {children}
     </div>
   );

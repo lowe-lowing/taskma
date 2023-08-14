@@ -12,14 +12,20 @@ import SideViewSkeleton from "./skeletons/SideViewSkeleton";
 
 interface SideViewProps {
   workspaces: Workspace[] | undefined;
-  isLoading: boolean;
+  isLoading?: boolean;
+  mobile?: boolean;
 }
 
-const SideView: FC<SideViewProps> = ({ workspaces, isLoading }) => {
+const SideView: FC<SideViewProps> = ({ workspaces, isLoading, mobile }) => {
   const pathname = usePathname();
 
   return (
-    <div className="w-40 space-y-1">
+    <div
+      className={cn("w-40 space-y-1", {
+        "max-sm:hidden": !mobile,
+        "w-full pt-4": mobile,
+      })}
+    >
       <Link href={"/boards"}>
         <Button
           variant={"ghost"}

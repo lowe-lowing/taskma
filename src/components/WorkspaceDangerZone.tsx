@@ -19,7 +19,7 @@ const WorkspaceDangerZone: FC<WorkspaceDangerZoneProps> = ({
   return (
     <div>
       <p className="mb-1">Danger zone</p>
-      <div className="flex flex-col gap-2 rounded-md border-[1px] border-destructive p-3 ">
+      <div className="flex flex-col gap-2 rounded-md border border-destructive p-3 ">
         <DangerButtonContainer>
           <div className="space-y-1 leading-none">
             <p>Leave Workspace</p>

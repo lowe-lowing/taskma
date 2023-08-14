@@ -48,10 +48,11 @@ export const LeaveDialog: FC<LeaveDialogProps> = ({
         toast.error("Something went wrong. Please try again later.");
       },
     });
+
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle className="font-semibold">
             Are you sure you want to leave?

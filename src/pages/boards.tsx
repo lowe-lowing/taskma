@@ -17,7 +17,7 @@ export default function Page({
       <Head>
         <title>Dashboard</title>
       </Head>
-      <Navbar session={session} />
+      <Navbar session={session} workspaces={workspaces} isLoading={isLoading} />
       <main className="m-2 flex justify-center overflow-hidden">
         <MainGrid>
           <SideView workspaces={workspaces} isLoading={isLoading} />

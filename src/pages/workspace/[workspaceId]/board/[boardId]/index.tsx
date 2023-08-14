@@ -11,7 +11,6 @@ import { Settings } from "lucide-react";
 import { InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-// import SocketProvider from "@/hooks/useSocket";
 
 export default function Page({
   data: session,
@@ -26,9 +25,7 @@ export default function Page({
     isLoading,
     error,
   } = trpc.board.getBoardFull.useQuery(
-    {
-      boardId,
-    },
+    { boardId },
     {
       enabled: !!boardId,
       refetchOnWindowFocus: false,
@@ -50,14 +47,14 @@ export default function Page({
         <title>{board?.Name}</title>
       </Head>
       <Navbar session={session} />
-      <main className="relative flex h-[calc(100vh-40px)] flex-col items-center overflow-x-hidden pt-1">
+      <main className="relative flex h-[calc(100vh-50px)] flex-col items-center overflow-x-hidden pt-1 sm:h-[calc(100vh-42px)]">
         {isLoading || membershipLoading ? (
           <BoardSkeleton workspaceId={workspaceId} />
         ) : board && loggedInUserMembership ? (
           <>
-            <BoardContainer className="flex items-center justify-between px-1">
+            <BoardContainer className="flex items-center justify-between px-0 sm:px-1">
               <BackButton href={`/workspace/${workspaceId}/boards`} />
-              <h2>Board: {board?.Name}</h2>
+              <h2 className="mr-6">Board: {board?.Name}</h2>
               <Button
                 variant={"ghost"}
                 size={"sm"}

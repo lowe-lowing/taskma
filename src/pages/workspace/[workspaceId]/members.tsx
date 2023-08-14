@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import { WorkspaceButtonsRow } from "@/components/WorkspaceButtonsRow";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Balancer } from "react-wrap-balancer";
 
 export default function Page({
   data: session,
@@ -44,7 +45,11 @@ export default function Page({
       <Head>
         <title>Members</title>
       </Head>
-      <Navbar session={session} />
+      <Navbar
+        session={session}
+        workspaces={workspaces}
+        isLoading={workspaceLoading}
+      />
       <main className="m-2 flex justify-center overflow-hidden">
         <MainGrid>
           <SideView workspaces={workspaces} isLoading={workspaceLoading} />
@@ -54,12 +59,12 @@ export default function Page({
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
-                  <p>{workspace.name} - Members</p>
+                  <Balancer>{workspace.name} - Members</Balancer>
                   <InviteWorkspaceDialog
                     workspace={workspace}
                     trigger={
                       <Button size={"sm"} variant={"ghost"} className="p-1">
-                        <Plus size={16} />
+                        <Plus className="h-5 w-5 sm:h-4 sm:w-4" />
                       </Button>
                     }
                   />

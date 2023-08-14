@@ -79,7 +79,7 @@ export const TransferOwnershipDialog: FC<TransferOwnershipDialogProps> = ({
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle className="font-semibold">
             Transfer Ownership of {workspace.name}

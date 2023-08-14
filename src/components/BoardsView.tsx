@@ -4,6 +4,7 @@ import { TRPCClientError } from "@trpc/client";
 import { useRouter } from "next/navigation";
 import { FC, useState } from "react";
 import toast from "react-hot-toast";
+import { Balancer } from "react-wrap-balancer";
 import BoardsPreview from "./BoardsPreview";
 import BoardsViewSkeleton from "./skeletons/BoardsViewSkeleton";
 import { Button } from "./ui/button";
@@ -49,7 +50,7 @@ const BoardsView: FC<BoardsProps> = ({ workspaces, isLoading }) => {
         workspaces.map((workspace) => (
           <div key={workspace.id} className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
-              <p>{workspace.name}</p>
+              <Balancer>{workspace.name}</Balancer>
               <WorkspaceButtonsRow workspaceId={workspace.id} />
             </div>
             <Separator />

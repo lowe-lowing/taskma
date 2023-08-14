@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { WorkspaceButtonsRow } from "@/components/WorkspaceButtonsRow";
 import { Separator } from "@/components/ui/separator";
 import WorkspaceDangerZone from "@/components/WorkspaceDangerZone";
+import Balancer from "react-wrap-balancer";
 
 export default function Page({
   data: session,
@@ -33,7 +34,7 @@ export default function Page({
       <Head>
         <title>Settings</title>
       </Head>
-      <Navbar session={session} />
+      <Navbar session={session} workspaces={workspaces} isLoading={isLoading} />
       <main className="m-2 flex justify-center overflow-hidden">
         <MainGrid>
           <SideView workspaces={workspaces} isLoading={isLoading} />
@@ -42,7 +43,7 @@ export default function Page({
             {workspace && membership && (
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <p>{workspace.name} - Settings</p>
+                  <Balancer>{workspace.name} - Settings</Balancer>
                   <WorkspaceButtonsRow workspaceId={workspace.id} />
                 </div>
                 <Separator />

@@ -39,7 +39,7 @@ const CreateBoardDialog: FC<CreateBoardDialogProps> = ({
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle className="font-semibold">
             {`Create new Board in '${workspace.name}'`}

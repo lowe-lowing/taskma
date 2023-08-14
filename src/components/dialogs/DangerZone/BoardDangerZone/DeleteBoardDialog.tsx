@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { FC } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { Balancer } from "react-wrap-balancer";
 import { z } from "zod";
 
 interface DeleteBoardDialogProps {
@@ -63,7 +64,7 @@ export const DeleteBoardDialog: FC<DeleteBoardDialogProps> = ({
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle className="font-semibold">Delete Board</DialogTitle>
         </DialogHeader>

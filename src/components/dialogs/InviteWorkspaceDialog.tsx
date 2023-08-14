@@ -85,10 +85,15 @@ export const InviteWorkspaceDialog: FC<InviteWorkspaceDialogProps> = ({
       },
     });
 
+  const DialogRef = useRef(null);
+  useOnClickOutside(DialogRef, () => {
+    closeDialog();
+  });
+
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent ref={DialogRef}>
         <DialogHeader>
           <DialogTitle className="font-semibold">
             {`Invite People to '${workspace.name}'`}

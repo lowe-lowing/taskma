@@ -106,33 +106,30 @@ const Board = ({
     }
   };
 
-  useEffect(() => {
-    socketInitializer();
-    // return () => {
-    //   socket.disconnect();
-    // };
-  }, []);
+  // useEffect(() => {
+  //   socketInitializer();
+  // }, []);
 
-  const socketInitializer = async () => {
-    socket = io({
-      path: "/api/socket",
-      addTrailingSlash: false,
-    });
+  // const socketInitializer = async () => {
+  //   socket = io({
+  //     path: "/api/socket",
+  //     addTrailingSlash: false,
+  //   });
 
-    socket.on("connect", () => {
-      console.log("connected");
-    });
+  //   socket.on("connect", () => {
+  //     console.log("connected");
+  //   });
 
-    socket.on("message", (msg: string) => {
-      if (msg === boardId) {
-        refetchLanes();
-      }
-    });
-  };
+  //   socket.on("message", (msg: string) => {
+  //     if (msg === boardId) {
+  //       refetchLanes();
+  //     }
+  //   });
+  // };
 
   const updateUi = () => {
     refetchLanes();
-    socket.emit("message", boardId);
+    // socket.emit("message", boardId);
   };
 
   return (

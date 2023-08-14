@@ -62,7 +62,7 @@ export const DeleteWorkspaceDialog: FC<DeleteWorkspaceDialogProps> = ({
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle className="font-semibold">Delete Workspace</DialogTitle>
         </DialogHeader>

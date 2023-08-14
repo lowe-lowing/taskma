@@ -46,7 +46,7 @@ export const CreateWorkspaceDialog: FC = () => {
           <Plus size={14} />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle className="font-semibold">
             Create New Workspace

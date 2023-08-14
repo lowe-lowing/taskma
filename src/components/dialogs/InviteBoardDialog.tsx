@@ -84,7 +84,7 @@ export const InviteBoardDialogDialog: FC<InviteBoardDialogProps> = ({
           <Plus />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle className="font-semibold">
             {`Add members to '${board.Name}'`}

@@ -45,7 +45,9 @@ export default function Page({
       <main className="pt-1">
         <BoardContainer className="flex items-center justify-between px-1">
           <BackButton href={`/workspace/${workspaceId}/board/${boardId}`} />
-          <h2>Board: {board ? board.Name : "Not found"}</h2>
+          <h2 className="mr-6">
+            Board: {board && !boardLoading ? board.Name : "Not found"}
+          </h2>
           <Button
             variant={"ghost"}
             size={"sm"}
@@ -57,7 +59,7 @@ export default function Page({
         </BoardContainer>
         <Separator className="my-1" />
         <BoardContainer>
-          {/* TODO: maybe add loading skeleton */}
+          {/* TODO: add loading skeleton here */}
           {boardLoading || membersLoading || membershipLoading ? (
             <div>Loading...</div>
           ) : board && members && loggedInUserMembership ? (

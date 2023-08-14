@@ -11,6 +11,7 @@ import { Workspace } from "@prisma/client";
 import { InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { Balancer } from "react-wrap-balancer";
 
 export default function Page({
   data: session,
@@ -25,7 +26,7 @@ export default function Page({
       <Head>
         <title>Boards</title>
       </Head>
-      <Navbar session={session} />
+      <Navbar session={session} workspaces={workspaces} isLoading={isLoading} />
       <main className="m-2 flex justify-center overflow-hidden">
         <MainGrid>
           <SideView workspaces={workspaces} isLoading={isLoading} />
@@ -34,7 +35,7 @@ export default function Page({
           ) : workspace ? (
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
-                <p>{workspace.name} - Boards</p>
+                <Balancer>{workspace.name} - Boards</Balancer>
                 <WorkspaceButtonsRow workspaceId={workspace.id} />
               </div>
               <Separator />

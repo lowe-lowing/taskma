@@ -65,10 +65,7 @@ const EditTaskDialog: FC<EditTaskDialogProps> = ({
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent
-        className="sm:max-w-[425px]"
-        overlayClassName="backdrop-blur-none bg-background/50"
-      >
+      <DialogContent overlayClassName="backdrop-blur-none bg-background/50">
         <form onSubmit={handleEdit} id="taskForm">
           <div>
             <Label htmlFor="title">Title</Label>
