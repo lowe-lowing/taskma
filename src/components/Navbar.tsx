@@ -24,14 +24,13 @@ const Navbar: FC<NavbarProps> = ({ session, isLoading, workspaces }) => {
   return (
     <div className="flex items-center justify-center border-b bg-secondary">
       <div className="flex w-full max-w-4xl items-center justify-between p-2">
-        <Link
-          href={"/boards"}
+        <p
           className={cn({
             "max-sm:hidden": !!workspaces,
           })}
         >
           Taskma
-        </Link>
+        </p>
         <div
           className={cn("flex gap-2 sm:hidden", {
             hidden: !workspaces,
