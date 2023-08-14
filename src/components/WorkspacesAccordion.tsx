@@ -53,10 +53,10 @@ export const WorkspacesAccordion: FC<Props> = ({ workspaces }) => {
                       workspace={workspace}
                       trigger={
                         <div
-                          className="cursor-pointer rounded-md p-0.5 transition-all hover:scale-125 hover:bg-primary-foreground"
+                          className="cursor-pointer rounded-md p-0 transition-all hover:scale-125 hover:bg-primary-foreground sm:p-0.5"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <Plus className="h-6 w-6 sm:h-4 sm:w-4" />
+                          <Plus className="h-[15px] w-[15px] sm:h-[14px] sm:w-[14px]" />
                         </div>
                       }
                     />
