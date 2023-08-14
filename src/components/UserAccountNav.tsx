@@ -2,7 +2,7 @@ import {
   DropdownMenu,
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
-import { User } from "next-auth";
+import type { User } from "next-auth";
 import { FC } from "react";
 import UserAvatar from "./UserAvatar";
 import {
@@ -39,14 +39,11 @@ const UserAccountNav: FC<UserAccountNavProps> = ({ user }) => {
           </div>
         </div>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link href="/">Feed</Link>
+        <DropdownMenuItem className="cursor-pointer" asChild>
+          <Link href="/">Home</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/p/create">Create Community</Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/settings">Settings</Link>
+        <DropdownMenuItem className="cursor-pointer" asChild>
+          <Link href="/boards">Dashboard</Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
