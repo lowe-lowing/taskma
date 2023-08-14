@@ -23,7 +23,7 @@ export default function Page({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar session={session} />
-      <main className="flex min-h-[calc(100vh-40px)] w-full flex-col items-center justify-between">
+      <main className="flex min-h-[calc(100vh-45px)] w-full flex-col items-center justify-between">
         <div className="flex max-w-[90%] flex-col items-center space-y-4 py-4 md:max-w-[80%] lg:max-w-[65%] xl:max-w-[55%]">
           <h1 className="whitespace-nowrap text-5xl font-extrabold leading-normal text-gray-700 max-sm:text-4xl">
             Welcome to <span className="text-purple-300">Taskma</span>

@@ -44,7 +44,6 @@ const Navbar: FC<NavbarProps> = ({ session, isLoading, workspaces }) => {
             <UserAccountNav user={session.user} />
           ) : (
             <Button
-              variant={"secondary"}
               size={"sm"}
               className="max-sm:text-lg"
               onClick={() => signIn()}
