@@ -1,6 +1,6 @@
-import { GetServerSideProps } from "next";
-import type { Session } from "next-auth";
-import { GetSessionParams, getSession } from "next-auth/react";
+import { type GetServerSideProps } from "next";
+import { type Session } from "next-auth";
+import { type GetSessionParams, getSession } from "next-auth/react";
 
 export const ssrSession: GetServerSideProps<{
   data: Session | null;

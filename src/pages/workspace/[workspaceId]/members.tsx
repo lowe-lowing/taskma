@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import MainGrid from "@/components/utils/MainGrid";
 import { ssrSession } from "@/lib/ssrSession";
 import { trpc } from "@/lib/trpc";
-import { InferGetServerSidePropsType } from "next";
+import { type InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { WorkspaceButtonsRow } from "@/components/WorkspaceButtonsRow";

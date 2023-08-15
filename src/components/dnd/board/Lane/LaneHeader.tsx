@@ -1,4 +1,4 @@
-import { LaneWithTasks } from "@/components/dnd/types";
+import { type LaneWithTasks } from "@/components/dnd/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useOnClickOutside } from "@/hooks/useOnClickOutside";
@@ -6,7 +6,7 @@ import { trpc } from "@/lib/trpc";
 import { BoardRole } from "@prisma/client";
 import { TRPCClientError } from "@trpc/client";
 import { Trash2 } from "lucide-react";
-import { FC, useRef, useState } from "react";
+import { type FC, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { AiOutlineEdit } from "react-icons/ai";
 

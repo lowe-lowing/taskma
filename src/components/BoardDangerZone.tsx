@@ -1,5 +1,5 @@
-import { Board, UserBoard } from "@prisma/client";
-import { FC } from "react";
+import type { Board, UserBoard } from "@prisma/client";
+import { type FC } from "react";
 import { DeleteBoardDialog } from "./dialogs/DangerZone/BoardDangerZone/DeleteBoardDialog";
 import { LeaveDialog } from "./dialogs/DangerZone/LeaveDialog";
 import { Button } from "./ui/button";
@@ -11,7 +11,7 @@ interface BoardDangerZoneProps {
 }
 
 const BoardDangerZone: FC<BoardDangerZoneProps> = ({ board, membership }) => {
-  const { Role: userRole, id: membershipId } = membership;
+  const { Role: userRole } = membership;
   return (
     <div>
       <p className="mb-1">Danger zone</p>

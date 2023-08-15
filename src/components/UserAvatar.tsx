@@ -1,7 +1,7 @@
-import { User } from "next-auth";
-import { FC } from "react";
+import { type User } from "next-auth";
+import { type FC } from "react";
 import Image from "next/image";
-import { AvatarProps } from "@radix-ui/react-avatar";
+import type { AvatarProps } from "@radix-ui/react-avatar";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { User as UserIcon } from "lucide-react";
 

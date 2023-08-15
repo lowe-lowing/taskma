@@ -1,7 +1,7 @@
 import { trpc } from "@/lib/trpc";
-import { Board as PrismaBoard } from "@prisma/client";
+import { type Board as PrismaBoard } from "@prisma/client";
 import Link from "next/link";
-import { FC } from "react";
+import { type FC } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Separator } from "./ui/separator";
 

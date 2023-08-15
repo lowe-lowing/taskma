@@ -11,7 +11,7 @@ import {
 import { trpc } from "@/lib/trpc";
 import type { UserBoard, UserWorkspace } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { FC } from "react";
+import { type FC } from "react";
 import toast from "react-hot-toast";
 
 type LeaveDialogProps =

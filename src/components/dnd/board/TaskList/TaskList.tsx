@@ -1,8 +1,8 @@
-import { LaneWithTasks, ListType } from "@/components/dnd/types";
+import { type LaneWithTasks, ListType } from "@/components/dnd/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { BoardRole, Task } from "@prisma/client";
+import { BoardRole, type Task } from "@prisma/client";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import AddTaskHandler from "./AddTaskHandler";
 import TaskItem from "./TaskItem";
@@ -11,8 +11,8 @@ type TaskListProps = {
   lane: LaneWithTasks;
   tasks: Task[];
   isDraggingLane: boolean;
-  ignoreContainerClipping: any;
-  isCombineEnabled: any;
+  ignoreContainerClipping?: boolean;
+  isCombineEnabled: boolean;
   listId: string;
   UserBoardRole: BoardRole;
   setLanes: React.Dispatch<React.SetStateAction<LaneWithTasks[]>>;

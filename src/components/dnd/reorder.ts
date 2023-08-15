@@ -1,5 +1,5 @@
-import { DropResult } from "react-beautiful-dnd";
-import { LaneWithTasks } from "./types";
+import { type DropResult } from "react-beautiful-dnd";
+import { type LaneWithTasks } from "./types";
 
 export const reorderLanes = (lanes: LaneWithTasks[], result: DropResult) => {
   const newLanes = [...lanes];

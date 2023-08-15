@@ -1,4 +1,4 @@
-import { Lane, Task } from "@prisma/client";
+import type { Lane, Task } from "@prisma/client";
 
 export interface LaneWithTasks extends Lane {
   Tasks: Task[];

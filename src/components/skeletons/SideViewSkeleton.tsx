@@ -1,6 +1,6 @@
 import React from "react";
 import { Skeleton } from "../ui/skeleton";
-import { ChevronDown } from "lucide-react";
+// import { ChevronDown } from "lucide-react";
 
 const SideViewSkeleton = () => {
   return (
@@ -17,7 +17,7 @@ export default SideViewSkeleton;
 const Dropdown = () => {
   return (
     <Skeleton className="h-6 w-full rounded-md" />
-    // FIXME: make this look better
+    // alternative skeleton
     //   <div className="flex flex-row-reverse p-0.5">
     //     <ChevronDown />
     //   </div>

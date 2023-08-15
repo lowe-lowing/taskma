@@ -2,18 +2,18 @@ import EditTaskDialog from "@/components/dialogs/EditTaskDialog";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { cn } from "@/lib/utils";
-import { Task } from "@prisma/client";
+import { type Task } from "@prisma/client";
 import { Edit, Trash2 } from "lucide-react";
 import moment from "moment";
 import React from "react";
-import { DraggableProvided } from "react-beautiful-dnd";
+import { type DraggableProvided } from "react-beautiful-dnd";
 
 type TaskItemProps = {
   task: Task;
-  isDragging: any;
-  isGroupedOver: any;
+  isDragging: boolean;
+  isGroupedOver: boolean;
   provided?: DraggableProvided;
-  index: any;
+  index: number;
   updateUi: () => void;
 };
 function TaskItem({

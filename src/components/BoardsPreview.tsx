@@ -1,5 +1,5 @@
-import { Board, Workspace } from "@prisma/client";
-import { FC } from "react";
+import type { Board, Workspace } from "@prisma/client";
+import { type FC } from "react";
 import BoardCard from "./BoardCard";
 import NewBoardCard from "./NewBoardCard";
 

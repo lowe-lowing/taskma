@@ -14,8 +14,8 @@ import { trpc } from "@/lib/trpc";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Workspace, WorkspaceRole } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { FC } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { type FC } from "react";
+import { type SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
 

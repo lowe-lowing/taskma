@@ -19,11 +19,10 @@ import {
 import UserAvatar from "@/components/UserAvatar";
 import { useOnClickOutside } from "@/hooks/useOnClickOutside";
 import { trpc } from "@/lib/trpc";
-import { Workspace } from "@prisma/client";
+import type { Workspace } from "@prisma/client";
 import debounce from "lodash.debounce";
-import type { User } from "next-auth";
-import { usePathname, useRouter } from "next/navigation";
-import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { type User } from "next-auth";
+import { type FC, useCallback, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 interface TransferOwnershipDialogProps {

@@ -2,8 +2,8 @@ import {
   DropdownMenu,
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
-import type { User } from "next-auth";
-import { FC } from "react";
+import { type User } from "next-auth";
+import { type FC } from "react";
 import UserAvatar from "./UserAvatar";
 import {
   DropdownMenuContent,

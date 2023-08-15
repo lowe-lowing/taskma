@@ -12,7 +12,7 @@ import { trpc } from "@/lib/trpc";
 import { TRPCClientError } from "@trpc/client";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { FC, useState } from "react";
+import { type FC, useState } from "react";
 import toast from "react-hot-toast";
 
 export const CreateWorkspaceDialog: FC = () => {

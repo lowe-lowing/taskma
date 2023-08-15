@@ -10,7 +10,7 @@ import { BoardContainer } from "@/components/utils/BoardContainer";
 import { ssrSession } from "@/lib/ssrSession";
 import { trpc } from "@/lib/trpc";
 import { KanbanSquare } from "lucide-react";
-import { InferGetServerSidePropsType } from "next";
+import { type InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 

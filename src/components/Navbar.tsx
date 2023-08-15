@@ -1,13 +1,13 @@
 import useDarkMode from "@/hooks/useDarkMode";
-import { Moon, Sheet, Sun } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { FC } from "react";
+import { type FC } from "react";
 import { Button } from "./ui/button";
 import UserAccountNav from "./UserAccountNav";
-import type { Session } from "next-auth";
+import { type Session } from "next-auth";
 import SideViewSheet from "./SideViewSheet";
-import { Workspace } from "@prisma/client";
+import { type Workspace } from "@prisma/client";
 import { cn } from "@/lib/utils";
 
 interface NavbarProps {
@@ -24,20 +24,21 @@ const Navbar: FC<NavbarProps> = ({ session, isLoading, workspaces }) => {
   return (
     <div className="flex items-center justify-center border-b bg-secondary">
       <div className="flex w-full max-w-4xl items-center justify-between p-2">
-        <p
+        <Link
+          href={"/"}
           className={cn({
             "max-sm:hidden": !!workspaces,
           })}
         >
           Taskma
-        </p>
+        </Link>
         <div
           className={cn("flex gap-2 sm:hidden", {
             hidden: !workspaces,
           })}
         >
           <SideViewSheet isLoading={isLoading} workspaces={workspaces} />
-          <Link href={"/boards"}>Taskma</Link>
+          <Link href={"/"}>Taskma</Link>
         </div>
         <div className="flex flex-row items-center gap-2">
           {session?.user ? (

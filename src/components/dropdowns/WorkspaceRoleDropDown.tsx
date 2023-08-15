@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { FC, useState } from "react";
+import { type FC, useState } from "react";
 import { WorkspaceRole } from "@prisma/client";
 import { trpc } from "@/lib/trpc";
 import { toast } from "react-hot-toast";

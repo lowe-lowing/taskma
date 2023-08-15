@@ -1,7 +1,7 @@
-import { UserBoardWithUser } from "@/server/trpc/router/boards";
-import { BoardRole } from "@prisma/client";
-import type { User, Session } from "next-auth";
-import { FC } from "react";
+import { type UserBoardWithUser } from "@/server/trpc/router/boards";
+import { type BoardRole } from "@prisma/client";
+import { type Session } from "next-auth";
+import { type FC } from "react";
 import BoardRoleDropdown from "./dropdowns/BoardRoleDropdown";
 import { Separator } from "./ui/separator";
 import UserAvatar from "./UserAvatar";

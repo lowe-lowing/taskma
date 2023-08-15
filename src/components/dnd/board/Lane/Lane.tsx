@@ -2,14 +2,13 @@ import { Card, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { BoardRole } from "@prisma/client";
 import { Draggable } from "react-beautiful-dnd";
-import { LaneWithTasks } from "../../types";
+import { type LaneWithTasks } from "../../types";
 import TaskList from "../TaskList/TaskList";
 import LaneHeader from "./LaneHeader";
 
 type LaneProps = {
   lane: LaneWithTasks;
-  index: any;
-  isCombineEnabled: any;
+  index: number;
   UserBoardRole: BoardRole;
   setLanes: React.Dispatch<React.SetStateAction<LaneWithTasks[]>>;
   updateUi: () => void;
@@ -18,7 +17,6 @@ type LaneProps = {
 const Lane = ({
   lane,
   index,
-  isCombineEnabled,
   UserBoardRole,
   setLanes,
   updateUi,
@@ -41,7 +39,6 @@ const Lane = ({
           isDraggingLane={false}
           listId={lane.id}
           isCombineEnabled={false}
-          ignoreContainerClipping={undefined}
           UserBoardRole={UserBoardRole}
           setLanes={setLanes}
           updateUi={updateUi}
@@ -79,8 +76,7 @@ const Lane = ({
             tasks={lane.Tasks}
             isDraggingLane={snapshot.isDragging}
             listId={lane.id}
-            isCombineEnabled={Boolean(isCombineEnabled)}
-            ignoreContainerClipping={undefined}
+            isCombineEnabled={false}
             UserBoardRole={UserBoardRole}
             setLanes={setLanes}
             updateUi={updateUi}

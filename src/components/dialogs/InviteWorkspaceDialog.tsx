@@ -10,11 +10,11 @@ import {
 } from "@/components/ui/dialog";
 import { useOnClickOutside } from "@/hooks/useOnClickOutside";
 import { trpc } from "@/lib/trpc";
-import { Workspace } from "@prisma/client";
+import { type Workspace } from "@prisma/client";
 import debounce from "lodash.debounce";
-import type { User } from "next-auth";
+import { type User } from "next-auth";
 import { usePathname, useRouter } from "next/navigation";
-import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { type FC, useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import {
   Command,
@@ -121,7 +121,7 @@ export const InviteWorkspaceDialog: FC<InviteWorkspaceDialogProps> = ({
                   {queryResults?.map((user: User) => (
                     <CommandItem
                       key={user.id}
-                      onSelect={(e) => {
+                      onSelect={() => {
                         setSelectedUsers((prev) => [...prev, user]);
                         setInput("");
                       }}

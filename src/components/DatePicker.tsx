@@ -11,7 +11,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import { FC } from "react";
+import { type FC } from "react";
 
 interface DatePickerProps {
   date: Date | undefined;

@@ -8,8 +8,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { trpc } from "@/lib/trpc";
-import { Task } from "@prisma/client";
-import { FC, useState } from "react";
+import { type Task } from "@prisma/client";
+import { type FC, useState } from "react";
 import toast from "react-hot-toast";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import DatePicker from "../DatePicker";
@@ -46,7 +46,7 @@ const EditTaskDialog: FC<EditTaskDialogProps> = ({
         toast.success("Task successfully edited!");
         closeDialog();
       },
-      onError: (error) => {
+      onError: () => {
         toast.error("Something went wrong. Please try again later.");
       },
     });

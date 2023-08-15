@@ -9,9 +9,9 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { trpc } from "@/lib/trpc";
-import { Workspace } from "@prisma/client";
+import { type Workspace } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { FC, useState } from "react";
+import { type FC, useState } from "react";
 import toast from "react-hot-toast";
 
 interface CreateBoardDialogProps {
@@ -31,7 +31,7 @@ const CreateBoardDialog: FC<CreateBoardDialogProps> = ({
       onSuccess: ({ id, workspaceId }) => {
         router.push(`/workspace/${workspaceId}/board/${id}`);
       },
-      onError: (error) => {
+      onError: () => {
         toast.error("Something went wrong. Please try again later.");
       },
     }

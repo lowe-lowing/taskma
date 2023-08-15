@@ -1,5 +1,5 @@
-import type { UserWorkspace, Workspace, WorkspaceRole } from "@prisma/client";
-import { FC } from "react";
+import type { UserWorkspace, Workspace } from "@prisma/client";
+import { type FC } from "react";
 import { LeaveDialog } from "./dialogs/DangerZone/LeaveDialog";
 import { DeleteWorkspaceDialog } from "./dialogs/DangerZone/WorkspaceDangerZone/DeleteWorkspaceDialog";
 import { TransferOwnershipDialog } from "./dialogs/DangerZone/WorkspaceDangerZone/TransferOwnershipDialog";

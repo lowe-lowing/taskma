@@ -1,6 +1,6 @@
-import { Workspace } from "@prisma/client";
+import { type Workspace } from "@prisma/client";
 import { Plus } from "lucide-react";
-import { FC } from "react";
+import { type FC } from "react";
 import CreateBoardDialog from "./dialogs/CreateBoardDialog";
 import { Card, CardContent } from "./ui/card";
 

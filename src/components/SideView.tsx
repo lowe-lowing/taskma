@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
-import { Workspace } from "@prisma/client";
+import { type Workspace } from "@prisma/client";
 import { KanbanSquare } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FC } from "react";
+import { type FC } from "react";
 import { CreateWorkspaceDialog } from "./dialogs/CreateWorkspaceDialog";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";

@@ -12,24 +12,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { trpc } from "@/lib/trpc";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { Board, Workspace, WorkspaceRole } from "@prisma/client";
+import { type Board } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { FC } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { type FC } from "react";
+import { type SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { Balancer } from "react-wrap-balancer";
 import { z } from "zod";
 
 interface DeleteBoardDialogProps {
   trigger: React.ReactNode;
   board: Board;
-  //   userRole: WorkspaceRole;
 }
 
 export const DeleteBoardDialog: FC<DeleteBoardDialogProps> = ({
   trigger,
   board,
-  //   userRole,
 }) => {
   const router = useRouter();
 

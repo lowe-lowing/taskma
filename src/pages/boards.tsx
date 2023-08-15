@@ -4,7 +4,7 @@ import SideView from "@/components/SideView";
 import MainGrid from "@/components/utils/MainGrid";
 import { ssrSession } from "@/lib/ssrSession";
 import { trpc } from "@/lib/trpc";
-import type { InferGetServerSidePropsType } from "next";
+import { type InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 
 export default function Page({

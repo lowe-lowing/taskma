@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/router";
-import { FC } from "react";
+import { type FC } from "react";
 import { Button } from "../ui/button";
 
 interface BackButtonProps {

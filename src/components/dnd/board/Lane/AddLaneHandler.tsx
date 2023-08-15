@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { trpc } from "@/lib/trpc";
 import { Plus, X } from "lucide-react";
-import { FC, useState } from "react";
-import { LaneWithTasks } from "../../types";
+import { type FC, useState } from "react";
+import { type LaneWithTasks } from "../../types";
 
 interface AddLaneHandlerProps {
   boardId: string;

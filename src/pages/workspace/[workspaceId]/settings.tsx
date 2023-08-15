@@ -4,7 +4,7 @@ import { WorkspaceSettingsForm } from "@/components/forms/WorkspaceSettingsForm"
 import MainGrid from "@/components/utils/MainGrid";
 import { ssrSession } from "@/lib/ssrSession";
 import { trpc } from "@/lib/trpc";
-import { InferGetServerSidePropsType } from "next";
+import { type InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { WorkspaceButtonsRow } from "@/components/WorkspaceButtonsRow";
@@ -21,13 +21,12 @@ export default function Page({
     trpc.workspace.getWorkspacesByUser.useQuery();
   const workspace = workspaces?.find((w) => w.id === workspaceId);
 
-  const { data: membership, isLoading: userRoleLoading } =
-    trpc.workspace.getMemberShip.useQuery(
-      {
-        workspaceId,
-      },
-      { enabled: !!workspaceId }
-    );
+  const { data: membership } = trpc.workspace.getMemberShip.useQuery(
+    {
+      workspaceId,
+    },
+    { enabled: !!workspaceId }
+  );
 
   return (
     <>

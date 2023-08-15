@@ -1,8 +1,8 @@
 import { trpc } from "@/lib/trpc";
-import { Board, Workspace } from "@prisma/client";
+import type { Board, Workspace } from "@prisma/client";
 import { TRPCClientError } from "@trpc/client";
 import { useRouter } from "next/navigation";
-import { FC, useState } from "react";
+import { type FC, useState } from "react";
 import toast from "react-hot-toast";
 import { Balancer } from "react-wrap-balancer";
 import BoardsPreview from "./BoardsPreview";

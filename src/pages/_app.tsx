@@ -1,15 +1,15 @@
+import { type Session } from "next-auth";
+import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
-import { getServerSession, type Session } from "next-auth";
-import { getSession, SessionProvider, useSession } from "next-auth/react";
 
 import { trpc } from "../lib/trpc";
 
-import "../styles/globals.css";
 import { AccordionContext } from "@/hooks/useAccordionContext";
+import useDarkMode from "@/hooks/useDarkMode";
+import NextTopLoader from "nextjs-toploader";
 import { useState } from "react";
 import { Toaster } from "react-hot-toast";
-import NextTopLoader from "nextjs-toploader";
-import useDarkMode from "@/hooks/useDarkMode";
+import "../styles/globals.css";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,

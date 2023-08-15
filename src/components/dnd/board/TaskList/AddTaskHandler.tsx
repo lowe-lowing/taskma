@@ -3,9 +3,9 @@ import { Input } from "@/components/ui/input";
 import { trpc } from "@/lib/trpc";
 import { TRPCClientError } from "@trpc/client";
 import { Plus, X } from "lucide-react";
-import { FC, useRef, useState } from "react";
+import { type FC, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { LaneWithTasks } from "../../types";
+import { type LaneWithTasks } from "../../types";
 import { useOnClickOutside } from "@/hooks/useOnClickOutside";
 
 interface AddTaskHandlerProps {

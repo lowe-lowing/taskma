@@ -1,17 +1,21 @@
 import { trpc } from "@/lib/trpc";
-import { FormEvent, useEffect, useState } from "react";
-import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
+import { useEffect, useState } from "react";
+import {
+  DragDropContext,
+  type DropResult,
+  Droppable,
+} from "react-beautiful-dnd";
 import {
   reorderLanes,
   reorderTasksBetweenLanes,
   reorderTasksSameLane,
 } from "../reorder";
-import { LaneWithTasks, ListType } from "../types";
+import { type LaneWithTasks, ListType } from "../types";
 import Lane from "./Lane/Lane";
 import AddLaneHandler from "./Lane/AddLaneHandler";
 import { BoardRole } from "@prisma/client";
-import io, { type Socket } from "socket.io-client";
-let socket: Socket;
+// import io, { type Socket } from "socket.io-client";
+// let socket: Socket;
 
 type BoardProps = {
   isCombineEnabled: boolean;
@@ -155,7 +159,6 @@ const Board = ({
                       key={lane.id}
                       lane={lane}
                       index={index}
-                      isCombineEnabled={isCombineEnabled}
                       UserBoardRole={UserBoardRole}
                       setLanes={setLanes}
                       updateUi={updateUi}
@@ -179,7 +182,6 @@ const Board = ({
                 key={lane.id}
                 lane={lane}
                 index={index}
-                isCombineEnabled={isCombineEnabled}
                 UserBoardRole={UserBoardRole}
                 setLanes={setLanes}
                 updateUi={updateUi}

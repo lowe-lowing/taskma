@@ -6,11 +6,11 @@ import {
 } from "@/components/ui/accordion";
 import { useAccordionContext } from "@/hooks/useAccordionContext";
 import { cn } from "@/lib/utils";
-import { Workspace } from "@prisma/client";
+import { type Workspace } from "@prisma/client";
 import { KanbanSquare, Plus, Settings, Users } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
-import { FC, ReactNode, useEffect } from "react";
+import { type FC, type ReactNode, useEffect } from "react";
 import { InviteWorkspaceDialog } from "./dialogs/InviteWorkspaceDialog";
 import { Button } from "./ui/button";
 

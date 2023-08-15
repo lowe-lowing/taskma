@@ -1,4 +1,4 @@
-import { InferGetServerSidePropsType } from "next";
+import { type InferGetServerSidePropsType } from "next";
 import { signIn } from "next-auth/react";
 import Head from "next/head";
 

@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { FC } from "react";
+import { type FC } from "react";
 
 interface BoardContainerProps {
   children: React.ReactNode;
