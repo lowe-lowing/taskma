@@ -1,4 +1,4 @@
-import { type LaneWithTasks, ListType } from "@/components/dnd/types";
+import { type LaneWithTasks, ListType, FullTask } from "@/components/dnd/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
@@ -9,7 +9,7 @@ import TaskItem from "./TaskItem";
 
 type TaskListProps = {
   lane: LaneWithTasks;
-  tasks: Task[];
+  tasks: FullTask[];
   isDraggingLane: boolean;
   ignoreContainerClipping?: boolean;
   isCombineEnabled: boolean;

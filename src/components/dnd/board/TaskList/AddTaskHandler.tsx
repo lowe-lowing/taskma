@@ -52,6 +52,7 @@ const AddTaskHandler: FC<AddTaskHandlerProps> = ({
         CreatedAt: new Date(),
         UpdatedAt: new Date(),
         DueDate: null,
+        UserTasks: [],
       });
       return newLanes;
     });

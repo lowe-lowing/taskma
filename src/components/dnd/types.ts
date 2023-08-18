@@ -1,8 +1,18 @@
-import type { Lane, Task } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
-export interface LaneWithTasks extends Lane {
-  Tasks: Task[];
-}
+export type FullTask = Prisma.TaskGetPayload<{
+  include: {
+    UserTasks: { include: { User: true } };
+  };
+}>;
+
+export type LaneWithTasks = Prisma.LaneGetPayload<{
+  include: {
+    Tasks: {
+      include: { UserTasks: true };
+    };
+  };
+}>;
 
 export enum ListType {
   LANE = "lane",

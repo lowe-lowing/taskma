@@ -65,6 +65,7 @@ model User {
   sessions      Session[]
   UserWorkspace UserWorkspace[]
   UserBoards    UserBoard[]
+  UserTasks     UserTask[]
 }
 
 model Workspace {
@@ -134,13 +135,22 @@ model Lane {
 }
 
 model Task {
-  id          String    @id @unique @default(cuid())
+  id          String     @id @unique @default(cuid())
   Title       String
   Description String?
-  CreatedAt   DateTime  @default(now())
-  UpdatedAt   DateTime  @updatedAt
+  CreatedAt   DateTime   @default(now())
+  UpdatedAt   DateTime   @updatedAt
   DueDate     DateTime?
   Order       Int
-  Lane        Lane      @relation(fields: [laneId], references: [id], onDelete: Cascade)
+  Lane        Lane       @relation(fields: [laneId], references: [id], onDelete: Cascade)
   laneId      String
+  UserTasks   UserTask[]
+}
+
+model UserTask {
+  id     String @id @unique @default(cuid())
+  User   User   @relation(fields: [userId], references: [id])
+  userId String
+  Task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  taskId String
 }

@@ -40,9 +40,15 @@ export const boardRouter = router({
       return ctx.prisma.board.findUnique({
         where: { id: input.boardId },
         include: {
+          UserBoards: { include: { User: true } },
           Lanes: {
             orderBy: { Order: "asc" },
-            include: { Tasks: { orderBy: { Order: "asc" } } },
+            include: {
+              Tasks: {
+                orderBy: { Order: "asc" },
+                include: { UserTasks: { include: { User: true } } },
+              },
+            },
           },
         },
       });

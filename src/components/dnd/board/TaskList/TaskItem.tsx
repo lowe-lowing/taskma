@@ -1,15 +1,18 @@
 import EditTaskDialog from "@/components/dialogs/EditTaskDialog";
 import { Button } from "@/components/ui/button";
+import UserAvatar from "@/components/UserAvatar";
 import { trpc } from "@/lib/trpc";
 import { cn } from "@/lib/utils";
 import { type Task } from "@prisma/client";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit, Loader2, Trash2 } from "lucide-react";
 import moment from "moment";
 import React from "react";
 import { type DraggableProvided } from "react-beautiful-dnd";
+import { toast } from "react-hot-toast";
+import { FullTask } from "../../types";
 
 type TaskItemProps = {
-  task: Task;
+  task: FullTask;
   isDragging: boolean;
   isGroupedOver: boolean;
   provided?: DraggableProvided;
@@ -23,11 +26,31 @@ function TaskItem({
   index,
   updateUi,
 }: TaskItemProps) {
-  const { mutateAsync: deleteTask } = trpc.task.deleteTask.useMutation({
+  const { mutate: deleteTask } = trpc.task.deleteTask.useMutation({
     onSuccess: () => {
       updateUi();
     },
   });
+
+  const { mutate: addAsignedUser, isLoading } =
+    trpc.task.addAsignedUser.useMutation({
+      onSuccess: () => {
+        updateUi();
+      },
+      onError: () => {
+        toast.error("Something went wrong, please try again later.");
+      },
+    });
+
+  function allowDrop(ev: React.DragEvent<HTMLDivElement>) {
+    ev.preventDefault();
+  }
+
+  function drop(ev: React.DragEvent<HTMLDivElement>, id: string) {
+    const userId = ev.dataTransfer.getData("userId");
+    addAsignedUser({ taskId: id, userId });
+    ev.preventDefault();
+  }
 
   if (!provided) {
     return (
@@ -67,6 +90,8 @@ function TaskItem({
         data-is-dragging={isDragging}
         data-testid={task.id}
         data-index={index}
+        onDrop={(e) => drop(e, task.id)}
+        onDragOver={(e) => allowDrop(e)}
       >
         <div className="flex flex-grow basis-full flex-col">
           <div
@@ -101,6 +126,16 @@ function TaskItem({
               Due Date: {moment(task.DueDate).format("MMM Do")}
             </p>
           )}
+          <div className="flex gap-0.5">
+            {task.UserTasks.map((userTask) => (
+              <UserAvatar
+                key={userTask.id}
+                user={userTask.User}
+                className="h-6 w-6"
+              />
+            ))}
+            {isLoading && <Loader2 className="h-6 w-6 animate-spin" />}
+          </div>
         </div>
       </div>
     );
@@ -108,21 +143,3 @@ function TaskItem({
 }
 
 export default React.memo(TaskItem);
-
-// const CloneBadge = styled.divBox`
-//   background: #79f2c0;
-//   bottom: ${grid / 2}px;
-//   border: 2px solid #57d9a3;
-//   border-radius: 50%;
-//   box-sizing: border-box;
-//   font-size: 10px;
-//   position: absolute;
-//   right: -${imageSize / 3}px;
-//   top: -${imageSize / 3}px;
-//   transform: rotate(40deg);
-//   height: ${imageSize}px;
-//   width: ${imageSize}px;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-// `;

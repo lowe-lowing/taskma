@@ -11,6 +11,7 @@ import { Settings } from "lucide-react";
 import { type InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import UserAvatar from "@/components/UserAvatar";
 
 export default function Page({
   data: session,
@@ -41,6 +42,10 @@ export default function Page({
   const { data: loggedInUserMembership, isLoading: membershipLoading } =
     trpc.board.getUserMembership.useQuery({ boardId }, { enabled: !!boardId });
 
+  function drag(ev: React.DragEvent<HTMLSpanElement>, userId: string) {
+    ev.dataTransfer.setData("userId", userId);
+  }
+
   return (
     <>
       <Head>
@@ -55,14 +60,27 @@ export default function Page({
             <BoardContainer className="flex items-center justify-between px-0 sm:px-1">
               <BackButton href={`/workspace/${workspaceId}/boards`} />
               <h2 className="mr-6">Board: {board?.Name}</h2>
-              <Button
-                variant={"ghost"}
-                size={"sm"}
-                className="p-1"
-                onClick={() => router.push(`${location.href}/settings`)}
-              >
-                <Settings size={20} />
-              </Button>
+              <div className="flex items-center gap-2">
+                <div className="hidden gap-1 sm:flex">
+                  {board.UserBoards.map((userBoard) => (
+                    <UserAvatar
+                      key={userBoard.id}
+                      user={userBoard.User}
+                      draggable={true}
+                      onDragStart={(ev) => drag(ev, userBoard.User.id)}
+                      className="mr-1 h-8 w-8"
+                    />
+                  ))}
+                </div>
+                <Button
+                  variant={"ghost"}
+                  size={"sm"}
+                  className="p-1"
+                  onClick={() => router.push(`${location.href}/settings`)}
+                >
+                  <Settings size={20} />
+                </Button>
+              </div>
             </BoardContainer>
             <Separator className="my-1" />
             <Board

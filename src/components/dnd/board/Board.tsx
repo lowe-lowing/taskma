@@ -1,21 +1,21 @@
+import { usePusher } from "@/hooks/usePusher";
 import { trpc } from "@/lib/trpc";
+import { BoardRole } from "@prisma/client";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import {
   DragDropContext,
-  type DropResult,
   Droppable,
+  type DropResult,
 } from "react-beautiful-dnd";
 import {
   reorderLanes,
   reorderTasksBetweenLanes,
   reorderTasksSameLane,
 } from "../reorder";
-import { type LaneWithTasks, ListType } from "../types";
-import Lane from "./Lane/Lane";
+import { ListType, type LaneWithTasks } from "../types";
 import AddLaneHandler from "./Lane/AddLaneHandler";
-import { BoardRole } from "@prisma/client";
-// import io, { type Socket } from "socket.io-client";
-// let socket: Socket;
+import Lane from "./Lane/Lane";
 
 type BoardProps = {
   isCombineEnabled: boolean;
@@ -41,6 +41,13 @@ const Board = ({
     setLanes(initial);
   }, [initial]);
 
+  const { data: session } = useSession();
+  usePusher("board", "update-ui", (data) => {
+    if (data.boardId === boardId && data.userId !== session?.user?.id) {
+      refetchLanes();
+    }
+  });
+
   const { mutate: updateLaneOrder } = trpc.lane.updateLaneOrder.useMutation();
 
   const { mutate: updateTaskOrderSameLane } =
@@ -48,6 +55,13 @@ const Board = ({
 
   const { mutate: updateTaskOrderDifferentLane } =
     trpc.task.updateTaskOrderDifferentLane.useMutation();
+
+  const { mutate: updateBoardUi } = trpc.pusher.updateBoardUi.useMutation();
+
+  const updateUi = () => {
+    refetchLanes();
+    updateBoardUi({ boardId });
+  };
 
   const onDragEnd = (result: DropResult) => {
     // dropped nowhere
@@ -108,32 +122,6 @@ const Board = ({
         });
       }
     }
-  };
-
-  // useEffect(() => {
-  //   socketInitializer();
-  // }, []);
-
-  // const socketInitializer = async () => {
-  //   socket = io({
-  //     path: "/api/socket",
-  //     addTrailingSlash: false,
-  //   });
-
-  //   socket.on("connect", () => {
-  //     console.log("connected");
-  //   });
-
-  //   socket.on("message", (msg: string) => {
-  //     if (msg === boardId) {
-  //       refetchLanes();
-  //     }
-  //   });
-  // };
-
-  const updateUi = () => {
-    refetchLanes();
-    // socket.emit("message", boardId);
   };
 
   return (

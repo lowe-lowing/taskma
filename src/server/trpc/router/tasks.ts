@@ -88,7 +88,7 @@ export const taskRouter = router({
       z.object({
         taskId: z.string(),
         title: z.string(),
-        description: z.string(),
+        description: z.string().nullable(),
         dueDate: z.date().nullable(),
       })
     )
@@ -100,6 +100,38 @@ export const taskRouter = router({
           Description: input.description,
           DueDate: input.dueDate,
         },
+      });
+    }),
+  searchUsersAsignToTask: protectedProcedure
+    .input(
+      z.object({ name: z.string(), boardId: z.string(), taskId: z.string() })
+    )
+    .query(async ({ ctx, input }) => {
+      const { name, boardId, taskId } = input;
+      // find all users in the board but not already assigned to the task
+      const users = await ctx.prisma.user.findMany({
+        where: {
+          name: { contains: name, mode: "insensitive" },
+          UserBoards: { some: { boardId } },
+          UserTasks: { none: { taskId } },
+        },
+      });
+      return users;
+    }),
+
+  addAsignedUser: protectedProcedure
+    .input(z.object({ taskId: z.string(), userId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const { taskId, userId } = input;
+      return ctx.prisma.userTask.create({
+        data: { taskId, userId },
+      });
+    }),
+  removeAsignedUser: protectedProcedure
+    .input(z.object({ taskUserId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.prisma.userTask.delete({
+        where: { id: input.taskUserId },
       });
     }),
 });
