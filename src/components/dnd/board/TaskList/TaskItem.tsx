@@ -3,13 +3,12 @@ import { Button } from "@/components/ui/button";
 import UserAvatar from "@/components/UserAvatar";
 import { trpc } from "@/lib/trpc";
 import { cn } from "@/lib/utils";
-import { type Task } from "@prisma/client";
 import { Edit, Loader2, Trash2 } from "lucide-react";
 import moment from "moment";
 import React from "react";
 import { type DraggableProvided } from "react-beautiful-dnd";
 import { toast } from "react-hot-toast";
-import { FullTask } from "../../types";
+import { FullTask, LaneWithTasks } from "../../types";
 
 type TaskItemProps = {
   task: FullTask;
@@ -18,15 +17,29 @@ type TaskItemProps = {
   provided?: DraggableProvided;
   index: number;
   updateUi: () => void;
+  setLanes?: React.Dispatch<React.SetStateAction<LaneWithTasks[]>>;
 };
+
 function TaskItem({
   task,
   isDragging,
   provided,
   index,
   updateUi,
+  setLanes,
 }: TaskItemProps) {
   const { mutate: deleteTask } = trpc.task.deleteTask.useMutation({
+    onMutate: ({ taskId }) => {
+      setLanes?.((prev) => {
+        const newLanes = [...prev];
+        const laneIndex = newLanes.findIndex((lane) => lane.id === task.laneId);
+        const taskIndex = newLanes[laneIndex]!.Tasks.findIndex(
+          (t) => t.id === taskId
+        );
+        newLanes[laneIndex]!.Tasks.splice(taskIndex, 1);
+        return newLanes;
+      });
+    },
     onSuccess: () => {
       updateUi();
     },

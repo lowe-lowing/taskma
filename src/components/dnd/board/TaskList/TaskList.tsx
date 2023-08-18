@@ -101,6 +101,7 @@ export default function TaskList({
                           provided={dragProvided}
                           index={i}
                           updateUi={updateUi}
+                          setLanes={setLanes}
                         />
                       )}
                     </Draggable>
