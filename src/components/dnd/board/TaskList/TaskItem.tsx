@@ -127,7 +127,7 @@ function TaskItem({
               <Button
                 variant={"ghost"}
                 size={"sm"}
-                className="p-1"
+                className="p-1 hover:text-destructive dark:hover:text-red-700"
                 onClick={() => deleteTask({ taskId: task.id })}
               >
                 <Trash2 size={20} />
