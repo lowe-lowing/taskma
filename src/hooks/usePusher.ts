@@ -1,5 +1,5 @@
 import { clientEnv } from "@/env/schema.mjs";
-import { UpdateUiPusherResponse } from "@/server/trpc/router/pusher";
+import type { UpdateUiPusherResponse } from "@/server/trpc/router/pusher";
 import Pusher from "pusher-js";
 import { useEffect } from "react";
 

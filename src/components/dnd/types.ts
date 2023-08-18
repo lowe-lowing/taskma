@@ -9,7 +9,7 @@ export type FullTask = Prisma.TaskGetPayload<{
 export type LaneWithTasks = Prisma.LaneGetPayload<{
   include: {
     Tasks: {
-      include: { UserTasks: true };
+      include: { UserTasks: { include: { User: true } } };
     };
   };
 }>;
