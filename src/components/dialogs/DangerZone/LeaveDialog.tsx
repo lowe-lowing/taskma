@@ -20,7 +20,11 @@ type LeaveDialogProps =
       membership: UserWorkspace;
       trigger: React.ReactNode;
     }
-  | { type: "board"; membership: UserBoard; trigger: React.ReactNode };
+  | {
+      type: "board";
+      membership: UserBoard | undefined | null;
+      trigger: React.ReactNode;
+    };
 
 export const LeaveDialog: FC<LeaveDialogProps> = ({
   type,
@@ -67,6 +71,7 @@ export const LeaveDialog: FC<LeaveDialogProps> = ({
               isLoading={leaveWorkspaceLoading || leaveBoardLoading}
               onClick={() =>
                 (type === "board" &&
+                  membership &&
                   leaveBoard({ membershipId: membership.id })) ||
                 (type === "workspace" &&
                   leaveWorkspace({

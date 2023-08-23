@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { useOnClickOutside } from "@/hooks/useOnClickOutside";
 import { trpc } from "@/lib/trpc";
-import { type Board } from "@prisma/client";
+import { BoardRole, type Board } from "@prisma/client";
 import debounce from "lodash.debounce";
 import { Plus } from "lucide-react";
 import { type User } from "next-auth";
@@ -28,11 +28,13 @@ import UserAvatar from "../UserAvatar";
 
 interface InviteBoardDialogProps {
   board: Board;
+  userRole: BoardRole;
   refetchMembers: () => void;
 }
 
-export const InviteBoardDialogDialog: FC<InviteBoardDialogProps> = ({
+export const InviteBoardDialog: FC<InviteBoardDialogProps> = ({
   board,
+  userRole,
   refetchMembers,
 }) => {
   const [input, setInput] = useState("");
@@ -79,7 +81,12 @@ export const InviteBoardDialogDialog: FC<InviteBoardDialogProps> = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="p-1" variant={"ghost"} size={"sm"}>
+        <Button
+          className="p-1"
+          variant={"ghost"}
+          size={"sm"}
+          disabled={userRole === "Viewer"}
+        >
           <Plus />
         </Button>
       </DialogTrigger>

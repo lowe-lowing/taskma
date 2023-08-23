@@ -1,11 +1,13 @@
-import EditTaskDialog from "@/components/dialogs/EditTaskDialog";
+import EditTaskDialog from "@/components/dialogs/EditTaskDialog/EditTaskDialog";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import UserAvatar from "@/components/UserAvatar";
 import { trpc } from "@/lib/trpc";
 import { cn } from "@/lib/utils";
+import { TaskCategory } from "@prisma/client";
 import { Edit, Loader2, Trash2 } from "lucide-react";
 import moment from "moment";
-import React from "react";
+import React, { FC } from "react";
 import { type DraggableProvided } from "react-beautiful-dnd";
 import { toast } from "react-hot-toast";
 import { FullTask, LaneWithTasks } from "../../types";
@@ -16,6 +18,7 @@ type TaskItemProps = {
   isGroupedOver: boolean;
   provided?: DraggableProvided;
   index: number;
+  categories: TaskCategory[];
   updateUi: () => void;
   setLanes?: React.Dispatch<React.SetStateAction<LaneWithTasks[]>>;
 };
@@ -25,6 +28,7 @@ function TaskItem({
   isDragging,
   provided,
   index,
+  categories,
   updateUi,
   setLanes,
 }: TaskItemProps) {
@@ -67,25 +71,8 @@ function TaskItem({
 
   if (!provided) {
     return (
-      <div
-        className={cn(
-          "box-border flex select-none rounded-lg border-transparent bg-background p-2",
-          {
-            "bg-green-100 shadow-md dark:bg-gray-700": isDragging,
-          }
-        )}
-        data-is-dragging={isDragging}
-        data-testid={task.id}
-        data-index={index}
-      >
-        <div className="flex flex-grow basis-full flex-col">
-          <p className="overflow-hidden">{task.Title}</p>
-          {task.DueDate && (
-            <p className="text-xs text-gray-500">
-              Due Date: {moment(task.DueDate).format("MMM Do")}
-            </p>
-          )}
-        </div>
+      <div className="box-border flex select-none rounded-lg border-transparent bg-background p-2">
+        <Task task={task} isLoading={isLoading} viewOnly />
       </div>
     );
   } else {
@@ -106,39 +93,85 @@ function TaskItem({
         onDrop={(e) => drop(e, task.id)}
         onDragOver={(e) => allowDrop(e)}
       >
-        <div className="flex flex-grow basis-full flex-col">
-          <div
-            className="grid gap-1"
-            style={{
-              gridTemplateColumns: "4fr 1fr",
-            }}
-          >
-            <p className="overflow-hidden">{task.Title}</p>
-            <div className="flex items-start">
-              <EditTaskDialog
-                updateUi={updateUi}
-                task={task}
-                trigger={
-                  <Button variant={"ghost"} size={"sm"} className="p-1">
-                    <Edit size={20} />
-                  </Button>
-                }
-              />
-              <Button
-                variant={"ghost"}
-                size={"sm"}
-                className="p-1 hover:text-destructive dark:hover:text-red-700"
-                onClick={() => deleteTask({ taskId: task.id })}
-              >
-                <Trash2 size={20} />
-              </Button>
-            </div>
+        <Task
+          viewOnly={false}
+          task={task}
+          isLoading={isLoading}
+          categories={categories}
+          deleteTask={deleteTask}
+          updateUi={updateUi}
+        />
+      </div>
+    );
+  }
+}
+
+export default React.memo(TaskItem);
+
+type TaskUnionProps =
+  | {
+      viewOnly: true;
+      task: FullTask;
+      isLoading: boolean;
+    }
+  | {
+      viewOnly: false;
+      task: FullTask;
+      isLoading: boolean;
+      categories: TaskCategory[];
+      updateUi: () => void;
+      deleteTask: ({ taskId }: { taskId: string }) => void;
+    };
+
+const Task: FC<TaskUnionProps> = (props) => {
+  const { viewOnly, task, isLoading } = props;
+  return (
+    <div className="flex flex-grow basis-full flex-col">
+      <div
+        className="grid gap-1"
+        style={{
+          gridTemplateColumns: viewOnly ? "1fr" : "4fr 1fr",
+        }}
+      >
+        <p className="overflow-hidden">{task.Title}</p>
+        {!viewOnly && (
+          <div className="flex items-start">
+            <EditTaskDialog
+              updateUi={props.updateUi}
+              task={task}
+              categories={props.categories}
+              trigger={
+                <Button variant={"ghost"} size={"sm"} className="p-1">
+                  <Edit size={20} />
+                </Button>
+              }
+            />
+            <Button
+              variant={"ghost"}
+              size={"sm"}
+              className="p-1 hover:text-destructive dark:hover:text-red-700"
+              onClick={() => props.deleteTask({ taskId: task.id })}
+            >
+              <Trash2 size={20} />
+            </Button>
           </div>
-          {task.DueDate && (
-            <p className="text-xs text-gray-500">
-              Due Date: {moment(task.DueDate).format("MMM Do")}
-            </p>
-          )}
+        )}
+      </div>
+      <div className="space-y-1">
+        {task.TaskCategory && (
+          <Badge
+            className={`w-fit`}
+            style={{ backgroundColor: task.TaskCategory.color }}
+          >
+            {task.TaskCategory.name}
+          </Badge>
+        )}
+        {task.DueDate && (
+          <p className="text-xs">
+            Due Date: {moment(task.DueDate).format("MMM Do")}
+          </p>
+        )}
+        {task.UserTasks.length > 0 && (
           <div className="flex gap-0.5">
             {task.UserTasks.map((userTask) => (
               <UserAvatar
@@ -149,10 +182,8 @@ function TaskItem({
             ))}
             {isLoading && <Loader2 className="h-6 w-6 animate-spin" />}
           </div>
-        </div>
+        )}
       </div>
-    );
-  }
-}
-
-export default React.memo(TaskItem);
+    </div>
+  );
+};

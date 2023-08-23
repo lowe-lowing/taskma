@@ -1,4 +1,4 @@
-import type { Board, UserBoard } from "@prisma/client";
+import type { Board, BoardRole, UserBoard } from "@prisma/client";
 import { type FC } from "react";
 import { DeleteBoardDialog } from "./dialogs/DangerZone/BoardDangerZone/DeleteBoardDialog";
 import { LeaveDialog } from "./dialogs/DangerZone/LeaveDialog";
@@ -7,11 +7,15 @@ import { Separator } from "./ui/separator";
 
 interface BoardDangerZoneProps {
   board: Board;
-  membership: UserBoard;
+  membership: UserBoard | undefined | null;
+  userRole: BoardRole;
 }
 
-const BoardDangerZone: FC<BoardDangerZoneProps> = ({ board, membership }) => {
-  const { Role: userRole } = membership;
+const BoardDangerZone: FC<BoardDangerZoneProps> = ({
+  board,
+  membership,
+  userRole,
+}) => {
   return (
     <div>
       <p className="mb-1">Danger zone</p>
@@ -27,7 +31,11 @@ const BoardDangerZone: FC<BoardDangerZoneProps> = ({ board, membership }) => {
             type="board"
             membership={membership}
             trigger={
-              <Button type="button" variant={"destructive"}>
+              <Button
+                type="button"
+                variant={"destructive"}
+                disabled={!membership}
+              >
                 Leave
               </Button>
             }

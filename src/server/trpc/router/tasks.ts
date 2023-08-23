@@ -90,18 +90,25 @@ export const taskRouter = router({
         title: z.string(),
         description: z.string().nullable(),
         dueDate: z.date().nullable(),
+        categoryId: z.string().nullable(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
-      return ctx.prisma.task.update({
-        where: { id: input.taskId },
-        data: {
-          Title: input.title,
-          Description: input.description,
-          DueDate: input.dueDate,
-        },
-      });
-    }),
+    .mutation(
+      async ({
+        ctx,
+        input: { taskId, title, description, dueDate, categoryId },
+      }) => {
+        return ctx.prisma.task.update({
+          where: { id: taskId },
+          data: {
+            Title: title,
+            Description: description,
+            DueDate: dueDate,
+            taskCategoryId: categoryId,
+          },
+        });
+      }
+    ),
   searchUsersAsignToTask: protectedProcedure
     .input(
       z.object({ name: z.string(), boardId: z.string(), taskId: z.string() })
@@ -132,6 +139,15 @@ export const taskRouter = router({
     .mutation(async ({ ctx, input }) => {
       return ctx.prisma.userTask.delete({
         where: { id: input.taskUserId },
+      });
+    }),
+
+  comment: protectedProcedure
+    .input(z.object({ taskId: z.string(), content: z.string() }))
+    .mutation(async ({ ctx, input: { content, taskId } }) => {
+      return ctx.prisma.taskComment.create({
+        data: { content, taskId, userId: ctx.session.user.id },
+        include: { User: true },
       });
     }),
 });

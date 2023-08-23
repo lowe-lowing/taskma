@@ -1,5 +1,4 @@
 import { clientEnv } from "@/env/schema.mjs";
-import type { UpdateUiPusherResponse } from "@/server/trpc/router/pusher";
 import Pusher from "pusher-js";
 import { useEffect } from "react";
 
@@ -7,15 +6,15 @@ const pusher = new Pusher(clientEnv.NEXT_PUBLIC_PUSHER_KEY as string, {
   cluster: clientEnv.NEXT_PUBLIC_PUSHER_CLUSTER as string,
 });
 
-export const usePusher = (
+export function usePusher<T>(
   channel: string,
   event: string,
-  func: (data: UpdateUiPusherResponse) => void
-) => {
+  func: (data: T) => void
+) {
   useEffect(() => {
     const chann = pusher.subscribe(channel);
 
-    chann.bind(event, (data: UpdateUiPusherResponse) => {
+    chann.bind(event, (data: T) => {
       func(data);
     });
 
@@ -23,4 +22,4 @@ export const usePusher = (
       pusher.unsubscribe(channel);
     };
   }, []);
-};
+}

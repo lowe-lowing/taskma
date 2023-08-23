@@ -12,6 +12,7 @@ import { type InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import UserAvatar from "@/components/UserAvatar";
+import Link from "next/link";
 
 export default function Page({
   data: session,
@@ -55,7 +56,7 @@ export default function Page({
       <main className="relative flex h-[calc(100dvh-50px)] flex-col items-center overflow-x-hidden pt-1 sm:h-[calc(100dvh-42px)]">
         {isLoading || membershipLoading ? (
           <BoardSkeleton workspaceId={workspaceId} />
-        ) : board && loggedInUserMembership ? (
+        ) : (board && loggedInUserMembership) || (board && board.isPublic) ? (
           <>
             <BoardContainer className="flex items-center justify-between px-0 sm:px-1">
               <BackButton href={`/workspace/${workspaceId}/boards`} />
@@ -72,24 +73,20 @@ export default function Page({
                     />
                   ))}
                 </div>
-                <Button
-                  variant={"ghost"}
-                  size={"sm"}
-                  className="p-1"
-                  onClick={() => router.push(`${location.href}/settings`)}
-                >
-                  <Settings size={20} />
-                </Button>
+                <Link href={`${location.href}/settings`}>
+                  <Button variant={"ghost"} size={"sm"} className="p-1">
+                    <Settings size={20} />
+                  </Button>
+                </Link>
               </div>
             </BoardContainer>
             <Separator className="my-1" />
             <Board
-              initial={board.Lanes}
-              boardId={boardId}
+              board={board}
               containerHeight={500}
               refetchLanes={refetchLanes}
               isCombineEnabled={false}
-              UserBoardRole={loggedInUserMembership.Role}
+              UserBoardRole={loggedInUserMembership?.Role || "Viewer"}
             />
           </>
         ) : error?.data?.code === "UNAUTHORIZED" ? (

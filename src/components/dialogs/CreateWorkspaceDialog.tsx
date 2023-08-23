@@ -52,22 +52,28 @@ export const CreateWorkspaceDialog: FC = () => {
             Create New Workspace
           </DialogTitle>
         </DialogHeader>
-        <Input
-          placeholder="Workspace Name"
-          name="name"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
+        <form
+          id="create-workspace-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            createWorkspace({
+              name: input,
+            });
+          }}
+        >
+          <Input
+            placeholder="Workspace Name"
+            name="name"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+          />
+        </form>
         <DialogFooter>
           <Button
             type="submit"
-            disabled={input.length < 3}
+            form="create-workspace-form"
+            disabled={input.length < 3 || isLoading}
             isLoading={isLoading}
-            onClick={() =>
-              createWorkspace({
-                name: input,
-              })
-            }
           >
             Create
           </Button>

@@ -38,7 +38,7 @@ export default function Page({
         <MainGrid>
           <SideView workspaces={workspaces} isLoading={isLoading} />
           <div className="w-full">
-            {/* TODO: maybe add loading skeleton */}
+            {/* TODO: (workspace settings) maybe add loading skeleton*/}
             {workspace && membership && (
               <div className="space-y-2">
                 <div className="flex items-center justify-between">

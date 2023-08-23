@@ -1,4 +1,10 @@
-import { BoardRole, type Prisma, type UserBoard } from "@prisma/client";
+import {
+  BoardRole,
+  Lane,
+  TaskCategory,
+  type Prisma,
+  type UserBoard,
+} from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
@@ -16,12 +22,47 @@ export type UserBoardWithUser = Prisma.UserBoardGetPayload<{
   include: { User: true };
 }>;
 
+export type BoardWithCategories = Prisma.BoardGetPayload<{
+  include: { TaskCategories: true };
+}>;
+
+export type TemplateBoard = Prisma.BoardGetPayload<{
+  include: {
+    TaskCategories: true;
+    Lanes: {
+      orderBy: { Order: "asc" };
+      include: {
+        Tasks: {
+          orderBy: { Order: "asc" };
+        };
+      };
+    };
+  };
+}>;
+
 export const boardRouter = router({
   getBoardById: protectedProcedure
     .input(z.object({ boardId: z.string() }))
-    .query(({ ctx, input }) => {
+    .query(async ({ ctx, input }) => {
+      const memberShipExists = await ctx.prisma.userBoard.findFirst({
+        where: { userId: ctx.session.user.id, boardId: input.boardId },
+      });
+
+      const boardPublic = await ctx.prisma.board
+        .findFirst({
+          where: { id: input.boardId },
+        })
+        .then((board) => board?.isPublic);
+
+      if (!memberShipExists && !boardPublic)
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "User is not a member of this board",
+        });
+
       return ctx.prisma.board.findUnique({
         where: { id: input.boardId },
+        include: { TaskCategories: true },
       });
     }),
   getBoardFull: protectedProcedure
@@ -31,7 +72,13 @@ export const boardRouter = router({
         where: { userId: ctx.session.user.id, boardId: input.boardId },
       });
 
-      if (!memberShipExists)
+      const boardPublic = await ctx.prisma.board
+        .findFirst({
+          where: { id: input.boardId },
+        })
+        .then((board) => board?.isPublic);
+
+      if (!memberShipExists && !boardPublic)
         throw new TRPCError({
           code: "UNAUTHORIZED",
           message: "User is not a member of this board",
@@ -40,19 +87,43 @@ export const boardRouter = router({
       return ctx.prisma.board.findUnique({
         where: { id: input.boardId },
         include: {
+          TaskCategories: true,
           UserBoards: { include: { User: true } },
           Lanes: {
             orderBy: { Order: "asc" },
             include: {
               Tasks: {
                 orderBy: { Order: "asc" },
-                include: { UserTasks: { include: { User: true } } },
+                include: {
+                  UserTasks: { include: { User: true } },
+                  TaskCategory: true,
+                  TaskComments: {
+                    include: { User: true },
+                    orderBy: { CreatedAt: "asc" },
+                  },
+                },
               },
             },
           },
         },
       });
     }),
+  getTemplates: protectedProcedure.query(async ({ ctx, input }) => {
+    return ctx.prisma.board.findMany({
+      where: { template: true },
+      include: {
+        TaskCategories: true,
+        Lanes: {
+          orderBy: { Order: "asc" },
+          include: {
+            Tasks: {
+              orderBy: { Order: "asc" },
+            },
+          },
+        },
+      },
+    });
+  }),
   createBoard: protectedProcedure
     .input(
       z.object({ Name: z.string().min(3).max(50), workspaceId: z.string() })
@@ -94,6 +165,56 @@ export const boardRouter = router({
         },
       });
     }),
+  createFromTemplate: protectedProcedure
+    .input(
+      z.object({
+        Name: z.string().min(3).max(50),
+        workspaceId: z.string(),
+        templateId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { Name, workspaceId, templateId } = input;
+      const template = await ctx.prisma.board.findUnique({
+        where: { id: templateId },
+        include: { TaskCategories: true, Lanes: true },
+      });
+      if (!template)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Template not found",
+        });
+
+      const parsedLanes = template.Lanes.map((lane: Partial<Lane>) => {
+        delete lane.boardId;
+        delete lane.id;
+        return lane as Lane;
+      });
+      const parsedCategories = template.TaskCategories.map(
+        (category: Partial<TaskCategory>) => {
+          delete category.boardId;
+          delete category.id;
+          return category as TaskCategory;
+        }
+      );
+
+      return ctx.prisma.board.create({
+        data: {
+          Name,
+          workspaceId,
+          Lanes: { createMany: { data: parsedLanes } },
+          TaskCategories: { createMany: { data: parsedCategories } },
+          UserBoards: {
+            create: {
+              userId: ctx.session.user.id,
+              Role: "Creator",
+              addedBy: "BoardCreation",
+            },
+          },
+        },
+      });
+    }),
+
   getUsersInBoard: protectedProcedure
     .input(z.object({ boardId: z.string() }))
     .query(({ ctx, input }) => {
@@ -179,7 +300,7 @@ export const boardRouter = router({
     .input(z.object({ boardId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const { boardId } = input;
-      // only admins can delete boards maybe do a check for that
+      // FIXME: only admins can delete boards maybe do a check for that
       return ctx.prisma.board.delete({
         where: { id: boardId },
       });
@@ -191,22 +312,41 @@ export const boardRouter = router({
         where: { id: input.membershipId },
       });
     }),
-});
 
-// getBoards: protectedProcedure.input(z.object({workspaceRole})).query(({ ctx, input }) => {
-//   return ctx.prisma.board.findMany({
-//     where: {
-//       Workspace: {
-//         UserWorkspaces: { every: { UserId: ctx.session.user.id } },
-//       },
-//     },
-//     include: { Workspace: true },
-//   });
-// }),
-// getBoardsByWorkspace: protectedProcedure
-//   .input(z.object({ workspaceId: z.string() }))
-//   .query(({ ctx, input }) => {
-//     return ctx.prisma.board.findMany({
-//       where: { Workspace: { id: input.workspaceId } },
-//     });
-//   }),
+  // TASK CATEGORY
+  createTaskCategory: protectedProcedure
+    .input(
+      z.object({
+        boardId: z.string(),
+        name: z.string().min(1).max(50),
+        color: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input: { boardId, name, color } }) => {
+      return ctx.prisma.taskCategory.create({
+        data: { boardId, name, color },
+      });
+    }),
+  updateTaskCategory: protectedProcedure
+    .input(
+      z.object({
+        categoryId: z.string(),
+        name: z.string().min(1).max(50),
+        color: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input: { categoryId, name, color } }) => {
+      return ctx.prisma.taskCategory.update({
+        where: { id: categoryId },
+        data: { name, color },
+      });
+    }),
+  deleteTaskCategory: protectedProcedure
+    .input(z.object({ categoryId: z.string() }))
+    .mutation(async ({ ctx, input: { categoryId } }) => {
+      return ctx.prisma.taskCategory.delete({
+        where: { id: categoryId },
+      });
+    }),
+  // ----------------
+});

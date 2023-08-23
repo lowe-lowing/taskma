@@ -1,5 +1,6 @@
 import { usePusher } from "@/hooks/usePusher";
 import { trpc } from "@/lib/trpc";
+import { UpdateUiPusherResponse } from "@/server/trpc/router/pusher";
 import { BoardRole } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -13,23 +14,21 @@ import {
   reorderTasksBetweenLanes,
   reorderTasksSameLane,
 } from "../reorder";
-import { ListType, type LaneWithTasks } from "../types";
+import { FullBoard, ListType, type LaneWithTasks } from "../types";
 import AddLaneHandler from "./Lane/AddLaneHandler";
 import Lane from "./Lane/Lane";
 
 type BoardProps = {
+  board: FullBoard;
   isCombineEnabled: boolean;
-  initial: LaneWithTasks[];
-  boardId: string;
   containerHeight: number;
   UserBoardRole: BoardRole;
   refetchLanes: () => void;
 };
 
 const Board = ({
+  board: { Lanes: initial, id: boardId, TaskCategories },
   isCombineEnabled,
-  initial,
-  boardId,
   containerHeight,
   UserBoardRole,
   refetchLanes,
@@ -42,10 +41,9 @@ const Board = ({
   }, [initial]);
 
   const { data: session } = useSession();
-  usePusher("board", "update-ui", (data) => {
-    if (data.boardId === boardId && data.userId !== session?.user?.id) {
-      refetchLanes();
-    }
+  usePusher<UpdateUiPusherResponse>("board-update-ui", boardId, (data) => {
+    if (data.userId === session?.user?.id) return;
+    refetchLanes();
   });
 
   const { mutate: updateLaneOrder } = trpc.lane.updateLaneOrder.useMutation();
@@ -148,6 +146,7 @@ const Board = ({
                       lane={lane}
                       index={index}
                       UserBoardRole={UserBoardRole}
+                      categories={TaskCategories}
                       setLanes={setLanes}
                       updateUi={updateUi}
                     />
@@ -171,6 +170,7 @@ const Board = ({
                 lane={lane}
                 index={index}
                 UserBoardRole={UserBoardRole}
+                categories={TaskCategories}
                 setLanes={setLanes}
                 updateUi={updateUi}
               />

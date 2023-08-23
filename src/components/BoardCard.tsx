@@ -2,6 +2,7 @@ import { trpc } from "@/lib/trpc";
 import { type Board as PrismaBoard } from "@prisma/client";
 import Link from "next/link";
 import { type FC } from "react";
+import { Badge } from "./ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Separator } from "./ui/separator";
 
@@ -16,7 +17,14 @@ const BoardCard: FC<BoardCardProps> = ({ board, workspaceId }) => {
     <Link href={`/workspace/${workspaceId}/board/${board.id}`}>
       <Card className="aspect-video overflow-hidden">
         <CardHeader className="p-1">
-          <CardTitle className="text-xs">{board.Name}</CardTitle>
+          <CardTitle className="flex w-full justify-between">
+            <p className="text-xs">{board.Name}</p>
+            {board.isPublic && (
+              <Badge className="h-fit w-fit bg-green-500 px-1.5 text-[10px]">
+                Public
+              </Badge>
+            )}
+          </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-row gap-1 p-0 pl-1">
           {lanes?.map((lane) => (

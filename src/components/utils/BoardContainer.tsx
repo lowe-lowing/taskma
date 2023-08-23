@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { type FC } from "react";
 
-interface BoardContainerProps {
+interface BoardContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   className?: string;
 }

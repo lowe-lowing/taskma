@@ -29,5 +29,6 @@ const MyApp: AppType<{ session: Session | null }> = ({
     </>
   );
 };
+// TODO: add comments on tasks
 
 export default trpc.withTRPC(MyApp);

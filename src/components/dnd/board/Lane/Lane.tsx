@@ -1,6 +1,6 @@
 import { Card, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { BoardRole } from "@prisma/client";
+import { BoardRole, TaskCategory } from "@prisma/client";
 import { Draggable } from "react-beautiful-dnd";
 import { type LaneWithTasks } from "../../types";
 import TaskList from "../TaskList/TaskList";
@@ -10,6 +10,7 @@ type LaneProps = {
   lane: LaneWithTasks;
   index: number;
   UserBoardRole: BoardRole;
+  categories: TaskCategory[];
   setLanes: React.Dispatch<React.SetStateAction<LaneWithTasks[]>>;
   updateUi: () => void;
 };
@@ -18,6 +19,7 @@ const Lane = ({
   lane,
   index,
   UserBoardRole,
+  categories,
   setLanes,
   updateUi,
 }: LaneProps) => {
@@ -35,11 +37,10 @@ const Lane = ({
         </Card>
         <TaskList
           lane={lane}
-          tasks={lane.Tasks}
           isDraggingLane={false}
-          listId={lane.id}
           isCombineEnabled={false}
           UserBoardRole={UserBoardRole}
+          categories={categories}
           setLanes={setLanes}
           updateUi={updateUi}
         />
@@ -73,11 +74,10 @@ const Lane = ({
           </Card>
           <TaskList
             lane={lane}
-            tasks={lane.Tasks}
             isDraggingLane={snapshot.isDragging}
-            listId={lane.id}
             isCombineEnabled={false}
             UserBoardRole={UserBoardRole}
+            categories={categories}
             setLanes={setLanes}
             updateUi={updateUi}
           />

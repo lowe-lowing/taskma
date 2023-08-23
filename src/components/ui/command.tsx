@@ -40,7 +40,7 @@ const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
 const CommandInput = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Input>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & {
-    isLoading: boolean;
+    isLoading?: boolean;
   }
 >(({ className, isLoading, ...props }, ref) => (
   <div className="flex items-center border-b px-3" cmdk-input-wrapper="">

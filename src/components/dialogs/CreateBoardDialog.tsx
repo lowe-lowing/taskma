@@ -45,23 +45,29 @@ const CreateBoardDialog: FC<CreateBoardDialogProps> = ({
             {`Create new Board in '${workspace.name}'`}
           </DialogTitle>
         </DialogHeader>
-        <Input
-          placeholder="Board Name"
-          name="name"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
+        <form
+          id="create-board-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            createBoard({
+              Name: input,
+              workspaceId: workspace.id,
+            });
+          }}
+        >
+          <Input
+            placeholder="Board Name"
+            name="name"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+          />
+        </form>
         <DialogFooter>
           <Button
             type="submit"
-            disabled={input.length < 3}
+            form="create-board-form"
+            disabled={input.length < 3 || isLoading}
             isLoading={isLoading}
-            onClick={() =>
-              createBoard({
-                Name: input,
-                workspaceId: workspace.id,
-              })
-            }
           >
             Create
           </Button>

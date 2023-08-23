@@ -20,6 +20,8 @@ const BoardMember: FC<BoardMemberProps> = ({
   refetchMembers,
 }) => {
   const isLoggedInUser = User.id === session?.user?.id;
+  console.log(userRole);
+
   return (
     <div key={User.id}>
       <div className="flex items-center justify-between">

@@ -56,9 +56,10 @@ const LaneHeader: FC<LaneHeaderProps> = ({ lane, UserBoardRole, updateUi }) => {
 
   return (
     <div
-      className="grid gap-1 p-1"
+      className="grid items-center gap-1 p-0.5"
       style={{
-        gridTemplateColumns: "4fr 1fr",
+        gridTemplateColumns:
+          UserBoardRole === BoardRole.Viewer ? "1fr" : "4fr 1fr",
       }}
     >
       {isEditingName ? (
@@ -73,22 +74,22 @@ const LaneHeader: FC<LaneHeaderProps> = ({ lane, UserBoardRole, updateUi }) => {
             placeholder="Lane Title"
             value={newLaneName}
             onChange={(e) => setNewLaneName(e.target.value)}
-            className="-mt-1 h-7 w-40 p-1 pr-12 focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="-mt-0.5 h-8 w-full p-1 pr-6 focus-visible:ring-0 focus-visible:ring-offset-0"
             autoFocus
           />
           <Button
             variant={"ghost"}
             size={"sm"}
-            className="absolute bottom-0 right-3 top-0 z-20 my-auto -mt-0.5 w-fit p-[3px] text-[10px]"
+            className="absolute right-1 top-0 z-20 my-auto w-fit p-[3px] text-[12px]"
           >
             Save
           </Button>
         </form>
       ) : (
-        <p className="overflow-hidden text-lg leading-none">{laneNameState}</p>
+        <p className="overflow-hidden text-lg">{laneNameState}</p>
       )}
       {UserBoardRole !== BoardRole.Viewer && (
-        <div className="flex items-start">
+        <div className="flex items-center">
           <AiOutlineEdit
             size={20}
             className="cursor-pointer"

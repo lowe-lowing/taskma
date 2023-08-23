@@ -1,5 +1,5 @@
 import { WorkspaceSettingsValidationSchema } from "@/components/forms/WorkspaceSettingsForm";
-import { WorkspaceRole } from "@prisma/client";
+import { User, Workspace, WorkspaceRole } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
@@ -9,6 +9,15 @@ const zodWorkspaceRole = z.union([
   z.literal(WorkspaceRole.Admin),
   z.literal(WorkspaceRole.Member),
 ]);
+
+type GetPublicWorkspacesReturnType = Array<{
+  id: string;
+  name: string;
+  description: string;
+  isPublic: boolean;
+  owner: User;
+  hasJoined: boolean;
+}>;
 
 export const workspaceRouter = router({
   getWorkspaceById: protectedProcedure
@@ -24,28 +33,41 @@ export const workspaceRouter = router({
       where: { UserWorkspaces: { some: { userId } } },
     });
   }),
+  getPublicWorkspaces: protectedProcedure.query(
+    async ({ ctx }): Promise<GetPublicWorkspacesReturnType> => {
+      const publicWorkspaces = await ctx.prisma.workspace.findMany({
+        where: { isPublic: true },
+        include: {
+          UserWorkspaces: {
+            include: { User: true },
+          },
+        },
+      });
+
+      return publicWorkspaces.map((publicWorkspace) => ({
+        ...publicWorkspace,
+        owner: publicWorkspace.UserWorkspaces.find(
+          (membership) => membership.Role === WorkspaceRole.Owner
+        )!.User,
+        hasJoined: publicWorkspace.UserWorkspaces.some(
+          (membership) => membership.userId === ctx.session.user.id
+        ),
+      }));
+    }
+  ),
   getWorkspacesWithBoardsByUser: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.session.user.id;
     const workspaces = await ctx.prisma.workspace.findMany({
       where: { UserWorkspaces: { some: { userId } } },
       include: {
-        Boards: { where: { UserBoards: { some: { userId } } } },
-        // UserWorkspaces: true,
+        Boards: {
+          where: {
+            OR: [{ UserBoards: { some: { userId } } }, { isPublic: true }],
+          },
+        },
       },
     });
     return workspaces;
-    // return workspaces.map((workspace) => {
-    //   const role = workspace.UserWorkspaces.find(
-    //     (userWorkspace) => userWorkspace.userId === userId
-    //   )!.Role;
-    //   if (role === WorkspaceRole.Member) {
-    //     // if role == member only including the boards if the user has a connected UserBoard (aka is a member of the board)
-    //     workspace.Boards = workspace.Boards.filter((board) =>
-    //       board.UserBoards.find((userBoard) => userBoard.userId === userId)
-    //     );
-    //   }
-    //   return workspace;
-    // });
   }),
   createWorkspace: protectedProcedure
     .input(z.object({ name: z.string().min(3).max(50) }))
@@ -109,6 +131,45 @@ export const workspaceRouter = router({
           })
         )
       );
+    }),
+  joinPublicWorkspace: protectedProcedure
+    .input(z.object({ workspaceId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const { workspaceId } = input;
+      const workspace = await ctx.prisma.workspace.findUnique({
+        where: { id: workspaceId },
+      });
+      if (!workspace) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Workspace not found",
+        });
+      }
+      if (!workspace.isPublic) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Workspace is not public",
+        });
+      }
+      const userAlreadyJoined = await ctx.prisma.userWorkspace.findFirst({
+        where: {
+          workspaceId,
+          userId: ctx.session.user.id,
+        },
+      });
+      if (userAlreadyJoined) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "User already joined",
+        });
+      }
+      return ctx.prisma.userWorkspace.create({
+        data: {
+          User: { connect: { id: ctx.session.user.id } },
+          Workspace: { connect: { id: workspaceId } },
+          Role: "Member",
+        },
+      });
     }),
   updateSettings: protectedProcedure
     .input(

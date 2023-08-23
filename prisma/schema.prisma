@@ -66,6 +66,7 @@ model User {
   UserWorkspace UserWorkspace[]
   UserBoards    UserBoard[]
   UserTasks     UserTask[]
+  TaskComments  TaskComment[]
 }
 
 model Workspace {
@@ -93,13 +94,15 @@ enum WorkspaceRole {
 }
 
 model Board {
-  id          String      @id @unique @default(cuid())
-  Name        String
-  isPublic    Boolean     @default(false)
-  Lanes       Lane[]
-  Workspace   Workspace   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  workspaceId String
-  UserBoards  UserBoard[]
+  id             String         @id @unique @default(cuid())
+  Name           String
+  isPublic       Boolean        @default(false)
+  template       Boolean        @default(false)
+  workspaceId    String
+  Workspace      Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  Lanes          Lane[]
+  UserBoards     UserBoard[]
+  TaskCategories TaskCategory[]
 }
 
 model UserBoard {
@@ -135,16 +138,19 @@ model Lane {
 }
 
 model Task {
-  id          String     @id @unique @default(cuid())
-  Title       String
-  Description String?
-  CreatedAt   DateTime   @default(now())
-  UpdatedAt   DateTime   @updatedAt
-  DueDate     DateTime?
-  Order       Int
-  Lane        Lane       @relation(fields: [laneId], references: [id], onDelete: Cascade)
-  laneId      String
-  UserTasks   UserTask[]
+  id             String        @id @unique @default(cuid())
+  Title          String
+  Description    String?
+  CreatedAt      DateTime      @default(now())
+  UpdatedAt      DateTime      @updatedAt
+  DueDate        DateTime?
+  Order          Int
+  Lane           Lane          @relation(fields: [laneId], references: [id], onDelete: Cascade)
+  laneId         String
+  UserTasks      UserTask[]
+  taskCategoryId String?
+  TaskCategory   TaskCategory? @relation(fields: [taskCategoryId], references: [id], onDelete: SetDefault)
+  TaskComments   TaskComment[]
 }
 
 model UserTask {
@@ -153,4 +159,23 @@ model UserTask {
   userId String
   Task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
   taskId String
+}
+
+model TaskCategory {
+  id      String @id @unique @default(cuid())
+  name    String
+  color   String
+  boardId String
+  Board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  Tasks   Task[]
+}
+
+model TaskComment {
+  id        String   @id @unique @default(cuid())
+  content   String
+  Task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  taskId    String
+  User      User     @relation(fields: [userId], references: [id])
+  userId    String
+  CreatedAt DateTime @default(now())
 }

@@ -23,6 +23,12 @@ const BoardSkeleton = ({ workspaceId }: { workspaceId: string }) => {
         </Button>
       </BoardContainer>
       <Separator className="my-1" />
+      <div className="flex gap-2 pt-2">
+        <Skeleton className="h-80 w-60" />
+        <Skeleton className="h-64 w-60" />
+        <Skeleton className="h-96 w-60" />
+        <Skeleton className="h-10 w-28" />
+      </div>
     </>
   );
 };
