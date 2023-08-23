@@ -77,19 +77,19 @@ const Comments: FC<CommentsProps> = ({
           >
             <Mention
               trigger="@"
+              // displayTransform={(id, display) => `@${display}`}
               data={
                 memberships?.map(({ User }) => ({
-                  id: User.id,
-                  display: User.name,
-                  avatar: User.image,
+                  id: User.name,
+                  display: User.image,
                 })) as SuggestionDataItem[]
               }
               renderSuggestion={(suggestion, search, highlightedDisplay) => (
                 <div className="flex items-center gap-1 border border-border p-1">
                   <UserAvatar
                     user={{
-                      name: suggestion.display,
-                      image: suggestion.avatar,
+                      name: suggestion.id as string,
+                      image: suggestion.display,
                     }}
                     className="h-7 w-7"
                   />
