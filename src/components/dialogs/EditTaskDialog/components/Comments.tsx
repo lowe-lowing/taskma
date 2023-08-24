@@ -74,6 +74,7 @@ const Comments: FC<CommentsProps> = ({
             singleLine={true}
             style={mentionsInputStyle}
             autoComplete="off"
+            className="overflow-hidden"
           >
             <Mention
               trigger="@"
