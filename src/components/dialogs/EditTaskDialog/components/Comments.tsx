@@ -77,23 +77,23 @@ const Comments: FC<CommentsProps> = ({
           >
             <Mention
               trigger="@"
-              // displayTransform={(id, display) => `@${display}`}
+              markup="@[__display__]"
               data={
                 memberships?.map(({ User }) => ({
-                  id: User.name,
-                  display: User.image,
+                  id: User.image,
+                  display: User.name,
                 })) as SuggestionDataItem[]
               }
               renderSuggestion={(suggestion, search, highlightedDisplay) => (
-                <div className="flex items-center gap-1 border border-border p-1">
+                <div className="flex items-center gap-1 rounded-md border border-border p-2">
                   <UserAvatar
                     user={{
-                      name: suggestion.id as string,
-                      image: suggestion.display,
+                      name: suggestion.display,
+                      image: suggestion.id as string,
                     }}
                     className="h-7 w-7"
                   />
-                  <span>{highlightedDisplay}</span>
+                  <span>{suggestion.display}</span>
                 </div>
               )}
               className="bg-blue-200 dark:bg-slate-600"
@@ -109,7 +109,7 @@ const Comments: FC<CommentsProps> = ({
       <div className="mt-2 space-y-1">
         {comments.map((comment) => (
           <div key={comment.id} className="space-y-1">
-            <div>
+            <div className="w-full">
               <div className="flex items-center gap-1">
                 <UserAvatar user={comment.User} className="h-4 w-4" />
                 <p className="text-xs">{comment.User.name}</p>
@@ -117,7 +117,7 @@ const Comments: FC<CommentsProps> = ({
                   {format(comment.CreatedAt, "Pp")}
                 </p>
               </div>
-              <p>{comment.content}</p>
+              <p className="break-all">{comment.content}</p>
             </div>
             <Separator />
           </div>
@@ -157,6 +157,7 @@ const mentionsInputStyle = {
   },
   suggestions: {
     item: {
+      backgroundColor: "hsl(var(--background))",
       "&focused": {
         backgroundColor: "hsl(var(--secondary))",
       },
