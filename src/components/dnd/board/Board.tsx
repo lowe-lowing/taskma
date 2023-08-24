@@ -46,13 +46,25 @@ const Board = ({
     refetchLanes();
   });
 
-  const { mutate: updateLaneOrder } = trpc.lane.updateLaneOrder.useMutation();
+  const { mutate: updateLaneOrder } = trpc.lane.updateLaneOrder.useMutation({
+    onSuccess: () => {
+      updateUi();
+    },
+  });
 
   const { mutate: updateTaskOrderSameLane } =
-    trpc.task.updateTaskOrderSameLane.useMutation();
+    trpc.task.updateTaskOrderSameLane.useMutation({
+      onSuccess: () => {
+        updateUi();
+      },
+    });
 
   const { mutate: updateTaskOrderDifferentLane } =
-    trpc.task.updateTaskOrderDifferentLane.useMutation();
+    trpc.task.updateTaskOrderDifferentLane.useMutation({
+      onSuccess: () => {
+        updateUi();
+      },
+    });
 
   const { mutate: updateBoardUi } = trpc.pusher.updateBoardUi.useMutation();
 
