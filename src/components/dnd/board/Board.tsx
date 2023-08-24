@@ -48,21 +48,21 @@ const Board = ({
 
   const { mutate: updateLaneOrder } = trpc.lane.updateLaneOrder.useMutation({
     onSuccess: () => {
-      updateUi();
+      updateBoardUi({ boardId });
     },
   });
 
   const { mutate: updateTaskOrderSameLane } =
     trpc.task.updateTaskOrderSameLane.useMutation({
       onSuccess: () => {
-        updateUi();
+        updateBoardUi({ boardId });
       },
     });
 
   const { mutate: updateTaskOrderDifferentLane } =
     trpc.task.updateTaskOrderDifferentLane.useMutation({
       onSuccess: () => {
-        updateUi();
+        updateBoardUi({ boardId });
       },
     });
 
