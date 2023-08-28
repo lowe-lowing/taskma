@@ -26,21 +26,20 @@ const BoardsView: FC<BoardsProps> = ({ workspaces, isLoading }) => {
   const [workspaceNameInput, setWorkspaceNameInput] = useState("");
 
   const router = useRouter();
-  const { mutate: createWorkspace } =
-    trpc.workspace.createWorkspace.useMutation({
-      onSuccess: () => {
-        router.refresh();
-      },
-      onError: (error) => {
-        if (error instanceof TRPCClientError) {
-          if (error.data.httpStatus === 400) {
-            const err = JSON.parse(error.message);
-            return toast.error(err[0].message);
-          }
+  const { mutate: createWorkspace } = trpc.workspace.createWorkspace.useMutation({
+    onSuccess: () => {
+      router.refresh();
+    },
+    onError: (error) => {
+      if (error instanceof TRPCClientError) {
+        if (error.data.httpStatus === 400) {
+          const err = JSON.parse(error.message);
+          return toast.error(err[0].message);
         }
-        toast.error("Something went wrong. Please try again later.");
-      },
-    });
+      }
+      toast.error("Something went wrong. Please try again later.");
+    },
+  });
 
   return (
     <div className="flex w-full flex-col gap-4">

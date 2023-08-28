@@ -12,23 +12,21 @@ const pusher = new Pusher({
 
 export type UpdateUiPusherResponse = {
   userId: string;
-  boardId: string;
 };
 
 export const pusherRouter = router({
   updateBoardUi: protectedProcedure
     .input(z.object({ boardId: z.string() }))
     .mutation(async ({ ctx, input: { boardId } }) => {
-      await pusher.trigger("board-update-ui", boardId, {
+      await pusher.trigger(boardId, "board-update-ui", {
         userId: ctx.session.user.id,
-        boardId,
       } as UpdateUiPusherResponse);
       return true;
     }),
-  sendComment: protectedProcedure
-    .input(z.object({ comment: z.any() }))
-    .mutation(async ({ ctx, input: { comment } }) => {
-      await pusher.trigger("task-comment", comment.taskId, comment);
-      return true;
-    }),
+  // sendComment: protectedProcedure
+  //   .input(z.object({ comment: z.any() }))
+  //   .mutation(async ({ ctx, input: { comment } }) => {
+  //     await pusher.trigger("task-comment", comment.taskId, comment);
+  //     return true;
+  //   }),
 });

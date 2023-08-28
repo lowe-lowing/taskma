@@ -2,18 +2,11 @@ import { usePusher } from "@/hooks/usePusher";
 import { trpc } from "@/lib/trpc";
 import { UpdateUiPusherResponse } from "@/server/trpc/router/pusher";
 import { BoardRole } from "@prisma/client";
+import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import {
-  DragDropContext,
-  Droppable,
-  type DropResult,
-} from "react-beautiful-dnd";
-import {
-  reorderLanes,
-  reorderTasksBetweenLanes,
-  reorderTasksSameLane,
-} from "../reorder";
+import { DragDropContext, Droppable, type DropResult } from "react-beautiful-dnd";
+import { reorderLanes, reorderTasksBetweenLanes, reorderTasksSameLane } from "../reorder";
 import { FullBoard, ListType, type LaneWithTasks } from "../types";
 import AddLaneHandler from "./Lane/AddLaneHandler";
 import Lane from "./Lane/Lane";
@@ -41,7 +34,7 @@ const Board = ({
   }, [initial]);
 
   const { data: session } = useSession();
-  usePusher<UpdateUiPusherResponse>("board-update-ui", boardId, (data) => {
+  usePusher<UpdateUiPusherResponse>(boardId, "board-update-ui", (data) => {
     if (data.userId === session?.user?.id) return;
     refetchLanes();
   });
@@ -52,12 +45,11 @@ const Board = ({
     },
   });
 
-  const { mutate: updateTaskOrderSameLane } =
-    trpc.task.updateTaskOrderSameLane.useMutation({
-      onSuccess: () => {
-        updateBoardUi({ boardId });
-      },
-    });
+  const { mutate: updateTaskOrderSameLane } = trpc.task.updateTaskOrderSameLane.useMutation({
+    onSuccess: () => {
+      updateBoardUi({ boardId });
+    },
+  });
 
   const { mutate: updateTaskOrderDifferentLane } =
     trpc.task.updateTaskOrderDifferentLane.useMutation({
@@ -83,10 +75,7 @@ const Board = ({
     const destination = result.destination;
 
     // did not move anywhere - can bail early
-    if (
-      source.droppableId === destination.droppableId &&
-      source.index === destination.index
-    ) {
+    if (source.droppableId === destination.droppableId && source.index === destination.index) {
       return;
     }
 
@@ -102,17 +91,17 @@ const Board = ({
       if (source.droppableId === destination.droppableId) {
         const taskList = reorderTasksSameLane(lanes, result);
         setLanes((prev) =>
-          prev.map((lane) =>
-            lane.id === source.droppableId ? { ...lane, Tasks: taskList } : lane
-          )
+          prev.map((lane) => (lane.id === source.droppableId ? { ...lane, Tasks: taskList } : lane))
         );
         updateTaskOrderSameLane({ newTasks: taskList });
       }
 
       // moving to different list
       if (source.droppableId !== destination.droppableId) {
-        const { oldTasksOrdered, newTasksOrdered, taskToMove } =
-          reorderTasksBetweenLanes(lanes, result);
+        const { oldTasksOrdered, newTasksOrdered, taskToMove } = reorderTasksBetweenLanes(
+          lanes,
+          result
+        );
         setLanes((prev) =>
           prev.map((lane) => {
             if (lane.id === source.droppableId) {

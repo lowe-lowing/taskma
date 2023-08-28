@@ -14,6 +14,7 @@ const getBaseUrl = () => {
 export const trpc = createTRPCNext<AppRouter>({
   config() {
     return {
+      abortOnUnmount: true,
       transformer: superjson,
       links: [
         loggerLink({

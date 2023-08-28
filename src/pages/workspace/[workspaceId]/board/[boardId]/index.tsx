@@ -1,8 +1,9 @@
-import Navbar from "@/components/Navbar";
 import Board from "@/components/dnd/board/Board";
+import Navbar from "@/components/Navbar";
 import BoardSkeleton from "@/components/skeletons/BoardSkeleton";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import UserAvatar from "@/components/UserAvatar";
 import BackButton from "@/components/utils/BackButton";
 import { BoardContainer } from "@/components/utils/BoardContainer";
 import { ssrSession } from "@/lib/ssrSession";
@@ -10,9 +11,8 @@ import { trpc } from "@/lib/trpc";
 import { Settings } from "lucide-react";
 import { type InferGetServerSidePropsType } from "next";
 import Head from "next/head";
-import { useRouter } from "next/router";
-import UserAvatar from "@/components/UserAvatar";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function Page({
   data: session,
@@ -32,9 +32,7 @@ export default function Page({
       enabled: !!boardId,
       refetchOnWindowFocus: false,
       retry(failureCount, error) {
-        if (error?.data?.code === "UNAUTHORIZED") {
-          return false;
-        }
+        if (error?.data?.code === "UNAUTHORIZED") return false;
         return true;
       },
     }
@@ -84,9 +82,9 @@ export default function Page({
             <Board
               board={board}
               containerHeight={500}
-              refetchLanes={refetchLanes}
               isCombineEnabled={false}
               UserBoardRole={loggedInUserMembership?.Role || "Viewer"}
+              refetchLanes={refetchLanes}
             />
           </>
         ) : error?.data?.code === "UNAUTHORIZED" ? (
