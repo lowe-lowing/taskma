@@ -1,8 +1,8 @@
-import { type LaneWithTasks, ListType, FullTask } from "@/components/dnd/types";
+import { ListType, type LaneWithTasks } from "@/components/dnd/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { BoardRole, TaskCategory, type Task } from "@prisma/client";
+import { BoardRole, type TaskCategory } from "@prisma/client";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import AddTaskHandler from "./AddTaskHandler";
 import TaskItem from "./TaskItem";
@@ -73,25 +73,15 @@ export default function TaskList({
           className="h-[calc(100vh-200px)]"
         >
           <Card
-            className={cn(
-              "w-60 rounded-t-none bg-secondary dark:border-gray-700",
-              {
-                "bg-green-100 dark:bg-gray-700": isDraggingLane,
-              }
-            )}
+            className={cn("w-60 rounded-t-none bg-secondary dark:border-gray-700", {
+              "bg-green-100 dark:bg-gray-700": isDraggingLane,
+            })}
           >
             <CardContent className="p-0">
-              <ScrollArea
-                className="px-3 pb-3"
-                thumbClassName="dark:bg-gray-700"
-              >
+              <ScrollArea className="px-3 pb-3" thumbClassName="dark:bg-gray-700">
                 <div className="mt-3 flex h-fit max-h-[calc(100vh-200px)] min-h-[3rem] select-none flex-col gap-2">
                   {tasks.map((task, i) => (
-                    <Draggable
-                      key={task.id}
-                      draggableId={task.id as string}
-                      index={i}
-                    >
+                    <Draggable key={task.id} draggableId={task.id as string} index={i}>
                       {(dragProvided, dragSnapshot) => (
                         <TaskItem
                           key={task.id}
@@ -108,11 +98,7 @@ export default function TaskList({
                     </Draggable>
                   ))}
                   {dropProvided.placeholder}
-                  <AddTaskHandler
-                    lane={lane}
-                    setLanes={setLanes}
-                    updateUi={updateUi}
-                  />
+                  <AddTaskHandler lane={lane} setLanes={setLanes} updateUi={updateUi} />
                 </div>
               </ScrollArea>
             </CardContent>

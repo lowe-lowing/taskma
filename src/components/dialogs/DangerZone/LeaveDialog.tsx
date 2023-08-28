@@ -26,11 +26,7 @@ type LeaveDialogProps =
       trigger: React.ReactNode;
     };
 
-export const LeaveDialog: FC<LeaveDialogProps> = ({
-  type,
-  membership,
-  trigger,
-}) => {
+export const LeaveDialog: FC<LeaveDialogProps> = ({ type, membership, trigger }) => {
   const router = useRouter();
 
   const { mutate: leaveWorkspace, isLoading: leaveWorkspaceLoading } =
@@ -43,24 +39,21 @@ export const LeaveDialog: FC<LeaveDialogProps> = ({
       },
     });
 
-  const { mutate: leaveBoard, isLoading: leaveBoardLoading } =
-    trpc.board.leaveBoard.useMutation({
-      onSuccess: () => {
-        router.push(`/boards`);
-      },
-      onError: () => {
-        toast.error("Something went wrong. Please try again later.");
-      },
-    });
+  const { mutate: leaveBoard, isLoading: leaveBoardLoading } = trpc.board.leaveBoard.useMutation({
+    onSuccess: () => {
+      router.push(`/boards`);
+    },
+    onError: () => {
+      toast.error("Something went wrong. Please try again later.");
+    },
+  });
 
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="font-semibold">
-            Are you sure you want to leave?
-          </DialogTitle>
+          <DialogTitle className="font-semibold">Are you sure you want to leave?</DialogTitle>
         </DialogHeader>
         <DialogFooter>
           <div className="flex w-full justify-between">
@@ -70,9 +63,7 @@ export const LeaveDialog: FC<LeaveDialogProps> = ({
             <Button
               isLoading={leaveWorkspaceLoading || leaveBoardLoading}
               onClick={() =>
-                (type === "board" &&
-                  membership &&
-                  leaveBoard({ membershipId: membership.id })) ||
+                (type === "board" && membership && leaveBoard({ membershipId: membership.id })) ||
                 (type === "workspace" &&
                   leaveWorkspace({
                     userRole: membership.Role,

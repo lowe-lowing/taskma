@@ -14,29 +14,24 @@ interface AddTaskHandlerProps {
   updateUi: () => void;
 }
 
-const AddTaskHandler: FC<AddTaskHandlerProps> = ({
-  lane,
-  setLanes,
-  updateUi,
-}) => {
+const AddTaskHandler: FC<AddTaskHandlerProps> = ({ lane, setLanes, updateUi }) => {
   const [newTaskName, setNewTaskName] = useState("");
   const [isCreatingNewTask, setIsCreatingNewTask] = useState(false);
 
-  const { mutateAsync: createTask, isLoading } =
-    trpc.task.createTask.useMutation({
-      onSuccess: () => {
-        updateUi();
-      },
-      onError: (error) => {
-        if (error instanceof TRPCClientError) {
-          if (error.data.httpStatus === 400) {
-            const err = JSON.parse(error.message);
-            return toast.error(err[0].message);
-          }
+  const { mutateAsync: createTask, isLoading } = trpc.task.createTask.useMutation({
+    onSuccess: () => {
+      updateUi();
+    },
+    onError: (error) => {
+      if (error instanceof TRPCClientError) {
+        if (error.data.httpStatus === 400) {
+          const err = JSON.parse(error.message);
+          return toast.error(err[0].message);
         }
-        toast.error("Something went wrong. Please try again later.");
-      },
-    });
+      }
+      toast.error("Something went wrong. Please try again later.");
+    },
+  });
 
   const handleAdd = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

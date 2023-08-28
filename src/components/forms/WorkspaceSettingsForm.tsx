@@ -7,14 +7,7 @@ import { toast } from "react-hot-toast";
 import { z } from "zod";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "../ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from "../ui/form";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
@@ -24,10 +17,7 @@ interface WorkspaceSettingsFormProps {
   userRole: WorkspaceRole;
 }
 
-export const WorkspaceSettingsForm: FC<WorkspaceSettingsFormProps> = ({
-  workspace,
-  userRole,
-}) => {
+export const WorkspaceSettingsForm: FC<WorkspaceSettingsFormProps> = ({ workspace, userRole }) => {
   const { mutate: updateSettings, isLoading: updateSettingsLoading } =
     trpc.workspace.updateSettings.useMutation({
       onSuccess: ({ name, description, isPublic }) => {
@@ -96,19 +86,14 @@ export const WorkspaceSettingsForm: FC<WorkspaceSettingsFormProps> = ({
                 <div className="space-y-1 leading-none">
                   <FormLabel>Public workspace</FormLabel>
                   <FormDescription>
-                    This workspace is currently{" "}
-                    {workspace.isPublic ? "public" : "private"}.
+                    This workspace is currently {workspace.isPublic ? "public" : "private"}.
                   </FormDescription>
                 </div>
               </FormItem>
             )}
           />
         </div>
-        <Button
-          type="submit"
-          disabled={!isDirty}
-          isLoading={updateSettingsLoading}
-        >
+        <Button type="submit" disabled={!isDirty} isLoading={updateSettingsLoading}>
           Save
         </Button>
       </form>
@@ -117,10 +102,7 @@ export const WorkspaceSettingsForm: FC<WorkspaceSettingsFormProps> = ({
 };
 
 export const WorkspaceSettingsValidationSchema = z.object({
-  name: z
-    .string()
-    .min(3, { message: "Name is required with atleast 3 letters" })
-    .max(50),
+  name: z.string().min(3, { message: "Name is required with atleast 3 letters" }).max(50),
   description: z.string().max(250),
   isPublic: z.boolean(),
 });

@@ -14,9 +14,7 @@ export const laneRouter = router({
       });
     }),
   createLane: protectedProcedure
-    .input(
-      z.object({ boardId: z.string(), name: z.string(), order: z.number() })
-    )
+    .input(z.object({ boardId: z.string(), name: z.string(), order: z.number() }))
     .mutation(async ({ ctx, input }) => {
       const { boardId, name, order } = input;
       return ctx.prisma.lane.create({
@@ -38,10 +36,7 @@ export const laneRouter = router({
     .input(
       z.object({
         laneId: z.string(),
-        name: z
-          .string()
-          .min(1, "Title must contain at least 1 character")
-          .max(30),
+        name: z.string().min(1, "Title must contain at least 1 character").max(30),
       })
     )
     .mutation(async ({ ctx, input }) => {

@@ -1,9 +1,9 @@
 import BoardMember from "@/components/BoardMember";
 import { InviteBoardDialog } from "@/components/dialogs/InviteBoardDialog";
 import { Separator } from "@/components/ui/separator";
-import { UserBoardWithUser } from "@/server/trpc/router/boards";
-import { Board, UserBoard } from "@prisma/client";
-import { Session } from "next-auth";
+import type { UserBoardWithUser } from "@/server/trpc/router/boards";
+import type { Board, UserBoard } from "@prisma/client";
+import type { Session } from "next-auth";
 import { type FC } from "react";
 
 interface MembersViewProps {
@@ -30,8 +30,7 @@ const MembersView: FC<MembersViewProps> = ({
   return boardLoading || membersLoading || membershipLoading ? (
     // TODO: Add skeleton
     <div>Loading...</div>
-  ) : (board && members && loggedInUserMembership) ||
-    (board && members && board.isPublic) ? (
+  ) : (board && members && loggedInUserMembership) || (board && members && board.isPublic) ? (
     <div className="w-full space-y-2">
       <div className="flex items-center justify-between">
         <p className="text-xl">Members</p>

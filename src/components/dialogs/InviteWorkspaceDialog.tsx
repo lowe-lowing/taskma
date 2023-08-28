@@ -31,10 +31,7 @@ interface InviteWorkspaceDialogProps {
   trigger: React.ReactNode;
 }
 
-export const InviteWorkspaceDialog: FC<InviteWorkspaceDialogProps> = ({
-  workspace,
-  trigger,
-}) => {
+export const InviteWorkspaceDialog: FC<InviteWorkspaceDialogProps> = ({ workspace, trigger }) => {
   const [input, setInput] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const router = useRouter();
@@ -70,20 +67,19 @@ export const InviteWorkspaceDialog: FC<InviteWorkspaceDialogProps> = ({
     setSelectedUsers([]);
   }, [pathname]);
 
-  const { mutate: inviteMutation, isLoading } =
-    trpc.workspace.inviteToWorkspace.useMutation({
-      onSuccess: (data) => {
-        toast.success(`${data.length > 1 ? "Users" : "User"} invited`);
-        if (pathname.endsWith(`${workspace.id}/members`)) {
-          router.refresh();
-        } else {
-          closeDialog();
-        }
-      },
-      onError: () => {
-        toast.error("Something went wrong. Please try again later.");
-      },
-    });
+  const { mutate: inviteMutation, isLoading } = trpc.workspace.inviteToWorkspace.useMutation({
+    onSuccess: (data) => {
+      toast.success(`${data.length > 1 ? "Users" : "User"} invited`);
+      if (pathname.endsWith(`${workspace.id}/members`)) {
+        router.refresh();
+      } else {
+        closeDialog();
+      }
+    },
+    onError: () => {
+      toast.error("Something went wrong. Please try again later.");
+    },
+  });
 
   const DialogRef = useRef(null);
   useOnClickOutside(DialogRef, () => {
@@ -99,10 +95,7 @@ export const InviteWorkspaceDialog: FC<InviteWorkspaceDialogProps> = ({
             {`Invite People to '${workspace.name}'`}
           </DialogTitle>
         </DialogHeader>
-        <Command
-          className="relative z-50 max-w-lg overflow-visible rounded-lg border"
-          ref={ref}
-        >
+        <Command className="relative z-50 max-w-lg overflow-visible rounded-lg border" ref={ref}>
           <CommandInput
             className="border-none outline-none ring-0 focus:border-none focus:outline-none"
             placeholder="Search users..."
@@ -145,9 +138,7 @@ export const InviteWorkspaceDialog: FC<InviteWorkspaceDialogProps> = ({
               variant={"ghost"}
               className="flex w-fit items-center rounded-xl bg-secondary p-1 px-2"
               onClick={() => {
-                setSelectedUsers((prev) =>
-                  prev.filter((prevUser) => prevUser.id !== user.id)
-                );
+                setSelectedUsers((prev) => prev.filter((prevUser) => prevUser.id !== user.id));
               }}
             >
               <UserAvatar user={user} className="mr-1 h-6 w-6" />

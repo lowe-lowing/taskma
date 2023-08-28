@@ -13,57 +13,40 @@ const BoardSettingsSideView: FC = () => {
   const pathname = usePathname();
 
   return (
-    <div
-      className={cn(
-        "flex h-fit w-40 flex-row gap-1 rounded-md bg-secondary p-1 sm:flex-col"
-      )}
-    >
+    <div className={cn("flex h-fit w-40 flex-row gap-1 rounded-md bg-secondary p-1 sm:flex-col")}>
       <Link href={`/workspace/${workspaceId}/board/${boardId}/settings`}>
         <Button
           variant={"ghost"}
           size={"sm"}
-          className={cn(
-            "flex w-full justify-start gap-1 text-lg hover:bg-background",
-            {
-              "bg-background": pathname.endsWith("general"),
-            }
-          )}
+          className={cn("flex w-full justify-start gap-1 text-lg hover:bg-background", {
+            "bg-background": pathname.endsWith("general"),
+          })}
         >
           <Settings />
           General
         </Button>
       </Link>
       <Separator className="bg-background" />
-      <Link
-        href={`/workspace/${workspaceId}/board/${boardId}/settings/members`}
-      >
+      <Link href={`/workspace/${workspaceId}/board/${boardId}/settings/members`}>
         <Button
           variant={"ghost"}
           size={"sm"}
-          className={cn(
-            "flex w-full justify-start gap-1 text-lg hover:bg-background",
-            {
-              "bg-background": pathname.endsWith("members"),
-            }
-          )}
+          className={cn("flex w-full justify-start gap-1 text-lg hover:bg-background", {
+            "bg-background": pathname.endsWith("members"),
+          })}
         >
           <Users />
           Members
         </Button>
       </Link>
       <Separator className="bg-background" />
-      <Link
-        href={`/workspace/${workspaceId}/board/${boardId}/settings/categories`}
-      >
+      <Link href={`/workspace/${workspaceId}/board/${boardId}/settings/categories`}>
         <Button
           variant={"ghost"}
           size={"sm"}
-          className={cn(
-            "flex w-full justify-start gap-1 text-lg hover:bg-background",
-            {
-              "bg-background": pathname.endsWith("categories"),
-            }
-          )}
+          className={cn("flex w-full justify-start gap-1 text-lg hover:bg-background", {
+            "bg-background": pathname.endsWith("categories"),
+          })}
         >
           <Tags />
           Categories

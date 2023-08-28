@@ -58,8 +58,7 @@ const LaneHeader: FC<LaneHeaderProps> = ({ lane, UserBoardRole, updateUi }) => {
     <div
       className="grid items-center gap-1 p-0.5"
       style={{
-        gridTemplateColumns:
-          UserBoardRole === BoardRole.Viewer ? "1fr" : "4fr 1fr",
+        gridTemplateColumns: UserBoardRole === BoardRole.Viewer ? "1fr" : "4fr 1fr",
       }}
     >
       {isEditingName ? (

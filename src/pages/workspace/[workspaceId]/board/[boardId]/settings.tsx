@@ -3,16 +3,6 @@ import GeneralView from "@/components/BoardSettingsViews/GeneralView";
 import MembersView from "@/components/BoardSettingsViews/MembersView";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BackButton from "@/components/utils/BackButton";
@@ -24,8 +14,6 @@ import { type InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FormEvent, FormEventHandler, useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
 
 export default function Page({
   data: session,
@@ -65,9 +53,7 @@ export default function Page({
       <main className="pt-1">
         <BoardContainer className="flex items-center justify-between px-1">
           <BackButton href={`/workspace/${workspaceId}/board/${boardId}`} />
-          <h2 className="mr-6">
-            Board: {board && !boardLoading ? board.Name : "Not found"}
-          </h2>
+          <h2 className="mr-6">Board: {board && !boardLoading ? board.Name : "Not found"}</h2>
           <Link href={`/workspace/${workspaceId}/board/${boardId}`}>
             <Button variant={"ghost"} size={"sm"} className="p-1">
               <KanbanSquare size={20} />

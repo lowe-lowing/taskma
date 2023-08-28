@@ -40,11 +40,7 @@ export default function Page({
       <Head>
         <title>Public Workspaces</title>
       </Head>
-      <Navbar
-        session={session}
-        workspaces={workspaces}
-        isLoading={workspacesLoading}
-      />
+      <Navbar session={session} workspaces={workspaces} isLoading={workspacesLoading} />
       <main className="m-2 flex justify-center">
         <MainGrid>
           <SideView workspaces={workspaces} isLoading={workspacesLoading} />

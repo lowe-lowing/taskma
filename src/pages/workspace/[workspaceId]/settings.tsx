@@ -17,8 +17,7 @@ export default function Page({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const workspaceId = router.query.workspaceId as string;
-  const { data: workspaces, isLoading } =
-    trpc.workspace.getWorkspacesByUser.useQuery();
+  const { data: workspaces, isLoading } = trpc.workspace.getWorkspacesByUser.useQuery();
   const workspace = workspaces?.find((w) => w.id === workspaceId);
 
   const { data: membership } = trpc.workspace.getMemberShip.useQuery(
@@ -46,14 +45,8 @@ export default function Page({
                   <WorkspaceButtonsRow workspaceId={workspace.id} />
                 </div>
                 <Separator />
-                <WorkspaceSettingsForm
-                  workspace={workspace}
-                  userRole={membership.Role}
-                />
-                <WorkspaceDangerZone
-                  workspace={workspace}
-                  membership={membership}
-                />
+                <WorkspaceSettingsForm workspace={workspace} userRole={membership.Role} />
+                <WorkspaceDangerZone workspace={workspace} membership={membership} />
               </div>
             )}
           </div>

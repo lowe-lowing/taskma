@@ -1,5 +1,5 @@
-import { TemplateBoard } from "@/server/trpc/router/boards";
-import { Workspace } from "@prisma/client";
+import { type TemplateBoard } from "@/server/trpc/router/boards";
+import { type Workspace } from "@prisma/client";
 import { type FC } from "react";
 import CreateBoardFromTemplateDialog from "./dialogs/CreateBoardFromTemplateDialog";
 import { Badge } from "./ui/badge";
@@ -11,10 +11,7 @@ interface TemplateBoardCardProps {
   workspaces: Workspace[];
 }
 
-const TemplateBoardCard: FC<TemplateBoardCardProps> = ({
-  template,
-  workspaces,
-}) => {
+const TemplateBoardCard: FC<TemplateBoardCardProps> = ({ template, workspaces }) => {
   return (
     <Card className="group relative aspect-video cursor-pointer overflow-hidden">
       <CreateBoardFromTemplateDialog
@@ -46,25 +43,15 @@ const TemplateBoardCard: FC<TemplateBoardCardProps> = ({
       </CardHeader>
       <CardContent className="mt-1 flex flex-row gap-1 p-0 pl-1">
         {template.Lanes?.map((lane) => (
-          <Card
-            className={
-              "h-fit w-20 rounded-sm bg-secondary dark:border-gray-700"
-            }
-            key={lane.id}
-          >
+          <Card className={"h-fit w-20 rounded-sm bg-secondary dark:border-gray-700"} key={lane.id}>
             <CardHeader className="flex h-4 w-20 flex-row items-center p-0">
-              <p className="truncate pl-0.5 text-[9px] leading-none">
-                {lane.Name}
-              </p>
+              <p className="truncate pl-0.5 text-[9px] leading-none">{lane.Name}</p>
             </CardHeader>
             <CardContent className="p-0">
               <Separator className="bg-gray-300 dark:bg-gray-700" />
               <div className="flex flex-col gap-0.5 p-0.5">
                 {lane.Tasks.map((task) => (
-                  <div
-                    key={task.id}
-                    className="flex items-center rounded-sm bg-background p-2"
-                  />
+                  <div key={task.id} className="flex items-center rounded-sm bg-background p-2" />
                 ))}
               </div>
             </CardContent>

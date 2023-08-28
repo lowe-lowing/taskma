@@ -84,10 +84,7 @@ export const TransferOwnershipDialog: FC<TransferOwnershipDialogProps> = ({
             Transfer Ownership of {workspace.name}
           </DialogTitle>
         </DialogHeader>
-        <Command
-          className="relative z-50 max-w-lg overflow-visible rounded-lg border"
-          ref={ref}
-        >
+        <Command className="relative z-50 max-w-lg overflow-visible rounded-lg border" ref={ref}>
           <CommandInput
             className="border-none outline-none ring-0 focus:border-none focus:outline-none"
             placeholder="Search admins..."

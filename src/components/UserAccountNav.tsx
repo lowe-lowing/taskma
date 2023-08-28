@@ -1,15 +1,8 @@
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
+import { DropdownMenu, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { type User } from "next-auth";
 import { type FC } from "react";
 import UserAvatar from "./UserAvatar";
-import {
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-} from "./ui/dropdown-menu";
+import { DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "./ui/dropdown-menu";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 
@@ -33,9 +26,7 @@ const UserAccountNav: FC<UserAccountNavProps> = ({ user }) => {
         <div className="flex items-center justify-start gap-2 p-2">
           <div className="flex flex-col space-y-1 leading-none">
             {user.name && <p className="font-medium">{user.name}</p>}
-            {user.email && (
-              <p className="w-[200px] truncate text-sm">{user.email}</p>
-            )}
+            {user.email && <p className="w-[200px] truncate text-sm">{user.email}</p>}
           </div>
         </div>
         <DropdownMenuSeparator />

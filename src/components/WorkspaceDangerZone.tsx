@@ -11,10 +11,7 @@ interface WorkspaceDangerZoneProps {
   membership: UserWorkspace;
 }
 
-const WorkspaceDangerZone: FC<WorkspaceDangerZoneProps> = ({
-  workspace,
-  membership,
-}) => {
+const WorkspaceDangerZone: FC<WorkspaceDangerZoneProps> = ({ workspace, membership }) => {
   const { Role: userRole, id: membershipId } = membership;
   return (
     <div>
@@ -37,11 +34,7 @@ const WorkspaceDangerZone: FC<WorkspaceDangerZoneProps> = ({
             type="workspace"
             membership={membership}
             trigger={
-              <Button
-                type="button"
-                disabled={userRole === "Owner"}
-                variant={"destructive"}
-              >
+              <Button type="button" disabled={userRole === "Owner"} variant={"destructive"}>
                 Leave
               </Button>
             }
@@ -51,19 +44,13 @@ const WorkspaceDangerZone: FC<WorkspaceDangerZoneProps> = ({
         <DangerButtonContainer>
           <div className="space-y-1 leading-none">
             <p>Transfer Ownership</p>
-            <p className="text-sm text-muted-foreground">
-              Transfer ownership to another admin.
-            </p>
+            <p className="text-sm text-muted-foreground">Transfer ownership to another admin.</p>
           </div>
           <TransferOwnershipDialog
             workspace={workspace}
             membershipId={membershipId}
             trigger={
-              <Button
-                type="button"
-                disabled={userRole !== "Owner"}
-                variant={"destructive"}
-              >
+              <Button type="button" disabled={userRole !== "Owner"} variant={"destructive"}>
                 Transfer
               </Button>
             }
@@ -73,19 +60,13 @@ const WorkspaceDangerZone: FC<WorkspaceDangerZoneProps> = ({
         <DangerButtonContainer>
           <div className="space-y-1 leading-none">
             <p>Delete Workspace</p>
-            <p className="text-sm text-muted-foreground">
-              This action is irreversible.
-            </p>
+            <p className="text-sm text-muted-foreground">This action is irreversible.</p>
           </div>
           <DeleteWorkspaceDialog
             workspace={workspace}
             userRole={userRole}
             trigger={
-              <Button
-                type="button"
-                disabled={userRole !== "Owner"}
-                variant={"destructive"}
-              >
+              <Button type="button" disabled={userRole !== "Owner"} variant={"destructive"}>
                 Delete
               </Button>
             }

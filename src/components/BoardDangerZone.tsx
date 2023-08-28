@@ -11,11 +11,7 @@ interface BoardDangerZoneProps {
   userRole: BoardRole;
 }
 
-const BoardDangerZone: FC<BoardDangerZoneProps> = ({
-  board,
-  membership,
-  userRole,
-}) => {
+const BoardDangerZone: FC<BoardDangerZoneProps> = ({ board, membership, userRole }) => {
   return (
     <div>
       <p className="mb-1">Danger zone</p>
@@ -23,19 +19,13 @@ const BoardDangerZone: FC<BoardDangerZoneProps> = ({
         <DangerButtonContainer>
           <div className="space-y-1 leading-none">
             <p>Leave Board</p>
-            <p className="text-sm text-muted-foreground">
-              You will lose access to this workspace.
-            </p>
+            <p className="text-sm text-muted-foreground">You will lose access to this workspace.</p>
           </div>
           <LeaveDialog
             type="board"
             membership={membership}
             trigger={
-              <Button
-                type="button"
-                variant={"destructive"}
-                disabled={!membership}
-              >
+              <Button type="button" variant={"destructive"} disabled={!membership}>
                 Leave
               </Button>
             }
@@ -45,9 +35,7 @@ const BoardDangerZone: FC<BoardDangerZoneProps> = ({
         <DangerButtonContainer>
           <div className="space-y-1 leading-none">
             <p>Delete Board</p>
-            <p className="text-sm text-muted-foreground">
-              This action is irreversible.
-            </p>
+            <p className="text-sm text-muted-foreground">This action is irreversible.</p>
           </div>
           <DeleteBoardDialog
             board={board}

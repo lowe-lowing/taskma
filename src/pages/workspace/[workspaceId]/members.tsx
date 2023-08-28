@@ -30,10 +30,7 @@ export default function Page({
     data: members,
     refetch: refetchMembers,
     isLoading: membersLoading,
-  } = trpc.workspace.getUsersInWorkspace.useQuery(
-    { workspaceId },
-    { enabled: !!workspaceId }
-  );
+  } = trpc.workspace.getUsersInWorkspace.useQuery({ workspaceId }, { enabled: !!workspaceId });
 
   const { data: loggedInUserRole } = trpc.workspace.getMemberShip.useQuery(
     { workspaceId },
@@ -45,11 +42,7 @@ export default function Page({
       <Head>
         <title>Members</title>
       </Head>
-      <Navbar
-        session={session}
-        workspaces={workspaces}
-        isLoading={workspaceLoading}
-      />
+      <Navbar session={session} workspaces={workspaces} isLoading={workspaceLoading} />
       <main className="m-2 flex justify-center overflow-hidden">
         <MainGrid>
           <SideView workspaces={workspaces} isLoading={workspaceLoading} />
@@ -89,14 +82,10 @@ export default function Page({
                           <p className="font-medium">
                             {User.name} {isLoggedInUser && "(you)"}
                           </p>
-                          <p className="w-[200px] truncate text-sm">
-                            {User.email}
-                          </p>
+                          <p className="w-[200px] truncate text-sm">{User.email}</p>
                         </div>
                       </div>
-                      {loggedInUserRole?.Role === "Member" ||
-                      isLoggedInUser ||
-                      Role === "Owner" ? (
+                      {loggedInUserRole?.Role === "Member" || isLoggedInUser || Role === "Owner" ? (
                         <p>{Role}</p>
                       ) : (
                         <WorkspaceRoleDropDown

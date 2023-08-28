@@ -1,4 +1,4 @@
-import { Board, UserBoard } from "@prisma/client";
+import type { Board, UserBoard } from "@prisma/client";
 import { type FC } from "react";
 import BoardDangerZone from "../BoardDangerZone";
 import { BoardSettingsForm } from "../forms/BoardSettingsForm";

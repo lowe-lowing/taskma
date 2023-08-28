@@ -6,13 +6,6 @@ interface BoardContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
 }
 
-export const BoardContainer: FC<BoardContainerProps> = ({
-  children,
-  className,
-}) => {
-  return (
-    <div className={cn("mx-auto w-[95%] sm:w-[70%] md:w-[50%]", className)}>
-      {children}
-    </div>
-  );
+export const BoardContainer: FC<BoardContainerProps> = ({ children, className }) => {
+  return <div className={cn("mx-auto w-[95%] sm:w-[70%] md:w-[50%]", className)}>{children}</div>;
 };

@@ -6,11 +6,7 @@ const pusher = new Pusher(clientEnv.NEXT_PUBLIC_PUSHER_KEY as string, {
   cluster: clientEnv.NEXT_PUBLIC_PUSHER_CLUSTER as string,
 });
 
-export function usePusher<T>(
-  channel: string,
-  event: string,
-  func: (data: T) => void
-) {
+export function usePusher<T>(channel: string, event: string, func: (data: T) => void) {
   useEffect(() => {
     const chann = pusher.subscribe(channel);
 

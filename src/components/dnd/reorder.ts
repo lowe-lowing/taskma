@@ -11,14 +11,9 @@ export const reorderLanes = (lanes: LaneWithTasks[], result: DropResult) => {
   return newLanes;
 };
 
-export const reorderTasksSameLane = (
-  lanes: LaneWithTasks[],
-  result: DropResult
-) => {
+export const reorderTasksSameLane = (lanes: LaneWithTasks[], result: DropResult) => {
   const { source, destination } = result;
-  const taskList = [
-    ...lanes.find((col) => col.id === source.droppableId)!.Tasks,
-  ];
+  const taskList = [...lanes.find((col) => col.id === source.droppableId)!.Tasks];
   // removes the task from its current place
   const [taskToMove] = taskList.splice(source.index, 1);
   // adds it to the new destination
@@ -28,17 +23,10 @@ export const reorderTasksSameLane = (
   return updateOrder;
 };
 
-export const reorderTasksBetweenLanes = (
-  lanes: LaneWithTasks[],
-  result: DropResult
-) => {
+export const reorderTasksBetweenLanes = (lanes: LaneWithTasks[], result: DropResult) => {
   const { source, destination } = result;
-  const currentTaskList = [
-    ...lanes.find((col) => col.id === source.droppableId)!.Tasks,
-  ];
-  const destinationTaskList = [
-    ...lanes.find((col) => col.id === destination!.droppableId)!.Tasks,
-  ];
+  const currentTaskList = [...lanes.find((col) => col.id === source.droppableId)!.Tasks];
+  const destinationTaskList = [...lanes.find((col) => col.id === destination!.droppableId)!.Tasks];
   // removes the task from its current place
   const [taskToMove] = currentTaskList.splice(source.index, 1);
   // adds it to the new destination

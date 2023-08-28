@@ -40,10 +40,7 @@ const BoardMember: FC<BoardMemberProps> = ({
             <p className="w-[200px] truncate text-sm">{User.email}</p>
           </div>
         </div>
-        {userRole === "Editor" ||
-        userRole === "Viewer" ||
-        isLoggedInUser ||
-        Role === "Creator" ? (
+        {userRole === "Editor" || userRole === "Viewer" || isLoggedInUser || Role === "Creator" ? (
           <p>{Role}</p>
         ) : (
           <BoardRoleDropdown

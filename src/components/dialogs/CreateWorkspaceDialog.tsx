@@ -19,21 +19,20 @@ export const CreateWorkspaceDialog: FC = () => {
   const [input, setInput] = useState("");
   const router = useRouter();
 
-  const { mutateAsync: createWorkspace, isLoading } =
-    trpc.workspace.createWorkspace.useMutation({
-      onSuccess: ({ workspaceId }) => {
-        router.push(`/workspace/${workspaceId}/boards`);
-      },
-      onError: (error) => {
-        if (error instanceof TRPCClientError) {
-          if (error.data.httpStatus === 400) {
-            const err = JSON.parse(error.message);
-            return toast.error(err[0].message);
-          }
+  const { mutateAsync: createWorkspace, isLoading } = trpc.workspace.createWorkspace.useMutation({
+    onSuccess: ({ workspaceId }) => {
+      router.push(`/workspace/${workspaceId}/boards`);
+    },
+    onError: (error) => {
+      if (error instanceof TRPCClientError) {
+        if (error.data.httpStatus === 400) {
+          const err = JSON.parse(error.message);
+          return toast.error(err[0].message);
         }
-        toast.error("Something went wrong. Please try again later.");
-      },
-    });
+      }
+      toast.error("Something went wrong. Please try again later.");
+    },
+  });
 
   return (
     <Dialog>
@@ -48,9 +47,7 @@ export const CreateWorkspaceDialog: FC = () => {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="font-semibold">
-            Create New Workspace
-          </DialogTitle>
+          <DialogTitle className="font-semibold">Create New Workspace</DialogTitle>
         </DialogHeader>
         <form
           id="create-workspace-form"

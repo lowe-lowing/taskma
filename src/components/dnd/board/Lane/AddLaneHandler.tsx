@@ -12,21 +12,15 @@ interface AddLaneHandlerProps {
   updateUi: () => void;
 }
 
-const AddLaneHandler: FC<AddLaneHandlerProps> = ({
-  boardId,
-  lanesLength,
-  setLanes,
-  updateUi,
-}) => {
+const AddLaneHandler: FC<AddLaneHandlerProps> = ({ boardId, lanesLength, setLanes, updateUi }) => {
   const [newLaneName, setNewLaneName] = useState("");
   const [isCreatingNewLane, setIsCreatingNewLane] = useState(false);
 
-  const { mutateAsync: createLane, isLoading } =
-    trpc.lane.createLane.useMutation({
-      onSuccess: () => {
-        updateUi();
-      },
-    });
+  const { mutateAsync: createLane, isLoading } = trpc.lane.createLane.useMutation({
+    onSuccess: () => {
+      updateUi();
+    },
+  });
 
   const handleAdd = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -57,10 +51,7 @@ const AddLaneHandler: FC<AddLaneHandlerProps> = ({
   return (
     <div className="mr-auto">
       {isCreatingNewLane ? (
-        <form
-          onSubmit={handleAdd}
-          className="relative flex w-48 flex-col justify-center gap-1 p-0"
-        >
+        <form onSubmit={handleAdd} className="relative flex w-48 flex-col justify-center gap-1 p-0">
           <Input
             type="text"
             placeholder="Add Lane"

@@ -16,10 +16,7 @@ export default function Page({
     <>
       <Head>
         <title>Home Page</title>
-        <meta
-          name="description"
-          content="Taskma, the greatest taskmanager you can find"
-        />
+        <meta name="description" content="Taskma, the greatest taskmanager you can find" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar session={session} />
@@ -38,33 +35,29 @@ export default function Page({
             </Button>
           )}
           <Balancer className="text-center text-xl">
-            Your Ultimate Task Management Solution! Effortlessly conquer your
-            to-do list and boost your productivity with Taskma. Our intuitive
-            and powerful task management application is designed to streamline
-            your daily tasks, help you stay organized, and supercharge your
+            Your Ultimate Task Management Solution! Effortlessly conquer your to-do list and boost
+            your productivity with Taskma. Our intuitive and powerful task management application is
+            designed to streamline your daily tasks, help you stay organized, and supercharge your
             efficiency.
           </Balancer>
           <ul className="list-disc rounded-md bg-secondary p-2 pl-6">
             <p className="text-2xl">Key Features:</p>
             <li>
-              <span className="font-bold">Task Tracking:</span> Easily create,
-              manage, and prioritize tasks. Never let important deadlines slip
-              through the cracks again.
+              <span className="font-bold">Task Tracking:</span> Easily create, manage, and
+              prioritize tasks. Never let important deadlines slip through the cracks again.
             </li>
             <li>
-              <span className="font-bold">Collaborative Workspace:</span>{" "}
-              Seamlessly collaborate with team members, friends, or family.
-              Delegate tasks, share updates, and achieve goals together.
+              <span className="font-bold">Collaborative Workspace:</span> Seamlessly collaborate
+              with team members, friends, or family. Delegate tasks, share updates, and achieve
+              goals together.
             </li>
             <li>
-              <span className="font-bold">Cross-Platform Sync:</span> Access
-              your tasks anytime, anywhere. Synchronize effortlessly across all
-              your devices and never miss a beat.
+              <span className="font-bold">Cross-Platform Sync:</span> Access your tasks anytime,
+              anywhere. Synchronize effortlessly across all your devices and never miss a beat.
             </li>
             <li>
-              <span className="font-bold">Data Security:</span> Rest easy
-              knowing your information is safe and protected. We prioritize your
-              privacy with top-notch security measures.
+              <span className="font-bold">Data Security:</span> Rest easy knowing your information
+              is safe and protected. We prioritize your privacy with top-notch security measures.
             </li>
           </ul>
           <Balancer className="text-center text-xl">
@@ -73,9 +66,8 @@ export default function Page({
             is here to transform the way you manage tasks.`}
           </Balancer>
           <Balancer className="text-center text-xl">
-            Join thousands of satisfied users who have already taken control of
-            their time and achieved their goals with Taskma. Experience the
-            future of task management today!
+            Join thousands of satisfied users who have already taken control of their time and
+            achieved their goals with Taskma. Experience the future of task management today!
           </Balancer>
         </div>
         <footer className="w-full border-t bg-secondary p-2 text-center">

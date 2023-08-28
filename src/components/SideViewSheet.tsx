@@ -16,11 +16,7 @@ const SideViewSheet: FC<SideViewSheetProps> = ({ isLoading, workspaces }) => {
         <Menu />
       </SheetTrigger>
       <SheetContent side={"left"} className="px-4">
-        <SideView
-          workspaces={workspaces}
-          isLoading={isLoading}
-          isMobileOnlyView
-        />
+        <SideView workspaces={workspaces} isLoading={isLoading} isMobileOnlyView />
       </SheetContent>
     </Sheet>
   );

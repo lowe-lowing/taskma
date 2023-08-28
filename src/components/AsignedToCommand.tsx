@@ -1,10 +1,7 @@
 import { useOnClickOutside } from "@/hooks/useOnClickOutside";
 import { trpc } from "@/lib/trpc";
-import { UserBoard } from "@prisma/client";
 import debounce from "lodash.debounce";
-import { User } from "next-auth";
-import { useCallback, useEffect, useRef, useState, type FC } from "react";
-import toast from "react-hot-toast";
+import { useCallback, useRef, useState, type FC } from "react";
 import { Button } from "./ui/button";
 import {
   Command,
@@ -22,11 +19,7 @@ interface AsignedToCommandProps {
   handleAdd: (userId: string) => void;
 }
 
-const AsignedToCommand: FC<AsignedToCommandProps> = ({
-  boardId,
-  taskId,
-  handleAdd,
-}) => {
+const AsignedToCommand: FC<AsignedToCommandProps> = ({ boardId, taskId, handleAdd }) => {
   const [input, setInput] = useState("");
 
   const {
@@ -56,10 +49,7 @@ const AsignedToCommand: FC<AsignedToCommandProps> = ({
   });
 
   return (
-    <Command
-      className="relative z-50 max-w-lg overflow-visible rounded-lg border"
-      ref={ref}
-    >
+    <Command className="relative z-50 max-w-lg overflow-visible rounded-lg border" ref={ref}>
       <CommandInput
         className="border-none outline-none ring-0 focus:border-none focus:outline-none"
         placeholder="Search users to asign this task to"

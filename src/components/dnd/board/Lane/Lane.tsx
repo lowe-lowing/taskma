@@ -1,6 +1,6 @@
 import { Card, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { BoardRole, TaskCategory } from "@prisma/client";
+import { BoardRole, type TaskCategory } from "@prisma/client";
 import { Draggable } from "react-beautiful-dnd";
 import { type LaneWithTasks } from "../../types";
 import TaskList from "../TaskList/TaskList";
@@ -15,24 +15,13 @@ type LaneProps = {
   updateUi: () => void;
 };
 
-const Lane = ({
-  lane,
-  index,
-  UserBoardRole,
-  categories,
-  setLanes,
-  updateUi,
-}: LaneProps) => {
+const Lane = ({ lane, index, UserBoardRole, categories, setLanes, updateUi }: LaneProps) => {
   if (UserBoardRole === BoardRole.Viewer) {
     return (
       <div className="relative">
         <Card className="mb-0 w-60 rounded-b-none bg-secondary dark:border-gray-700">
           <CardHeader className="px-2 py-1">
-            <LaneHeader
-              lane={lane}
-              UserBoardRole={UserBoardRole}
-              updateUi={updateUi}
-            />
+            <LaneHeader lane={lane} UserBoardRole={UserBoardRole} updateUi={updateUi} />
           </CardHeader>
         </Card>
         <TaskList
@@ -50,26 +39,15 @@ const Lane = ({
   return (
     <Draggable draggableId={lane.id} index={index}>
       {(provided, snapshot) => (
-        <div
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          className="relative"
-        >
+        <div ref={provided.innerRef} {...provided.draggableProps} className="relative">
           <Card
-            className={cn(
-              "mb-0 w-60 rounded-b-none bg-secondary dark:border-gray-700",
-              {
-                "bg-green-100 dark:bg-gray-700": snapshot.isDragging,
-              }
-            )}
+            className={cn("mb-0 w-60 rounded-b-none bg-secondary dark:border-gray-700", {
+              "bg-green-100 dark:bg-gray-700": snapshot.isDragging,
+            })}
             {...provided.dragHandleProps}
           >
             <CardHeader className="px-2 py-1">
-              <LaneHeader
-                lane={lane}
-                UserBoardRole={UserBoardRole}
-                updateUi={updateUi}
-              />
+              <LaneHeader lane={lane} UserBoardRole={UserBoardRole} updateUi={updateUi} />
             </CardHeader>
           </Card>
           <TaskList

@@ -12,34 +12,19 @@ const BoardsViewSkeleton = () => {
         <Skeleton className="max-w-1/2 h-6 w-full rounded-md" />
         <div className="flex gap-1">
           <Skeleton>
-            <Button
-              variant={"secondary"}
-              size={"sm"}
-              className="gap-0.5 text-xs"
-              disabled
-            >
+            <Button variant={"secondary"} size={"sm"} className="gap-0.5 text-xs" disabled>
               <KanbanSquare size={12} />
               Boards
             </Button>
           </Skeleton>
           <Skeleton>
-            <Button
-              variant={"secondary"}
-              size={"sm"}
-              className="gap-0.5 text-xs"
-              disabled
-            >
+            <Button variant={"secondary"} size={"sm"} className="gap-0.5 text-xs" disabled>
               <Users size={12} />
               Members
             </Button>
           </Skeleton>
           <Skeleton>
-            <Button
-              variant={"secondary"}
-              size={"sm"}
-              className="gap-0.5 text-xs"
-              disabled
-            >
+            <Button variant={"secondary"} size={"sm"} className="gap-0.5 text-xs" disabled>
               <Settings size={12} />
               Settings
             </Button>

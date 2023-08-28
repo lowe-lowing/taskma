@@ -4,13 +4,13 @@ import { Button } from "@/components/ui/button";
 import UserAvatar from "@/components/UserAvatar";
 import { trpc } from "@/lib/trpc";
 import { cn } from "@/lib/utils";
-import { TaskCategory } from "@prisma/client";
+import type { TaskCategory } from "@prisma/client";
 import { Edit, Loader2, Trash2 } from "lucide-react";
 import moment from "moment";
-import React, { FC } from "react";
+import React, { type FC } from "react";
 import { type DraggableProvided } from "react-beautiful-dnd";
 import { toast } from "react-hot-toast";
-import { FullTask, LaneWithTasks } from "../../types";
+import type { FullTask, LaneWithTasks } from "../../types";
 
 type TaskItemProps = {
   task: FullTask;
@@ -37,9 +37,7 @@ function TaskItem({
       setLanes?.((prev) => {
         const newLanes = [...prev];
         const laneIndex = newLanes.findIndex((lane) => lane.id === task.laneId);
-        const taskIndex = newLanes[laneIndex]!.Tasks.findIndex(
-          (t) => t.id === taskId
-        );
+        const taskIndex = newLanes[laneIndex]!.Tasks.findIndex((t) => t.id === taskId);
         newLanes[laneIndex]!.Tasks.splice(taskIndex, 1);
         return newLanes;
       });
@@ -49,15 +47,14 @@ function TaskItem({
     },
   });
 
-  const { mutate: addAsignedUser, isLoading } =
-    trpc.task.addAsignedUser.useMutation({
-      onSuccess: () => {
-        updateUi();
-      },
-      onError: () => {
-        toast.error("Something went wrong, please try again later.");
-      },
-    });
+  const { mutate: addAsignedUser, isLoading } = trpc.task.addAsignedUser.useMutation({
+    onSuccess: () => {
+      updateUi();
+    },
+    onError: () => {
+      toast.error("Something went wrong, please try again later.");
+    },
+  });
 
   function allowDrop(ev: React.DragEvent<HTMLDivElement>) {
     ev.preventDefault();
@@ -159,26 +156,17 @@ const Task: FC<TaskUnionProps> = (props) => {
       </div>
       <div className="space-y-1">
         {task.TaskCategory && (
-          <Badge
-            className={`w-fit`}
-            style={{ backgroundColor: task.TaskCategory.color }}
-          >
+          <Badge className={`w-fit`} style={{ backgroundColor: task.TaskCategory.color }}>
             {task.TaskCategory.name}
           </Badge>
         )}
         {task.DueDate && (
-          <p className="text-xs">
-            Due Date: {moment(task.DueDate).format("MMM Do")}
-          </p>
+          <p className="text-xs">Due Date: {moment(task.DueDate).format("MMM Do")}</p>
         )}
         {task.UserTasks.length > 0 && (
           <div className="flex gap-0.5">
             {task.UserTasks.map((userTask) => (
-              <UserAvatar
-                key={userTask.id}
-                user={userTask.User}
-                className="h-6 w-6"
-              />
+              <UserAvatar key={userTask.id} user={userTask.User} className="h-6 w-6" />
             ))}
             {isLoading && <Loader2 className="h-6 w-6 animate-spin" />}
           </div>

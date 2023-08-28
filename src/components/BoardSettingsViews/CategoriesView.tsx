@@ -4,8 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { trpc } from "@/lib/trpc";
-import { BoardWithCategories } from "@/server/trpc/router/boards";
-import { UserBoard } from "@prisma/client";
+import type { BoardWithCategories } from "@/server/trpc/router/boards";
+import type { UserBoard } from "@prisma/client";
 import { Edit, Trash2 } from "lucide-react";
 import { type FC } from "react";
 import toast from "react-hot-toast";
@@ -53,10 +53,7 @@ const CategoriesView: FC<CategoriesViewProps> = ({
         {board.TaskCategories?.map((category) => (
           <div className="flex flex-col gap-1" key={category.id}>
             <div className="flex items-center justify-between">
-              <Badge
-                className="w-fit text-base"
-                style={{ backgroundColor: category.color }}
-              >
+              <Badge className="w-fit text-base" style={{ backgroundColor: category.color }}>
                 {category.name}
               </Badge>
               {membership?.Role !== "Viewer" && (

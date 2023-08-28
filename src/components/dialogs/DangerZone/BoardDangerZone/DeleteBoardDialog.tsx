@@ -24,10 +24,7 @@ interface DeleteBoardDialogProps {
   board: Board;
 }
 
-export const DeleteBoardDialog: FC<DeleteBoardDialogProps> = ({
-  trigger,
-  board,
-}) => {
+export const DeleteBoardDialog: FC<DeleteBoardDialogProps> = ({ trigger, board }) => {
   const router = useRouter();
 
   const BoardDeleteValidationSchema = z.object({
@@ -44,19 +41,16 @@ export const DeleteBoardDialog: FC<DeleteBoardDialogProps> = ({
     resolver: zodResolver(BoardDeleteValidationSchema),
   });
 
-  const { mutate: deleteBoard, isLoading } = trpc.board.deleteBoard.useMutation(
-    {
-      onSuccess: () => {
-        router.push(`/workspace/${board.workspaceId}/boards`);
-      },
-      onError: () => {
-        toast.error("Something went wrong. Please try again later.");
-      },
-    }
-  );
+  const { mutate: deleteBoard, isLoading } = trpc.board.deleteBoard.useMutation({
+    onSuccess: () => {
+      router.push(`/workspace/${board.workspaceId}/boards`);
+    },
+    onError: () => {
+      toast.error("Something went wrong. Please try again later.");
+    },
+  });
 
-  const onSubmit: SubmitHandler<ValidationSchema> = () =>
-    deleteBoard({ boardId: board.id });
+  const onSubmit: SubmitHandler<ValidationSchema> = () => deleteBoard({ boardId: board.id });
 
   return (
     <Dialog>
@@ -66,24 +60,20 @@ export const DeleteBoardDialog: FC<DeleteBoardDialogProps> = ({
           <DialogTitle className="font-semibold">Delete Board</DialogTitle>
         </DialogHeader>
         <div className="space-y-2">
-          <p>
-            This board will be deleted, along with all of its Boards and Todos
-          </p>
+          <p>This board will be deleted, along with all of its Boards and Todos</p>
           <p className="w-full rounded-sm bg-destructive p-2 text-sm">
             Warning: This action is not reversible. Please be certain.
           </p>
           <form onSubmit={handleSubmit(onSubmit)} id="verification">
             <div>
               <Label htmlFor="name" className="text-muted-foreground">
-                Enter the board name{" "}
-                <span className="text-primary">{board.Name}</span> to continue:
+                Enter the board name <span className="text-primary">{board.Name}</span> to continue:
               </Label>
               <Input id="name" {...register("name")} />
             </div>
             <div>
               <Label htmlFor="verify" className="text-muted-foreground">
-                To verify, type{" "}
-                <span className="text-primary">delete this board</span> below:
+                To verify, type <span className="text-primary">delete this board</span> below:
               </Label>
               <Input id="verify" {...register("verify")} />
             </div>

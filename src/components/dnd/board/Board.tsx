@@ -1,13 +1,12 @@
 import { usePusher } from "@/hooks/usePusher";
 import { trpc } from "@/lib/trpc";
-import { UpdateUiPusherResponse } from "@/server/trpc/router/pusher";
+import type { UpdateUiPusherResponse } from "@/server/trpc/router/pusher";
 import { BoardRole } from "@prisma/client";
-import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { DragDropContext, Droppable, type DropResult } from "react-beautiful-dnd";
 import { reorderLanes, reorderTasksBetweenLanes, reorderTasksSameLane } from "../reorder";
-import { FullBoard, ListType, type LaneWithTasks } from "../types";
+import { type FullBoard, ListType } from "../types";
 import AddLaneHandler from "./Lane/AddLaneHandler";
 import Lane from "./Lane/Lane";
 

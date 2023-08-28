@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { trpc } from "@/lib/trpc";
-import { TemplateBoard } from "@/server/trpc/router/boards";
+import type { TemplateBoard } from "@/server/trpc/router/boards";
 import { useRouter } from "next/navigation";
 import { useState, type FC } from "react";
 import toast from "react-hot-toast";
@@ -32,13 +32,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { Workspace } from "@prisma/client";
+import type { Workspace } from "@prisma/client";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
@@ -62,15 +58,14 @@ const CreateBoardFromTemplateDialog: FC<CreateBoardFromTemplateDialogProps> = ({
 }) => {
   const router = useRouter();
 
-  const { mutate: createFromTemplate, isLoading } =
-    trpc.board.createFromTemplate.useMutation({
-      onSuccess: ({ id, workspaceId }) => {
-        router.push(`/workspace/${workspaceId}/board/${id}`);
-      },
-      onError: () => {
-        toast.error("Something went wrong. Please try again later.");
-      },
-    });
+  const { mutate: createFromTemplate, isLoading } = trpc.board.createFromTemplate.useMutation({
+    onSuccess: ({ id, workspaceId }) => {
+      router.push(`/workspace/${workspaceId}/board/${id}`);
+    },
+    onError: () => {
+      toast.error("Something went wrong. Please try again later.");
+    },
+  });
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -99,11 +94,7 @@ const CreateBoardFromTemplateDialog: FC<CreateBoardFromTemplateDialogProps> = ({
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form
-            id="create-board-form"
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4"
-          >
+          <form id="create-board-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
               name="name"
@@ -136,9 +127,7 @@ const CreateBoardFromTemplateDialog: FC<CreateBoardFromTemplateDialogProps> = ({
                             )}
                           >
                             {field.value
-                              ? workspaces.find(
-                                  (workspace) => workspace.id === field.value
-                                )?.name
+                              ? workspaces.find((workspace) => workspace.id === field.value)?.name
                               : "Select workspace"}
                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                           </Button>
@@ -162,9 +151,7 @@ const CreateBoardFromTemplateDialog: FC<CreateBoardFromTemplateDialogProps> = ({
                                 <Check
                                   className={cn(
                                     "mr-2 h-4 w-4",
-                                    workspace.id === field.value
-                                      ? "opacity-100"
-                                      : "opacity-0"
+                                    workspace.id === field.value ? "opacity-100" : "opacity-0"
                                   )}
                                 />
                                 {workspace.name}

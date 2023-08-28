@@ -1,5 +1,5 @@
 import { WorkspaceSettingsValidationSchema } from "@/components/forms/WorkspaceSettingsForm";
-import { User, Workspace, WorkspaceRole } from "@prisma/client";
+import { type User, WorkspaceRole } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
@@ -212,13 +212,12 @@ export const workspaceRouter = router({
       const { workspaceId, userToChangeId, memberShipId, role } = input;
 
       if (role === "Admin") {
-        const boardsInWorkspaceNotAlreadyMember =
-          await ctx.prisma.board.findMany({
-            where: {
-              workspaceId,
-              NOT: { UserBoards: { some: { userId: userToChangeId } } },
-            },
-          });
+        const boardsInWorkspaceNotAlreadyMember = await ctx.prisma.board.findMany({
+          where: {
+            workspaceId,
+            NOT: { UserBoards: { some: { userId: userToChangeId } } },
+          },
+        });
         return ctx.prisma.$transaction([
           ...boardsInWorkspaceNotAlreadyMember.map((board) =>
             ctx.prisma.userBoard.create({

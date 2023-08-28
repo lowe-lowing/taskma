@@ -56,12 +56,8 @@ const WorkspaceRoleDropDown: FC<RoleDropDownProps> = ({
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectItem value={WorkspaceRole.Admin}>
-            {WorkspaceRole.Admin}
-          </SelectItem>
-          <SelectItem value={WorkspaceRole.Member}>
-            {WorkspaceRole.Member}
-          </SelectItem>
+          <SelectItem value={WorkspaceRole.Admin}>{WorkspaceRole.Admin}</SelectItem>
+          <SelectItem value={WorkspaceRole.Member}>{WorkspaceRole.Member}</SelectItem>
         </SelectGroup>
       </SelectContent>
     </Select>

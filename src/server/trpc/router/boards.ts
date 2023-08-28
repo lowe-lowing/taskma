@@ -1,10 +1,5 @@
-import {
-  BoardRole,
-  Lane,
-  TaskCategory,
-  type Prisma,
-  type UserBoard,
-} from "@prisma/client";
+import type { Lane, TaskCategory, Prisma, UserBoard } from "@prisma/client";
+import { BoardRole } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
@@ -125,9 +120,7 @@ export const boardRouter = router({
     });
   }),
   createBoard: protectedProcedure
-    .input(
-      z.object({ Name: z.string().min(3).max(50), workspaceId: z.string() })
-    )
+    .input(z.object({ Name: z.string().min(3).max(50), workspaceId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const { Name, workspaceId } = input;
       const userId = ctx.session.user.id;
@@ -156,10 +149,7 @@ export const boardRouter = router({
           workspaceId,
           UserBoards: {
             createMany: {
-              data: [
-                { Role: "Creator", userId, addedBy: "BoardCreation" },
-                ...otherAdmins,
-              ],
+              data: [{ Role: "Creator", userId, addedBy: "BoardCreation" }, ...otherAdmins],
             },
           },
         },
@@ -190,13 +180,11 @@ export const boardRouter = router({
         delete lane.id;
         return lane as Lane;
       });
-      const parsedCategories = template.TaskCategories.map(
-        (category: Partial<TaskCategory>) => {
-          delete category.boardId;
-          delete category.id;
-          return category as TaskCategory;
-        }
-      );
+      const parsedCategories = template.TaskCategories.map((category: Partial<TaskCategory>) => {
+        delete category.boardId;
+        delete category.id;
+        return category as TaskCategory;
+      });
 
       return ctx.prisma.board.create({
         data: {

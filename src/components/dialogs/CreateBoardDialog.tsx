@@ -19,23 +19,18 @@ interface CreateBoardDialogProps {
   workspace: Workspace;
 }
 
-const CreateBoardDialog: FC<CreateBoardDialogProps> = ({
-  workspace,
-  trigger,
-}) => {
+const CreateBoardDialog: FC<CreateBoardDialogProps> = ({ workspace, trigger }) => {
   const [input, setInput] = useState("");
   const router = useRouter();
 
-  const { mutate: createBoard, isLoading } = trpc.board.createBoard.useMutation(
-    {
-      onSuccess: ({ id, workspaceId }) => {
-        router.push(`/workspace/${workspaceId}/board/${id}`);
-      },
-      onError: () => {
-        toast.error("Something went wrong. Please try again later.");
-      },
-    }
-  );
+  const { mutate: createBoard, isLoading } = trpc.board.createBoard.useMutation({
+    onSuccess: ({ id, workspaceId }) => {
+      router.push(`/workspace/${workspaceId}/board/${id}`);
+    },
+    onError: () => {
+      toast.error("Something went wrong. Please try again later.");
+    },
+  });
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>

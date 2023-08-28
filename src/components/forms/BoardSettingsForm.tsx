@@ -7,14 +7,7 @@ import { toast } from "react-hot-toast";
 import { z } from "zod";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "../ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from "../ui/form";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
@@ -87,8 +80,7 @@ export const BoardSettingsForm: FC<BoardSettingsFormProps> = ({
                 <div className="space-y-1 leading-none">
                   <FormLabel>Public board</FormLabel>
                   <FormDescription>
-                    This workspace is currently{" "}
-                    {board.isPublic ? "public" : "private"}, and will be
+                    This workspace is currently {board.isPublic ? "public" : "private"}, and will be
                     accessible to all members of the workspace.
                   </FormDescription>
                 </div>
@@ -96,11 +88,7 @@ export const BoardSettingsForm: FC<BoardSettingsFormProps> = ({
             )}
           />
         </div>
-        <Button
-          type="submit"
-          disabled={!isDirty}
-          isLoading={updateSettingsLoading}
-        >
+        <Button type="submit" disabled={!isDirty} isLoading={updateSettingsLoading}>
           Save
         </Button>
       </form>
@@ -109,10 +97,7 @@ export const BoardSettingsForm: FC<BoardSettingsFormProps> = ({
 };
 
 export const BoardSettingsValidationSchema = z.object({
-  Name: z
-    .string()
-    .min(3, { message: "Name is required with atleast 3 letters" })
-    .max(50),
+  Name: z.string().min(3, { message: "Name is required with atleast 3 letters" }).max(50),
   isPublic: z.boolean(),
 });
 

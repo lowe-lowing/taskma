@@ -16,11 +16,7 @@ interface SideViewProps {
   isMobileOnlyView?: boolean;
 }
 
-const SideView: FC<SideViewProps> = ({
-  workspaces,
-  isLoading,
-  isMobileOnlyView,
-}) => {
+const SideView: FC<SideViewProps> = ({ workspaces, isLoading, isMobileOnlyView }) => {
   const pathname = usePathname();
 
   return (

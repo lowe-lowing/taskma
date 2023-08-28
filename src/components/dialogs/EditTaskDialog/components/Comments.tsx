@@ -2,14 +2,12 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import UserAvatar from "@/components/UserAvatar";
-import { usePusher } from "@/hooks/usePusher";
 import { trpc } from "@/lib/trpc";
-import { Prisma } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import { format } from "date-fns";
-import { useSession } from "next-auth/react";
-import { useEffect, useState, type FC } from "react";
+import { useState, type FC } from "react";
 import toast from "react-hot-toast";
-import { Mention, MentionsInput, SuggestionDataItem } from "react-mentions";
+import { Mention, MentionsInput, type SuggestionDataItem } from "react-mentions";
 
 type FullTaskComment = Prisma.TaskCommentGetPayload<{
   include: { User: true };
@@ -22,24 +20,16 @@ interface CommentsProps {
   updateUi: () => void;
 }
 
-const Comments: FC<CommentsProps> = ({
-  boardId,
-  taskId,
-  comments,
-  updateUi,
-}) => {
+const Comments: FC<CommentsProps> = ({ boardId, taskId, comments, updateUi }) => {
   const [value, setValue] = useState("");
 
   const { data: memberships } = trpc.board.getUsersInBoard.useQuery({
     boardId,
   });
 
-  // const { mutate: pushComment } = trpc.pusher.sendComment.useMutation();
-
   const { mutate: addComment } = trpc.task.comment.useMutation({
-    onSuccess: (data) => {
+    onSuccess: () => {
       updateUi();
-      // pushComment({ comment: data });
       setValue("");
     },
     onError: () => {
@@ -114,9 +104,7 @@ const Comments: FC<CommentsProps> = ({
               <div className="flex items-center gap-1">
                 <UserAvatar user={comment.User} className="h-4 w-4" />
                 <p className="text-xs">{comment.User.name}</p>
-                <p className="text-xs text-muted-foreground">
-                  {format(comment.CreatedAt, "Pp")}
-                </p>
+                <p className="text-xs text-muted-foreground">{format(comment.CreatedAt, "Pp")}</p>
               </div>
               <p className="break-all">{comment.content}</p>
             </div>

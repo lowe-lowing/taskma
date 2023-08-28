@@ -33,9 +33,7 @@ export const WorkspacesAccordion: FC<Props> = ({ workspaces }) => {
     >
       {workspaces.map((workspace) => (
         <AccordionItem key={workspace.id} value={workspace.id}>
-          <AccordionTrigger className="text-sm">
-            {workspace.name}
-          </AccordionTrigger>
+          <AccordionTrigger className="text-sm">{workspace.name}</AccordionTrigger>
           <AccordionContent>
             <div className="mt-1 flex flex-col gap-1">
               <WorkspaceLink href={`/workspace/${workspace.id}/boards`}>

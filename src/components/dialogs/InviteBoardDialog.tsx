@@ -66,40 +66,29 @@ export const InviteBoardDialog: FC<InviteBoardDialogProps> = ({
     setInput("");
   });
 
-  const { mutateAsync: inviteMutation, isLoading } =
-    trpc.board.inviteToBoard.useMutation({
-      onSuccess: (data) => {
-        toast.success(`${data.length > 1 ? "Users" : "User"} invited`);
-        refetchMembers();
-        closeDialog();
-      },
-      onError: () => {
-        toast.error("Something went wrong. Please try again later.");
-      },
-    });
+  const { mutateAsync: inviteMutation, isLoading } = trpc.board.inviteToBoard.useMutation({
+    onSuccess: (data) => {
+      toast.success(`${data.length > 1 ? "Users" : "User"} invited`);
+      refetchMembers();
+      closeDialog();
+    },
+    onError: () => {
+      toast.error("Something went wrong. Please try again later.");
+    },
+  });
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-          className="p-1"
-          variant={"ghost"}
-          size={"sm"}
-          disabled={userRole === "Viewer"}
-        >
+        <Button className="p-1" variant={"ghost"} size={"sm"} disabled={userRole === "Viewer"}>
           <Plus />
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="font-semibold">
-            {`Add members to '${board.Name}'`}
-          </DialogTitle>
+          <DialogTitle className="font-semibold">{`Add members to '${board.Name}'`}</DialogTitle>
         </DialogHeader>
-        <Command
-          className="relative z-50 max-w-lg overflow-visible rounded-lg border"
-          ref={ref}
-        >
+        <Command className="relative z-50 max-w-lg overflow-visible rounded-lg border" ref={ref}>
           <CommandInput
             className="border-none outline-none ring-0 focus:border-none focus:outline-none"
             placeholder="Search users in workspace..."
@@ -142,9 +131,7 @@ export const InviteBoardDialog: FC<InviteBoardDialogProps> = ({
               variant={"ghost"}
               className="flex w-fit items-center rounded-xl bg-secondary p-1 px-2"
               onClick={() => {
-                setSelectedUsers((prev) =>
-                  prev.filter((prevUser) => prevUser.id !== user.id)
-                );
+                setSelectedUsers((prev) => prev.filter((prevUser) => prevUser.id !== user.id));
               }}
             >
               <UserAvatar user={user} className="mr-1 h-6 w-6" />

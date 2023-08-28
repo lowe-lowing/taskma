@@ -15,10 +15,7 @@ export const taskRouter = router({
       z.object({
         laneId: z.string(),
         order: z.number(),
-        title: z
-          .string()
-          .min(1, "Title must contain at least 1 character")
-          .max(100),
+        title: z.string().min(1, "Title must contain at least 1 character").max(100),
       })
     )
     .mutation(async ({ ctx, input: { laneId, order, title } }) => {
@@ -93,26 +90,19 @@ export const taskRouter = router({
         categoryId: z.string().nullable(),
       })
     )
-    .mutation(
-      async ({
-        ctx,
-        input: { taskId, title, description, dueDate, categoryId },
-      }) => {
-        return ctx.prisma.task.update({
-          where: { id: taskId },
-          data: {
-            Title: title,
-            Description: description,
-            DueDate: dueDate,
-            taskCategoryId: categoryId,
-          },
-        });
-      }
-    ),
+    .mutation(async ({ ctx, input: { taskId, title, description, dueDate, categoryId } }) => {
+      return ctx.prisma.task.update({
+        where: { id: taskId },
+        data: {
+          Title: title,
+          Description: description,
+          DueDate: dueDate,
+          taskCategoryId: categoryId,
+        },
+      });
+    }),
   searchUsersAsignToTask: protectedProcedure
-    .input(
-      z.object({ name: z.string(), boardId: z.string(), taskId: z.string() })
-    )
+    .input(z.object({ name: z.string(), boardId: z.string(), taskId: z.string() }))
     .query(async ({ ctx, input }) => {
       const { name, boardId, taskId } = input;
       // find all users in the board but not already assigned to the task
