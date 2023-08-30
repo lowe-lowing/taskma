@@ -18,7 +18,7 @@ const AddTaskHandler: FC<AddTaskHandlerProps> = ({ lane, setLanes, updateUi }) =
   const [newTaskName, setNewTaskName] = useState("");
   const [isCreatingNewTask, setIsCreatingNewTask] = useState(false);
 
-  const { mutateAsync: createTask, isLoading } = trpc.task.createTask.useMutation({
+  const { mutate: createTask, isLoading } = trpc.task.createTask.useMutation({
     onSuccess: () => {
       updateUi();
     },
@@ -35,6 +35,12 @@ const AddTaskHandler: FC<AddTaskHandlerProps> = ({ lane, setLanes, updateUi }) =
 
   const handleAdd = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    createTask({
+      laneId: lane.id,
+      title: newTaskName,
+      order: lane.Tasks.length,
+    });
+    if (newTaskName.length < 1) return;
     setLanes((prev) => {
       const newLanes = [...prev];
       const laneIndex = newLanes.findIndex((l) => l.id === lane.id);
@@ -56,11 +62,6 @@ const AddTaskHandler: FC<AddTaskHandlerProps> = ({ lane, setLanes, updateUi }) =
     });
     setIsCreatingNewTask(false);
     setNewTaskName("");
-    createTask({
-      laneId: lane.id,
-      title: newTaskName,
-      order: lane.Tasks.length,
-    });
   };
 
   const handleClose = () => {
