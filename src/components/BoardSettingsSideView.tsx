@@ -7,6 +7,7 @@ import { type FC } from "react";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 
+// seems to be unused
 const BoardSettingsSideView: FC = () => {
   const router = useRouter();
   const { boardId, workspaceId } = router.query;
