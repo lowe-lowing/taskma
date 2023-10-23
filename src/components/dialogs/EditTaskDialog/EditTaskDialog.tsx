@@ -146,7 +146,7 @@ const EditTaskDialog: FC<EditTaskDialogProps> = ({ trigger, task, categories, up
                   <Link
                     href={`/workspace/${workspaceId}/board/${boardId}/settings/?tab=categories`}
                   >
-                    <Button variant={"outline"} className="w-full">
+                    <Button type="button" variant={"outline"} className="w-full">
                       Create a category
                     </Button>
                   </Link>
