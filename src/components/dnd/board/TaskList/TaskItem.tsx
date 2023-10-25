@@ -130,7 +130,7 @@ const Task: FC<TaskUnionProps> = (props) => {
           gridTemplateColumns: viewOnly ? "1fr" : "4fr 1fr",
         }}
       >
-        <p className="overflow-hidden">{task.Title}</p>
+        <p className="overflow-hidden text-[0.9rem] leading-6">{task.Title}</p>
         {!viewOnly && (
           <div className="flex items-start">
             <EditTaskDialog
