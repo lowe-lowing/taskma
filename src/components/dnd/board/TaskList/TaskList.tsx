@@ -78,7 +78,7 @@ export default function TaskList({
             })}
           >
             <CardContent className="p-0">
-              <ScrollArea className="px-2 pb-2" thumbClassName="dark:bg-gray-700">
+              <ScrollArea className="px-[0.63rem]" thumbClassName="dark:bg-gray-700">
                 <div className="mt-3 flex h-fit max-h-[calc(100vh-200px)] min-h-[3rem] select-none flex-col gap-2">
                   {tasks.map((task, i) => (
                     <Draggable key={task.id} draggableId={task.id as string} index={i}>

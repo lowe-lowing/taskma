@@ -106,7 +106,7 @@ const AddTaskHandler: FC<AddTaskHandlerProps> = ({ lane, setLanes, updateUi }) =
           </Button>
         </form>
       ) : (
-        <Button size={"sm"} onClick={() => setIsCreatingNewTask(true)}>
+        <Button className="mb-[0.7rem]" size={"sm"} onClick={() => setIsCreatingNewTask(true)}>
           Add Task{" "}
           <span>
             <Plus size={16} />
