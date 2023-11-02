@@ -77,7 +77,7 @@ const AddTaskHandler: FC<AddTaskHandlerProps> = ({ lane, setLanes, updateUi }) =
       {isCreatingNewTask ? (
         <form
           onSubmit={handleAdd}
-          className="relative flex flex-col justify-center gap-1 p-0"
+          className="relative mb-[0.7rem] flex flex-col justify-center gap-1 p-0"
           ref={ref}
         >
           <Input
